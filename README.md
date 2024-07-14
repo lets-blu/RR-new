@@ -1,2 +1,3 @@
-# RR-new
-An object-oriented peripheral driver library
+# RR
+
+环境配置指南：[extras/环境配置指南.pdf](extras/环境配置指南.pdf)

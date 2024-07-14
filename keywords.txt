@@ -1,0 +1,50 @@
+# datatypes				KEYWORD1
+# functions				KEYWORD2
+# structures				KEYWORD3
+# constants				LITERAL1
+# ?					LITERAL2
+
+# port/common/inc/BasePort.h
+BASE_PORT_VALUE_LOW			LITERAL1
+BASE_PORT_VALUE_HIGH			LITERAL1
+BASE_PORT_PARAMETER_RESERVED		LITERAL1
+BasePort				KEYWORD3
+BasePortParameter			KEYWORD3
+BasePortMode				KEYWORD1
+BasePortVtbl				KEYWORD3
+ConstructBasePort			KEYWORD2
+DestructBasePort			KEYWORD2
+SetupBasePort				KEYWORD2
+ReadBasePort				KEYWORD2
+WriteBasePort				KEYWORD2
+
+# port/arduino/inc/ArduinoDPort.h
+ARDUINO_D_PORT_PARAMETER_BASE		LITERAL1
+BasePort2ArduinoPort			LITERAL2
+BasePortParameter2ArduinoDPortParameter	LITERAL2
+ArduinoDPort				KEYWORD3
+ArduinoDPortParameter			KEYWORD3
+ConstructArduinoDPort			KEYWORD2
+DestructArduinoDPort			KEYWORD2
+
+# port/arduino/inc/ArduinoCore.h
+ARDUINO_CORE_DIGITAL_PORT		LITERAL1
+BaseCore2ArduinoCore			LITERAL2
+ArduinoCore				KEYWORD3
+ConstructArduinoCore			KEYWORD2
+DestructArduinoCore			KEYWORD2
+
+# core/device/inc/DeviceManager.h
+DeviceManager				KEYWORD3
+DestructDeviceManager			KEYWORD2
+SetCoreToDeviceManager			KEYWORD2
+GetFactoriesFromDeviceManager		KEYWORD2
+InstanceOfDeviceManager			KEYWORD2
+
+# basics/led/inc/LED/h
+LED					KEYWORD3
+ConstructLED				KEYWORD2
+DestructLED				KEYWORD2
+TurnOnLED				KEYWORD2
+TurnOffLED				KEYWORD2
+
