@@ -8,10 +8,10 @@ extern "C" {
 #include <stddef.h>
 #include <string.h>
 
-#include "core/common/inc/Keywords.h"
-#include "core/common/inc/LinkedList.h"
+#include "core/common/inc/keywords.h"
+#include "core/common/inc/linked_list.h"
 
-#include "port/common/inc/BasePort.h"
+#include "port/common/inc/base_port.h"
 #include "port/common/inc/base_task.h"
 
 #define BASE_FACTORY_ANALOG_PORT    "DefaultAPort"

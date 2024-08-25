@@ -9,7 +9,7 @@ extern "C" {
 #include <stddef.h>
 #include <string.h>
 
-#include "core/common/inc/Keywords.h"
+#include "core/common/inc/keywords.h"
 
 struct LinkedListNode;
 

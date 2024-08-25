@@ -1,5 +1,5 @@
 #include "core/thread/inc/base_thread.h"
-#include "core/device/inc/DeviceManager.h"
+#include "core/device/inc/device_manager.h"
 
 // Method implement(s)
 PROTECTED void ConstructBaseThread(BaseThread *instance)

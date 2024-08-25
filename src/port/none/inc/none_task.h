@@ -8,7 +8,7 @@ extern "C" {
 #include <stddef.h>
 #include <string.h>
 
-#include "core/common/inc/Keywords.h"
+#include "core/common/inc/keywords.h"
 #include "port/common/inc/base_task.h"
 
 #define NONE_TASK "NoneTask"

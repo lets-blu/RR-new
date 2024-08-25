@@ -9,9 +9,9 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 
-#include "core/common/inc/Keywords.h"
-#include "port/common/inc/BaseCore.h"
-#include "port/arduino/inc/ArduinoDPort.h"
+#include "core/common/inc/keywords.h"
+#include "port/common/inc/base_core.h"
+#include "port/arduino/inc/arduino_port.h"
 
 #define ARDUINO_CORE_DIGITAL_PORT "ArduinoDPort"
 

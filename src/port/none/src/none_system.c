@@ -120,6 +120,7 @@ PUBLIC void DestroyTaskWithNoneSystemBase(
     const char *type,
     BaseTask *task)
 {
+    (void)type;
     NoneSystem *self = BaseSystem2NoneSystem(factory);
 
     if (factory != NULL && BaseTask2NoneTask(task) == self->_task)

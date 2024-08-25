@@ -9,8 +9,8 @@ extern "C" {
 #include <stdint.h>
 #include <string.h>
 
-#include "core/common/inc/Keywords.h"
-#include "port/common/inc/BasePort.h"
+#include "core/common/inc/keywords.h"
+#include "port/common/inc/base_port.h"
 
 #define ARDUINO_D_PORT_PARAMETER_BASE {BASE_PORT_PARAMETER_RESERVED}
 

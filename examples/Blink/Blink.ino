@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 #include <RR.h>
-#include <port/arduino/inc/ArduinoCore.h>
+#include <port/arduino/inc/arduino_core.h>
 #include <port/none/inc/none_system.h>
 
 #include "blink_thread.h"

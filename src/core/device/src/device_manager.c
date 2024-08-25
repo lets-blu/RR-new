@@ -1,4 +1,4 @@
-#include "core/device/inc/DeviceManager.h"
+#include "core/device/inc/device_manager.h"
 
 // Private member(s)
 PRIVATE STATIC DeviceManager instance;

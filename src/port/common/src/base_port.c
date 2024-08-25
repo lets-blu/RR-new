@@ -1,4 +1,4 @@
-#include "port/common/inc/BasePort.h"
+#include "port/common/inc/base_port.h"
 
 // Method implement(s)
 PROTECTED void ConstructBasePort(

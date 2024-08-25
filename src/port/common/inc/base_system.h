@@ -8,8 +8,8 @@ extern "C" {
 #include <stddef.h>
 #include <string.h>
 
-#include "core/common/inc/Keywords.h"
-#include "port/common/inc/BaseFactory.h"
+#include "core/common/inc/keywords.h"
+#include "port/common/inc/base_factory.h"
 
 #define BaseFactory2BaseSystem(instance) \
     BASE2SUB(instance, BaseSystem, base)

@@ -1,4 +1,4 @@
-#include "core/common/inc/LinkedList.h"
+#include "core/common/inc/linked_list.h"
 
 // Method implement(s)
 PUBLIC void ConstructLinkedList(LinkedList *instance)

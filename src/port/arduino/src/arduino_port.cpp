@@ -1,7 +1,7 @@
 #ifdef ARDUINO
 
 #include <Arduino.h>
-#include "port/arduino/inc/ArduinoDPort.h"
+#include "port/arduino/inc/arduino_port.h"
 
 #ifdef __cplusplus
 extern "C" {

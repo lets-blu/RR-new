@@ -9,11 +9,11 @@ extern "C" {
 #include <stdio.h>
 #include <string.h>
 
-#include "core/common/inc/Keywords.h"
-#include "core/device/inc/DeviceManager.h"
+#include "core/common/inc/keywords.h"
+#include "core/device/inc/device_manager.h"
 
-#include "port/common/inc/BaseFactory.h"
-#include "port/common/inc/BasePort.h"
+#include "port/common/inc/base_factory.h"
+#include "port/common/inc/base_port.h"
 
 typedef struct {
     BasePort *_port;

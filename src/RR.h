@@ -5,8 +5,8 @@
 extern "C" {
 #endif // __cplusplus
 
-#include "core/device/inc/DeviceManager.h"
-#include "basics/led/inc/LED.h"
+#include "core/device/inc/device_manager.h"
+#include "basics/led/inc/led.h"
 
 #ifdef __cplusplus
 }

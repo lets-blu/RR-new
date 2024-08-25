@@ -9,8 +9,8 @@ extern "C" {
 #include <stddef.h>
 #include <string.h>
 
-#include "core/common/inc/Keywords.h"
-#include "core/common/inc/LinkedList.h"
+#include "core/common/inc/keywords.h"
+#include "core/common/inc/linked_list.h"
 
 #define BASE_THREAD_BEGIN(self)                     \
     switch ((self)->_line)                          \

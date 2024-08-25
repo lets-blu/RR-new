@@ -1,4 +1,4 @@
-#include "port/common/inc/BaseFactory.h"
+#include "port/common/inc/base_factory.h"
 
 // Method implement(s)
 PROTECTED void ConstructBaseFactory(

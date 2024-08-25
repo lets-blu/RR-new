@@ -7,7 +7,7 @@ extern "C" {
 
 #include <stddef.h>
 #include <string.h>
-#include "core/common/inc/Keywords.h"
+#include "core/common/inc/keywords.h"
 
 #define BASE_TASK_PARAMETER_RESERVED 0
 

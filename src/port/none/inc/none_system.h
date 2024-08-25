@@ -9,7 +9,7 @@ extern "C" {
 #include <stdlib.h>
 #include <string.h>
 
-#include "core/common/inc/Keywords.h"
+#include "core/common/inc/keywords.h"
 
 #include "port/common/inc/base_system.h"
 #include "port/common/inc/base_task.h"

@@ -1,4 +1,4 @@
-#include "port/common/inc/BaseCore.h"
+#include "port/common/inc/base_core.h"
 
 // Method implement(s)
 PROTECTED void ConstructBaseCore(BaseCore *instance)

@@ -8,7 +8,7 @@ extern "C" {
 #include <stddef.h>
 #include <string.h>
 
-#include "core/common/inc/Keywords.h"
+#include "core/common/inc/keywords.h"
 
 #define BASE_PORT_VALUE_LOW             0
 #define BASE_PORT_VALUE_HIGH            1
