@@ -1,5 +1,6 @@
 #ifdef ARDUINO
 
+#include <Arduino.h>
 #include "port/arduino/inc/ArduinoCore.h"
 
 #ifdef __cplusplus
@@ -8,6 +9,9 @@ extern "C" {
 
 // Override method(s)
 PUBLIC const char *GetNameOfArduinoCoreBase(
+    BaseCore *core);
+
+PUBLIC unsigned long GetTickOfArduinoCoreBase(
     BaseCore *core);
 
 PUBLIC BasePort *CreatePortWithArduinoCoreBase(
@@ -22,12 +26,15 @@ PUBLIC void DestroyPortWithArduinoCoreBase(
 
 // Virtual methods table
 static const BaseCoreVtbl baseCoreVtbl = {
-    .GetName = GetNameOfArduinoCoreBase
+    .GetName = GetNameOfArduinoCoreBase,
+    .GetTick = GetTickOfArduinoCoreBase
 };
 
 static const BaseFactoryVtbl baseFactoryVtbl = {
     .CreatePort = CreatePortWithArduinoCoreBase,
-    .DestroyPort = DestroyPortWithArduinoCoreBase
+    .DestroyPort = DestroyPortWithArduinoCoreBase,
+    .CreateTask = NULL,
+    .DestroyTask = NULL
 };
 
 // Method implement(s)
@@ -55,6 +62,13 @@ PUBLIC const char *GetNameOfArduinoCoreBase(
 {
     (void)core;
     return "Arduino";
+}
+
+PUBLIC unsigned long GetTickOfArduinoCoreBase(
+    BaseCore *core)
+{
+    (void)core;
+    return millis();
 }
 
 PUBLIC BasePort *CreatePortWithArduinoCoreBase(

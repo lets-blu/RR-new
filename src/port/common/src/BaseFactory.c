@@ -1,7 +1,7 @@
 #include "port/common/inc/BaseFactory.h"
 
 // Method implement(s)
-PROTECTED void ConstructorBaseFactory(
+PROTECTED void ConstructBaseFactory(
     BaseFactory *instance)
 {
     if (instance != NULL)
@@ -11,7 +11,7 @@ PROTECTED void ConstructorBaseFactory(
     }
 }
 
-PROTECTED void DestructorBaseFactory(
+PROTECTED void DestructBaseFactory(
     BaseFactory *instance)
 {
     if (instance != NULL)
@@ -45,6 +45,32 @@ PUBLIC void DestroyPortWithBaseFactory(
     }
 
     self->vtbl->DestroyPort(self, type, port);
+}
+
+PUBLIC BaseTask *CreateTaskWithBaseFactory(
+    BaseFactory *self,
+    const char *type,
+    BaseTaskParameter *parameter)
+{
+    if (self == NULL || self->vtbl == NULL || self->vtbl->CreateTask == NULL)
+    {
+        return NULL;
+    }
+
+    return self->vtbl->CreateTask(self, type, parameter);
+}
+
+PUBLIC void DestroyTaskWithBaseFactory(
+    BaseFactory *self,
+    const char *type,
+    BaseTask *task)
+{
+    if (self == NULL || self->vtbl == NULL || self->vtbl->DestroyTask == NULL)
+    {
+        return;
+    }
+
+    self->vtbl->DestroyTask(self, type, task);
 }
 
 PUBLIC STATIC BasePort *CreatePortWithBaseFactories(
@@ -85,6 +111,49 @@ PUBLIC STATIC void DestroyPortWithBaseFactories(
             = LinkedListNode2BaseFactory(NextOfLinkedListIterator(&iterator));
         
         DestroyPortWithBaseFactory(factory, type, port);
+    }
+
+    DestructLinkedListIterator(&iterator);
+}
+
+PUBLIC STATIC BaseTask *CreateTaskWithBaseFactories(
+    LinkedList *factories,
+    const char *type,
+    BaseTaskParameter *parameter)
+{
+    BaseTask *task = NULL;
+    LinkedListIterator iterator;
+
+    ConstructLinkedListIterator(&iterator, factories);
+
+    while (task == NULL && HasNextInLinkedListIterator(&iterator))
+    {
+        BaseFactory *factory
+            = LinkedListNode2BaseFactory(NextOfLinkedListIterator(&iterator));
+
+        task = CreateTaskWithBaseFactory(factory, type, parameter);
+    }
+
+    DestructLinkedListIterator(&iterator);
+
+    return task;
+}
+
+PUBLIC STATIC void DestroyTaskWithBaseFactories(
+    LinkedList *factories,
+    const char *type,
+    BaseTask *task)
+{
+    LinkedListIterator iterator;
+
+    ConstructLinkedListIterator(&iterator, factories);
+
+    while (HasNextInLinkedListIterator(&iterator))
+    {
+        BaseFactory *factory
+            = LinkedListNode2BaseFactory(NextOfLinkedListIterator(&iterator));
+
+        DestroyTaskWithBaseFactory(factory, type, task);
     }
 
     DestructLinkedListIterator(&iterator);

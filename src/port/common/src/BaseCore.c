@@ -5,7 +5,7 @@ PROTECTED void ConstructBaseCore(BaseCore *instance)
 {
     if (instance != NULL)
     {
-        ConstructorBaseFactory(&instance->base);
+        ConstructBaseFactory(&instance->base);
         instance->vtbl = NULL;
     }
 }
@@ -14,7 +14,7 @@ PROTECTED void DestructBaseCore(BaseCore *instance)
 {
     if (instance != NULL)
     {
-        DestructorBaseFactory(&instance->base);
+        DestructBaseFactory(&instance->base);
         memset(instance, 0, sizeof(BaseCore));
     }
 }
@@ -27,4 +27,14 @@ PUBLIC const char *GetNameOfBaseCore(BaseCore *self)
     }
 
     return self->vtbl->GetName(self);
+}
+
+PUBLIC unsigned long GetTickOfBaseCore(BaseCore *self)
+{
+    if (self == NULL || self->vtbl == NULL || self->vtbl->GetTick == NULL)
+    {
+        return 0;
+    }
+
+    return self->vtbl->GetTick(self);
 }

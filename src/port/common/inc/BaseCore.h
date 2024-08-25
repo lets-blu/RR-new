@@ -22,7 +22,8 @@ typedef struct {
 } BaseCore;
 
 typedef struct BaseCoreVtbl {
-    const char *(*GetName)(BaseCore *);    
+    const char *(*GetName)(BaseCore *);
+    unsigned long (*GetTick)(BaseCore *);
 } BaseCoreVtbl;
 
 // Constructor(s) & Destructor(s)
@@ -31,6 +32,7 @@ PROTECTED void DestructBaseCore(BaseCore *instance);
 
 // Public method(s)
 PUBLIC const char *GetNameOfBaseCore(BaseCore *self);
+PUBLIC unsigned long GetTickOfBaseCore(BaseCore *self);
 
 #ifdef __cplusplus
 }

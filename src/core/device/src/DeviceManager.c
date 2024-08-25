@@ -5,25 +5,45 @@ PRIVATE STATIC DeviceManager instance;
 
 // Private method(s)
 PRIVATE void ConstructDeviceManager(DeviceManager *instance);
+PRIVATE STATIC void RunDeviceManager(void *parameter);
 
 // Method implement(s)
 PRIVATE void ConstructDeviceManager(DeviceManager *instance)
 {
-    if (instance != NULL)
+    if (instance == NULL)
     {
-        ConstructLinkedList(&instance->_factories);
-        instance->_isConstructed = true;
-        instance->_core = NULL;
+        return;
+    }
+
+    instance->_isConstructed = true;
+
+    instance->_core = NULL;
+    instance->_sys = NULL;
+    ConstructLinkedList(&instance->_factories);
+
+    instance->_task = NULL;
+
+    for (unsigned int i = 0; i < DEVICE_MANAGER_THREAD_NUMBER; i++)
+    {
+        ConstructLinkedList(&instance->_threads[i]);
     }
 }
 
 PUBLIC void DestructDeviceManager(DeviceManager *instance)
 {
-    if (instance != NULL)
+    if (instance == NULL)
     {
-        DestructLinkedList(&instance->_factories);
-        memset(instance, 0, sizeof(DeviceManager));
+        return;
     }
+
+    DestructLinkedList(&instance->_factories);
+
+    for (unsigned int i = 0; i < DEVICE_MANAGER_THREAD_NUMBER; i++)
+    {
+        DestructLinkedList(&instance->_threads[i]);
+    }
+
+    memset(instance, 0, sizeof(DeviceManager));
 }
 
 PUBLIC void SetCoreToDeviceManager(DeviceManager *self, BaseCore *core)
@@ -34,6 +54,53 @@ PUBLIC void SetCoreToDeviceManager(DeviceManager *self, BaseCore *core)
         AddNodeToLinkedList(&self->_factories, &core->base.base);
         printf("[DeviceManager][D] Set core: %s\r\n", GetNameOfBaseCore(core));
     }
+}
+
+PUBLIC void SetSystemToDeviceManager(DeviceManager *self, BaseSystem *sys)
+{
+    if (self == NULL || sys == NULL || self->_sys != NULL)
+    {
+        return;
+    }
+
+    self->_sys = sys;
+    AddNodeToLinkedList(&self->_factories, &sys->base.base);
+    printf("[DeviceManager][D] Set system: %s\r\n", GetNameOfBaseSystem(sys));
+
+    GeneralTaskParameter parameter = {
+        .base = GENERAL_TASK_PARAMETER_BASE,
+        .entry = RunDeviceManager,
+        .parameter = self
+    };
+
+    self->_task = CreateTaskWithBaseFactories(
+        &self->_factories,
+        GENERAL_TASK,
+        &parameter.base);
+    
+    printf("[DeviceManager][I] Set system, create task %p\r\n", self->_task);
+}
+
+PUBLIC void AddThreadToDeviceManager(
+    DeviceManager *self,
+    DeviceManagerThreadType type,
+    BaseThread *thread)
+{
+    if (self != NULL && thread != NULL)
+    {
+        AddNodeToLinkedList(&self->_threads[type], &thread->base);
+        printf("[DeviceManager][D] Add thread: %p (type %d)\r\n", thread, type);
+    }
+}
+
+PUBLIC BaseCore *GetCoreFromDeviceManager(DeviceManager *self)
+{
+    return (self == NULL) ? NULL : self->_core;
+}
+
+PUBLIC BaseSystem *GetSystemFromDeviceManager(DeviceManager *self)
+{
+    return (self == NULL) ? NULL : self->_sys;
 }
 
 PUBLIC LinkedList *GetFactoriesFromDeviceManager(DeviceManager *self)
@@ -49,4 +116,17 @@ PUBLIC STATIC DeviceManager *InstanceOfDeviceManager(void)
     }
 
     return &instance;
+}
+
+PRIVATE STATIC void RunDeviceManager(void *parameter)
+{
+    DeviceManager *self = (DeviceManager *)parameter;
+
+    for (;;)
+    {
+        for (unsigned int i = 0; i < DEVICE_MANAGER_THREAD_NUMBER; i++)
+        {
+            RunBaseThreads(&self->_threads[i]);
+        }
+    }
 }
