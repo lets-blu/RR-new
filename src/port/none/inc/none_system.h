@@ -26,7 +26,7 @@ extern "C" {
 
 typedef struct {
     BaseSystem base;
-    NoneTask *_task;
+    NoneTask _task;
 } NoneSystem;
 
 // Constructor(s) & Destructor(s)

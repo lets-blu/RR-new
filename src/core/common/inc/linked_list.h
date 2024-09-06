@@ -56,6 +56,10 @@ PUBLIC LinkedListNode *FindNodeInLinkedList(
     LinkedListFindCallback callback,
     void *data);
 
+PUBLIC STATIC bool FindEqualCallbackOfLinkedList(
+    LinkedListNode *node,
+    void *data);
+
 PUBLIC bool HasNextInLinkedListIterator(LinkedListIterator *self);
 PUBLIC LinkedListNode *NextOfLinkedListIterator(LinkedListIterator *self);
 

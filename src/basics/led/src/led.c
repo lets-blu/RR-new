@@ -3,6 +3,7 @@
 // Method implement(s)
 PUBLIC void ConstructLED(
     LED *instance,
+    const char *type,
     BasePortParameter *parameter,
     unsigned int onValue)
 {
@@ -15,7 +16,7 @@ PUBLIC void ConstructLED(
 
     instance->_port = CreatePortWithBaseFactories(
         GetFactoriesFromDeviceManager(manager),
-        BASE_FACTORY_DIGITAL_PORT,
+        type,
         parameter);
     
     instance->_onValue = onValue;
@@ -34,7 +35,7 @@ PUBLIC void DestructLED(LED *instance)
 
     DestroyPortWithBaseFactories(
         GetFactoriesFromDeviceManager(manager),
-        BASE_FACTORY_DIGITAL_PORT,
+        NULL,
         instance->_port);
     
     memset(instance, 0, sizeof(LED));

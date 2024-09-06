@@ -9,6 +9,7 @@ PROTECTED void ConstructBasePort(
 
     if (instance != NULL)
     {
+        ConstructLinkedListNode(&instance->base);
         instance->vtbl = NULL;
     }
 }
@@ -17,6 +18,7 @@ PROTECTED void DestructBasePort(BasePort *instance)
 {
     if (instance != NULL)
     {
+        DestructLinkedListNode(&instance->base);
         memset(instance, 0, sizeof(BasePort));
     }
 }

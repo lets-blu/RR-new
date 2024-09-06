@@ -15,7 +15,7 @@ PUBLIC unsigned long GetTickOfArduinoCoreBase(
     BaseCore *core);
 
 PUBLIC BasePort *CreatePortWithArduinoCoreBase(
-    BaseFactory *factory, 
+    BaseFactory *factory,
     const char *type,
     BasePortParameter *parameter);
 
@@ -40,12 +40,16 @@ static const BaseFactoryVtbl baseFactoryVtbl = {
 // Method implement(s)
 PUBLIC void ConstructArduinoCore(ArduinoCore *instance)
 {
-    if (instance != NULL)
+    if (instance == NULL)
     {
-        ConstructBaseCore(&instance->base);
-        instance->base.vtbl = &baseCoreVtbl;
-        instance->base.base.vtbl = &baseFactoryVtbl;
+        return;
     }
+
+    ConstructBaseCore(&instance->base);
+    instance->base.vtbl = &baseCoreVtbl;
+    instance->base.base.vtbl = &baseFactoryVtbl;
+
+    ConstructLinkedList(&instance->_ports);
 }
 
 PUBLIC void DestructArduinoCore(ArduinoCore *instance)
@@ -53,6 +57,7 @@ PUBLIC void DestructArduinoCore(ArduinoCore *instance)
     if (instance != NULL)
     {
         DestructBaseCore(&instance->base);
+        DestructLinkedList(&instance->_ports);
         memset(instance, 0, sizeof(ArduinoCore));
     }
 }
@@ -72,20 +77,19 @@ PUBLIC unsigned long GetTickOfArduinoCoreBase(
 }
 
 PUBLIC BasePort *CreatePortWithArduinoCoreBase(
-    BaseFactory *factory, 
+    BaseFactory *factory,
     const char *type,
     BasePortParameter *parameter)
 {
-    (void)factory;
     BasePort *port = NULL;
+    ArduinoCore *self = BaseFactory2ArduinoCore(factory);
 
-    if (type == NULL)
+    if (factory == NULL || type == NULL || parameter == NULL)
     {
         return NULL;
     }
 
-    if (strcmp(type, ARDUINO_CORE_DIGITAL_PORT) == 0
-        || strcmp(type, BASE_FACTORY_DIGITAL_PORT) == 0)
+    if (strcmp(type, ARDUINO_CORE_DIGITAL_PORT) == 0)
     {
         port = (BasePort *)malloc(sizeof(ArduinoDPort));
 
@@ -94,6 +98,29 @@ PUBLIC BasePort *CreatePortWithArduinoCoreBase(
             ConstructArduinoDPort(
                 BasePort2ArduinoDPort(port),
                 BasePortParameter2ArduinoDPortParameter(parameter));
+
+            AddNodeToLinkedList(&self->_ports, &port->base);
+        }
+    }
+    else if (strcmp(type, GENERAL_DIGITAL_PORT) == 0)
+    {
+        GeneralPortParameter *generalParameter
+            = BasePortParameter2GeneralPortParameter(parameter);
+
+        ArduinoDPortParameter arduinoParameter = {
+            .base = ARDUINO_D_PORT_PARAMETER_BASE,
+            .pin = (uint8_t)generalParameter->pin
+        };
+
+        port = (BasePort *)malloc(sizeof(ArduinoDPort));
+
+        if (port != NULL)
+        {
+            ConstructArduinoDPort(
+                BasePort2ArduinoDPort(port),
+                &arduinoParameter);
+
+            AddNodeToLinkedList(&self->_ports, &port->base);
         }
     }
 
@@ -105,16 +132,20 @@ PUBLIC void DestroyPortWithArduinoCoreBase(
     const char *type,
     BasePort *port)
 {
-    (void)factory;
-    
-    if (type == NULL)
+    (void)type;
+    ArduinoCore *self = BaseFactory2ArduinoCore(factory);
+
+    if (factory == NULL || port == NULL)
     {
         return;
     }
 
-    if (strcmp(type, ARDUINO_CORE_DIGITAL_PORT) == 0
-        || strcmp(type, BASE_FACTORY_DIGITAL_PORT) == 0)
+    if (FindNodeInLinkedList(
+            &self->_ports,
+            FindEqualCallbackOfLinkedList,
+            &port->base) != NULL)
     {
+        RemoveNodeFromLinkedList(&self->_ports, &port->base);
         DestructArduinoDPort(BasePort2ArduinoDPort(port));
         free(port);
     }

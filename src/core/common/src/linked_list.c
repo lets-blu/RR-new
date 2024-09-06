@@ -149,6 +149,13 @@ PUBLIC LinkedListNode *FindNodeInLinkedList(
     return node;
 }
 
+PUBLIC STATIC bool FindEqualCallbackOfLinkedList(
+    LinkedListNode *node,
+    void *data)
+{
+    return (node == data);
+}
+
 PUBLIC bool HasNextInLinkedListIterator(LinkedListIterator *self)
 {
     return (self != NULL && self->_next != NULL);

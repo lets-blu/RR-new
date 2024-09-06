@@ -31,16 +31,12 @@ static const BaseFactoryVtbl baseFactoryVtbl = {
 // Method implement(s)
 PROTECTED void ConstructNoneSystem(NoneSystem *instance)
 {
-    if (instance == NULL)
+    if (instance != NULL)
     {
-        return;
+        ConstructBaseSystem(&instance->base);
+        instance->base.vtbl = &baseSystemVtbl;
+        instance->base.base.vtbl = &baseFactoryVtbl;
     }
-
-    ConstructBaseSystem(&instance->base);
-    instance->base.vtbl = &baseSystemVtbl;
-    instance->base.base.vtbl = &baseFactoryVtbl;
-
-    instance->_task = NULL;
 }
 
 PROTECTED void DestructNoneSystem(NoneSystem *instance)
@@ -57,9 +53,9 @@ PUBLIC void RunNoneSystemBase(
 {
     NoneSystem *self = BaseSystem2NoneSystem(sys);
 
-    if (sys != NULL && self->_task != NULL)
+    if (sys != NULL && IS_NONE_TASK_CONSTRUCTED(&self->_task))
     {
-        RunBaseTask(&self->_task->base);
+        RunBaseTask(&self->_task.base);
     }
 }
 
@@ -77,21 +73,16 @@ PUBLIC BaseTask *CreateTaskWithNoneSystemBase(
 {
     NoneSystem *self = BaseSystem2NoneSystem(factory);
 
-    if (factory == NULL || self->_task != NULL)
+    if (factory == NULL || IS_NONE_TASK_CONSTRUCTED(&self->_task))
     {
         return NULL;
     }
 
     if (strcmp(type, NONE_SYSTEM_TASK) == 0)
     {
-        self->_task = (NoneTask *)malloc(sizeof(NoneTask));
-
-        if (self->_task != NULL)
-        {
-            ConstructNoneTask(
-                self->_task,
-                BaseTaskParameter2NoneTaskParameter(parameter));
-        }
+        ConstructNoneTask(
+            &self->_task,
+            BaseTaskParameter2NoneTaskParameter(parameter));
     }
     else if (strcmp(type, GENERAL_TASK) == 0)
     {
@@ -104,15 +95,10 @@ PUBLIC BaseTask *CreateTaskWithNoneSystemBase(
             .parameter = generalParameter->parameter
         };
 
-        self->_task = (NoneTask *)malloc(sizeof(NoneTask));
-
-        if (self->_task != NULL)
-        {
-            ConstructNoneTask(self->_task, &noneParameter);
-        }
+        ConstructNoneTask(&self->_task, &noneParameter);
     }
 
-    return &self->_task->base;
+    return &self->_task.base;
 }
 
 PUBLIC void DestroyTaskWithNoneSystemBase(
@@ -123,10 +109,8 @@ PUBLIC void DestroyTaskWithNoneSystemBase(
     (void)type;
     NoneSystem *self = BaseSystem2NoneSystem(factory);
 
-    if (factory != NULL && BaseTask2NoneTask(task) == self->_task)
+    if (factory != NULL && task == &self->_task.base)
     {
-        DestructNoneTask(self->_task);
-        free(self->_task);
-        self->_task = NULL;
+        DestructNoneTask(&self->_task);
     }
 }

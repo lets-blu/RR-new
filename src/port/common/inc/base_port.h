@@ -9,15 +9,19 @@ extern "C" {
 #include <string.h>
 
 #include "core/common/inc/keywords.h"
+#include "core/common/inc/linked_list.h"
 
 #define BASE_PORT_VALUE_LOW             0
 #define BASE_PORT_VALUE_HIGH            1
-
 #define BASE_PORT_PARAMETER_RESERVED    0
+
+#define LinkedListNode2BasePort(instance) \
+    BASE2SUB(instance, BasePort, base)
 
 struct BasePortVtbl;
 
 typedef struct {
+    LinkedListNode base;
     const struct BasePortVtbl *vtbl;
 } BasePort;
 

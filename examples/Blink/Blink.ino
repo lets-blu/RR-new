@@ -33,7 +33,11 @@ void setup()
         .pin = LED_BUILTIN
     };
 
-    ConstructLED(&led, &ledParameter.base, BASE_PORT_VALUE_HIGH);
+    ConstructLED(
+        &led,
+        ARDUINO_CORE_DIGITAL_PORT,
+        &ledParameter.base,
+        BASE_PORT_VALUE_HIGH);
 
     // 3. Create thread & task
     ConstructBlinkThread(&thread, &led, 1000);

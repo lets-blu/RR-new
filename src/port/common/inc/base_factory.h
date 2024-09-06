@@ -14,9 +14,6 @@ extern "C" {
 #include "port/common/inc/base_port.h"
 #include "port/common/inc/base_task.h"
 
-#define BASE_FACTORY_ANALOG_PORT    "DefaultAPort"
-#define BASE_FACTORY_DIGITAL_PORT   "DefaultDPort"
-
 #define LinkedListNode2BaseFactory(instance) \
     BASE2SUB(instance, BaseFactory, base)
 

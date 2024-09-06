@@ -23,6 +23,7 @@ typedef struct {
 // Constructor(s) & Destructor(s)
 PUBLIC void ConstructLED(
     LED *instance,
+    const char *type,
     BasePortParameter *parameter,
     unsigned int onValue);
 

@@ -16,6 +16,9 @@ extern "C" {
 #define NONE_TASK_PARAMETER_BASE \
     {BASE_TASK_PARAMETER_RESERVED}
 
+#define IS_NONE_TASK_CONSTRUCTED(instance) \
+    ((instance)->_entry != NULL)
+
 #define BaseTask2NoneTask(instance) \
     BASE2SUB(instance, NoneTask, base)
 
