@@ -5,8 +5,18 @@
 extern "C" {
 #endif // __cplusplus
 
+#include "core/common/inc/keywords.h"
+#include "core/common/inc/linked_list.h"
 #include "core/device/inc/device_manager.h"
+#include "core/thread/inc/base_thread.h"
+
 #include "basics/led/inc/led.h"
+
+#include "port/common/inc/base_factory.h"
+#include "port/common/inc/base_port.h"
+#include "port/common/inc/base_core.h"
+#include "port/common/inc/base_task.h"
+#include "port/common/inc/base_system.h"
 
 #ifdef __cplusplus
 }

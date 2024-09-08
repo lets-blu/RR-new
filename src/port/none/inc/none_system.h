@@ -6,7 +6,6 @@ extern "C" {
 #endif // __cplusplus
 
 #include <stddef.h>
-#include <stdlib.h>
 #include <string.h>
 
 #include "core/common/inc/keywords.h"

@@ -11,8 +11,6 @@ extern "C" {
 #include "core/common/inc/keywords.h"
 #include "port/common/inc/base_task.h"
 
-#define NONE_TASK "NoneTask"
-
 #define NONE_TASK_PARAMETER_BASE \
     {BASE_TASK_PARAMETER_RESERVED}
 

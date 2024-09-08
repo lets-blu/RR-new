@@ -24,6 +24,8 @@ static const BaseSystemVtbl baseSystemVtbl = {
 };
 
 static const BaseFactoryVtbl baseFactoryVtbl = {
+    .CreatePort = NULL,
+    .DestroyPort = NULL,
     .CreateTask = CreateTaskWithNoneSystemBase,
     .DestroyTask = DestroyTaskWithNoneSystemBase
 };
@@ -73,7 +75,7 @@ PUBLIC BaseTask *CreateTaskWithNoneSystemBase(
 {
     NoneSystem *self = BaseSystem2NoneSystem(factory);
 
-    if (factory == NULL || IS_NONE_TASK_CONSTRUCTED(&self->_task))
+    if (factory == NULL || type == NULL ||IS_NONE_TASK_CONSTRUCTED(&self->_task))
     {
         return NULL;
     }
@@ -96,6 +98,8 @@ PUBLIC BaseTask *CreateTaskWithNoneSystemBase(
         };
 
         ConstructNoneTask(&self->_task, &noneParameter);
+    } else {
+        return NULL;
     }
 
     return &self->_task.base;

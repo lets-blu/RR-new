@@ -18,7 +18,7 @@ PUBLIC void ConstructLED(
         GetFactoriesFromDeviceManager(manager),
         type,
         parameter);
-    
+
     instance->_onValue = onValue;
 
     SetupBasePort(instance->_port, BASE_PORT_MODE_OUTPUT);
@@ -37,7 +37,7 @@ PUBLIC void DestructLED(LED *instance)
         GetFactoriesFromDeviceManager(manager),
         NULL,
         instance->_port);
-    
+
     memset(instance, 0, sizeof(LED));
 }
 

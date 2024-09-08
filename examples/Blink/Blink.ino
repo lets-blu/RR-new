@@ -42,15 +42,15 @@ void setup()
     // 3. Create thread & task
     ConstructBlinkThread(&thread, &led, 1000);
 
-    GeneralTaskParameter taskParameter = {
-        .base = GENERAL_TASK_PARAMETER_BASE,
-        .entry = (void *)RunBlinkThreadTask,
+    NoneTaskParameter taskParameter = {
+        .base = NONE_TASK_PARAMETER_BASE,
+        .entry = RunBlinkThreadTask,
         .parameter = &thread
     };
 
     task = CreateTaskWithBaseFactories(
         GetFactoriesFromDeviceManager(manager),
-        GENERAL_TASK,
+        NONE_SYSTEM_TASK,
         &taskParameter.base);
 
     if (task == NULL)

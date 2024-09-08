@@ -58,6 +58,12 @@ PUBLIC void SetCoreToDeviceManager(DeviceManager *self, BaseCore *core)
 
 PUBLIC void SetSystemToDeviceManager(DeviceManager *self, BaseSystem *sys)
 {
+    GeneralTaskParameter parameter = {
+        .base = GENERAL_TASK_PARAMETER_BASE,
+        .entry = RunDeviceManager,
+        .parameter = self
+    };
+
     if (self == NULL || sys == NULL || self->_sys != NULL)
     {
         return;
@@ -67,17 +73,11 @@ PUBLIC void SetSystemToDeviceManager(DeviceManager *self, BaseSystem *sys)
     AddNodeToLinkedList(&self->_factories, &sys->base.base);
     printf("[DeviceManager][D] Set system: %s\r\n", GetNameOfBaseSystem(sys));
 
-    GeneralTaskParameter parameter = {
-        .base = GENERAL_TASK_PARAMETER_BASE,
-        .entry = RunDeviceManager,
-        .parameter = self
-    };
-
     self->_task = CreateTaskWithBaseFactories(
         &self->_factories,
         GENERAL_TASK,
         &parameter.base);
-    
+
     printf("[DeviceManager][I] Set system, create task %p\r\n", self->_task);
 }
 

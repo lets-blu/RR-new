@@ -14,7 +14,6 @@ extern "C" {
 struct LinkedListNode;
 
 typedef struct {
-    unsigned int _count;
     struct LinkedListNode *_head;
     struct LinkedListNode *_tail;
 } LinkedList;
@@ -61,7 +60,7 @@ PUBLIC STATIC bool FindEqualCallbackOfLinkedList(
     void *data);
 
 PUBLIC bool HasNextInLinkedListIterator(LinkedListIterator *self);
-PUBLIC LinkedListNode *NextOfLinkedListIterator(LinkedListIterator *self);
+PUBLIC LinkedListNode *NextInLinkedListIterator(LinkedListIterator *self);
 
 #ifdef __cplusplus
 }

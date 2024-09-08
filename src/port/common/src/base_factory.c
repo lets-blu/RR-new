@@ -86,13 +86,12 @@ PUBLIC STATIC BasePort *CreatePortWithBaseFactories(
     while (port == NULL && HasNextInLinkedListIterator(&iterator))
     {
         BaseFactory *factory
-            = LinkedListNode2BaseFactory(NextOfLinkedListIterator(&iterator));
-        
+            = LinkedListNode2BaseFactory(NextInLinkedListIterator(&iterator));
+
         port = CreatePortWithBaseFactory(factory, type, parameter);
     }
 
     DestructLinkedListIterator(&iterator);
-
     return port;
 }
 
@@ -108,8 +107,8 @@ PUBLIC STATIC void DestroyPortWithBaseFactories(
     while (HasNextInLinkedListIterator(&iterator))
     {
         BaseFactory *factory
-            = LinkedListNode2BaseFactory(NextOfLinkedListIterator(&iterator));
-        
+            = LinkedListNode2BaseFactory(NextInLinkedListIterator(&iterator));
+
         DestroyPortWithBaseFactory(factory, type, port);
     }
 
@@ -129,13 +128,12 @@ PUBLIC STATIC BaseTask *CreateTaskWithBaseFactories(
     while (task == NULL && HasNextInLinkedListIterator(&iterator))
     {
         BaseFactory *factory
-            = LinkedListNode2BaseFactory(NextOfLinkedListIterator(&iterator));
+            = LinkedListNode2BaseFactory(NextInLinkedListIterator(&iterator));
 
         task = CreateTaskWithBaseFactory(factory, type, parameter);
     }
 
     DestructLinkedListIterator(&iterator);
-
     return task;
 }
 
@@ -151,7 +149,7 @@ PUBLIC STATIC void DestroyTaskWithBaseFactories(
     while (HasNextInLinkedListIterator(&iterator))
     {
         BaseFactory *factory
-            = LinkedListNode2BaseFactory(NextOfLinkedListIterator(&iterator));
+            = LinkedListNode2BaseFactory(NextInLinkedListIterator(&iterator));
 
         DestroyTaskWithBaseFactory(factory, type, task);
     }

@@ -12,7 +12,8 @@ extern "C" {
 #include "core/common/inc/keywords.h"
 #include "port/common/inc/base_port.h"
 
-#define ARDUINO_D_PORT_PARAMETER_BASE {BASE_PORT_PARAMETER_RESERVED}
+#define ARDUINO_D_PORT_PARAMETER_BASE \
+    {BASE_PORT_PARAMETER_RESERVED}
 
 #define BasePort2ArduinoDPort(instance) \
     BASE2SUB(instance, ArduinoDPort, base)

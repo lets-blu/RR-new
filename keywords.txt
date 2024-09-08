@@ -1,50 +1,149 @@
-# datatypes				KEYWORD1
-# functions				KEYWORD2
-# structures				KEYWORD3
-# constants				LITERAL1
-# ?					LITERAL2
+# datatypes								KEYWORD1
+# functions								KEYWORD2
+# structures							KEYWORD3
+# constants								LITERAL1
+# ?										LITERAL2
 
-# port/common/inc/base_port.h
-BASE_PORT_VALUE_LOW			LITERAL1
-BASE_PORT_VALUE_HIGH			LITERAL1
-BASE_PORT_PARAMETER_RESERVED		LITERAL1
-BasePort				KEYWORD3
-BasePortParameter			KEYWORD3
-BasePortMode				KEYWORD1
-BasePortVtbl				KEYWORD3
-ConstructBasePort			KEYWORD2
-DestructBasePort			KEYWORD2
-SetupBasePort				KEYWORD2
-ReadBasePort				KEYWORD2
-WriteBasePort				KEYWORD2
+# Core #########################################
+# core/common/inc/keywords.h
+PUBLIC									LITERAL2
+PROTECTED								LITERAL2
+PRIVATE									LITERAL2
+STATIC									LITERAL2
+BASE2SUB								LITERAL2
 
-# port/arduino/inc/arduino_port.h
-ARDUINO_D_PORT_PARAMETER_BASE		LITERAL1
-BasePort2ArduinoPort			LITERAL2
-BasePortParameter2ArduinoDPortParameter	LITERAL2
-ArduinoDPort				KEYWORD3
-ArduinoDPortParameter			KEYWORD3
-ConstructArduinoDPort			KEYWORD2
-DestructArduinoDPort			KEYWORD2
-
-# port/arduino/inc/arduino_core.h
-ARDUINO_CORE_DIGITAL_PORT		LITERAL1
-BaseCore2ArduinoCore			LITERAL2
-ArduinoCore				KEYWORD3
-ConstructArduinoCore			KEYWORD2
-DestructArduinoCore			KEYWORD2
+# core/common/inc/linked_list.h
 
 # core/device/inc/device_manager.h
-DeviceManager				KEYWORD3
-DestructDeviceManager			KEYWORD2
-SetCoreToDeviceManager			KEYWORD2
-GetFactoriesFromDeviceManager		KEYWORD2
-InstanceOfDeviceManager			KEYWORD2
+DEVICE_MANAGER_THREAD_DRIVER_INPUT		LITERAL1
+DEVICE_MANAGER_THREAD_APPLICATION		LITERAL1
+DEVICE_MANAGER_THREAD_DRIVER_OUTPUT		LITERAL1
+DEVICE_MANAGER_THREAD_NUMBER			LITERAL1
+DeviceManagerThreadType					KEYWORD1
+DeviceManager							KEYWORD3
+DestructDeviceManager					KEYWORD2
+SetCoreToDeviceManager					KEYWORD2
+SetSystemToDeviceManager				KEYWORD2
+AddThreadToDeviceManager				KEYWORD2
+GetCoreFromDeviceManager				KEYWORD2
+GetSystemFromDeviceManager				KEYWORD2
+GetFactoriesFromDeviceManager			KEYWORD2
+InstanceOfDeviceManager					KEYWORD2
 
-# basics/led/inc/LED/h
-LED					KEYWORD3
-ConstructLED				KEYWORD2
-DestructLED				KEYWORD2
-TurnOnLED				KEYWORD2
-TurnOffLED				KEYWORD2
+# core/thread/inc/base_thread.h
+BASE_THREAD_BEGIN						LITERAL1
+BASE_THREAD_END							LITERAL1
+BASE_THREAD_DELAY						LITERAL1
+LinkedListNode2BaseThread				LITERAL2
+BASE_THREAD_STATE_ENDED					LITERAL1
+BASE_THREAD_STATE_WAITING				LITERAL1
+BaseThreadState							KEYWORD1
+BaseThread								KEYWORD3
+BaseThreadVtbl							KEYWORD3
+ConstructBaseThread						KEYWORD2
+DestructBaseThread						KEYWORD2
+UpdateTickInBaseThread					KEYWORD2
+IsTimeoutOfBaseThread					KEYWORD2
+RunBaseThread							KEYWORD2
+RunBaseThreads							KEYWORD2
 
+# Basics #######################################
+# basics/led/inc/LED.h
+LED										KEYWORD3
+ConstructLED							KEYWORD2
+DestructLED								KEYWORD2
+TurnOnLED								KEYWORD2
+TurnOffLED								KEYWORD2
+
+# Port (Common) ################################
+# port/common/inc/base_factory.h
+LinkedListNode2BaseFactory				LITERAL2
+BaseFactory								KEYWORD3
+BaseFactoryVtbl							KEYWORD3
+ConstructBaseFactory					KEYWORD2
+DestructBaseFactory						KEYWORD2
+CreatePortWithBaseFactory				KEYWORD2
+DestroyPortWithBaseFactory				KEYWORD2
+CreateTaskWithBaseFactory				KEYWORD2
+DestroyTaskWithBaseFactory				KEYWORD2
+CreatePortWithBaseFactories				KEYWORD2
+DestroyPortWithBaseFactories			KEYWORD2
+CreateTaskWithBaseFactories				KEYWORD2
+DestroyTaskWithBaseFactories			KEYWORD2
+
+# port/common/inc/base_port.h
+BASE_PORT_VALUE_LOW						LITERAL1
+BASE_PORT_VALUE_HIGH					LITERAL1
+BASE_PORT_PARAMETER_RESERVED			LITERAL1
+LinkedListNode2BasePort					LITERAL2
+BasePort								KEYWORD3
+BasePortParameter						KEYWORD3
+BASE_PORT_MODE_INPUT					LITERAL1
+BASE_PORT_MODE_OUTPUT					LITERAL1
+BASE_PORT_MODE_INPUT_PULLUP				LITERAL1
+BasePortMode							KEYWORD1
+BasePortVtbl							KEYWORD3
+ConstructBasePort						KEYWORD2
+DestructBasePort						KEYWORD2
+SetupBasePort							KEYWORD2
+ReadBasePort							KEYWORD2
+WriteBasePort							KEYWORD2
+
+# port/common/inc/base_core.h
+
+# port/common/inc/base_task.h
+BASE_TASK_PARAMETER_RESERVED			LITERAL1
+LinkedListNode2BaseTask					LITERAL2
+BaseTask								KEYWORD3
+BaseTaskParameter						KEYWORD3
+BaseTaskVtbl							KEYWORD3
+ConstructBaseTask						KEYWORD2
+DestructBaseTask						KEYWORD2
+RunBaseTask								KEYWORD2
+
+# port/common/inc/base_system.h
+BaseFactory2BaseSystem					LITERAL2
+BaseSystem								KEYWORD3
+BaseSystemVtbl							KEYWORD3
+ConstructBaseSystem						KEYWORD2
+DestructBaseSystem						KEYWORD2
+RunBaseSystem							KEYWORD2
+GetNameOfBaseSystem						KEYWORD2
+
+# Port (Arduino) ###############################
+# port/arduino/inc/arduino_port.h
+ARDUINO_D_PORT_PARAMETER_BASE			LITERAL1
+BasePort2ArduinoPort					LITERAL2
+BasePortParameter2ArduinoDPortParameter	LITERAL2
+ArduinoDPort							KEYWORD3
+ArduinoDPortParameter					KEYWORD3
+ConstructArduinoDPort					KEYWORD2
+DestructArduinoDPort					KEYWORD2
+
+# port/arduino/inc/arduino_core.h
+ARDUINO_CORE_DIGITAL_PORT				LITERAL1
+BaseCore2ArduinoCore					LITERAL2
+BaseFactory2ArduinoCore					LITERAL2
+ArduinoCore								KEYWORD3
+ConstructArduinoCore					KEYWORD2
+DestructArduinoCore						KEYWORD2
+
+# Port (None) ##################################
+# port/none/inc/none_task.h
+NONE_TASK_PARAMETER_BASE				LITERAL1
+IS_NONE_TASK_CONSTRUCTED				LITERAL1
+BaseTask2NoneTask						LITERAL1
+BaseTaskParameter2NoneTaskParameter		LITERAL1
+NoneTask								KEYWORD3
+NoneTaskParameter						KEYWORD3
+NoneTaskEntry							KEYWORD1
+ConstructNoneTask						KEYWORD2
+DestructNoneTask						KEYWORD2
+
+# port/none/inc/none_system.h
+NONE_SYSTEM_TASK						LITERAL1
+BaseSystem2NoneSystem					LITERAL2
+BaseFactory2NoneSystem					LITERAL2
+NoneSystem								KEYWORD3
+ConstructNoneSystem						KEYWORD2
+DestructNoneSystem						KEYWORD2

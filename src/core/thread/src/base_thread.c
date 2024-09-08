@@ -35,11 +35,10 @@ PUBLIC void UpdateTickInBaseThread(BaseThread *self)
     }
 }
 
-PUBLIC bool IsTimeoutForBaseThread(BaseThread *self, unsigned long delay)
+PUBLIC bool IsTimeoutOfBaseThread(BaseThread *self, unsigned long delay)
 {
     DeviceManager *manager = InstanceOfDeviceManager();
     unsigned long current = GetTickOfBaseCore(GetCoreFromDeviceManager(manager));
-
     return (self == NULL) ? false : (current - self->_tick > delay);
 }
 
@@ -67,7 +66,7 @@ PUBLIC STATIC void RunBaseThreads(LinkedList *threads)
     while (HasNextInLinkedListIterator(&iterator))
     {
         BaseThread *thread
-            = LinkedListNode2BaseThread(NextOfLinkedListIterator(&iterator));
+            = LinkedListNode2BaseThread(NextInLinkedListIterator(&iterator));
 
         if (RunBaseThread(thread) == BASE_THREAD_STATE_ENDED)
         {

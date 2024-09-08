@@ -5,7 +5,6 @@ PUBLIC void ConstructLinkedList(LinkedList *instance)
 {
     if (instance != NULL)
     {
-        instance->_count = 0;
         instance->_head = NULL;
         instance->_tail = NULL;
     }
@@ -74,9 +73,6 @@ PUBLIC void AddNodeToLinkedList(
     }
 
     self->_tail = node;
-
-    // 3. Increase count
-    self->_count++;
 }
 
 PUBLIC void RemoveNodeFromLinkedList(
@@ -95,7 +91,6 @@ PUBLIC void RemoveNodeFromLinkedList(
     if (self->_head == node)
     {
         self->_head = node->_next;
-        self->_count--;
 
         if (self->_head == NULL)
         {
@@ -116,7 +111,6 @@ PUBLIC void RemoveNodeFromLinkedList(
     if (previous != NULL)
     {
         previous->_next = node->_next;
-        self->_count--;
 
         if (self->_tail == node)
         {
@@ -161,7 +155,7 @@ PUBLIC bool HasNextInLinkedListIterator(LinkedListIterator *self)
     return (self != NULL && self->_next != NULL);
 }
 
-PUBLIC LinkedListNode *NextOfLinkedListIterator(LinkedListIterator *self)
+PUBLIC LinkedListNode *NextInLinkedListIterator(LinkedListIterator *self)
 {
     LinkedListNode *next = NULL;
 

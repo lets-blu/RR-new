@@ -8,9 +8,9 @@ extern "C" {
 #include <stddef.h>
 #include <string.h>
 
-#include <RR.h>
 #include <core/common/inc/keywords.h>
 #include <core/thread/inc/base_thread.h>
+#include <basics/led/inc/led.h>
 
 #define BaseThread2BlinkThread(instance) \
     BASE2SUB(instance, BlinkThread, base)

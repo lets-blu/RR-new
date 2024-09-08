@@ -26,7 +26,7 @@ extern "C" {
     {                                               \
         UpdateTickInBaseThread(self);               \
         (self)->_line = __LINE__; case __LINE__:    \
-        if (!IsTimeoutForBaseThread(self, delay))   \
+        if (!IsTimeoutOfBaseThread(self, delay))    \
         {                                           \
             return BASE_THREAD_STATE_WAITING;       \
         }                                           \
@@ -59,7 +59,7 @@ PROTECTED void DestructBaseThread(BaseThread *instance);
 
 // Public method(s)
 PUBLIC void UpdateTickInBaseThread(BaseThread *self);
-PUBLIC bool IsTimeoutForBaseThread(BaseThread *self, unsigned long delay);
+PUBLIC bool IsTimeoutOfBaseThread(BaseThread *self, unsigned long delay);
 PUBLIC BaseThreadState RunBaseThread(BaseThread *self);
 
 PUBLIC STATIC void RunBaseThreads(LinkedList *threads);
