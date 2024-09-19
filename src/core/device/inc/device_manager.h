@@ -22,8 +22,8 @@ typedef enum {
     DEVICE_MANAGER_THREAD_DRIVER_INPUT,
     DEVICE_MANAGER_THREAD_APPLICATION,
     DEVICE_MANAGER_THREAD_DRIVER_OUTPUT,
-    DEVICE_MANAGER_THREAD_NUMBER
-} DeviceManagerThreadType;
+    NUMBER_OF_DEVICE_MANAGER_THREADS
+} DeviceManagerThread;
 
 typedef struct {
     bool _isConstructed;
@@ -33,7 +33,7 @@ typedef struct {
     LinkedList _factories;
 
     BaseTask *_task;
-    LinkedList _threads[DEVICE_MANAGER_THREAD_NUMBER];
+    LinkedList _threads[NUMBER_OF_DEVICE_MANAGER_THREADS];
 } DeviceManager;
 
 // Constructor(s) & Destructor(s)
@@ -45,7 +45,7 @@ PUBLIC void SetSystemToDeviceManager(DeviceManager *self, BaseSystem *sys);
 
 PUBLIC void AddThreadToDeviceManager(
     DeviceManager *self,
-    DeviceManagerThreadType type,
+    DeviceManagerThread type,
     BaseThread *thread);
 
 PUBLIC BaseCore *GetCoreFromDeviceManager(DeviceManager *self);

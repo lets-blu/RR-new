@@ -12,16 +12,16 @@ extern "C" {
 #include "core/common/inc/keywords.h"
 #include "core/common/inc/linked_list.h"
 
-#define BASE_THREAD_BEGIN(self)                     \
+#define BEGIN_BASE_THREAD(self)                     \
     switch ((self)->_line)                          \
     {                                               \
         case 0:
 
-#define BASE_THREAD_END(self)                       \
+#define END_BASE_THREAD(self)                       \
     }                                               \
     return BASE_THREAD_STATE_ENDED
 
-#define BASE_THREAD_DELAY(self, delay)              \
+#define DELAY_BASE_THREAD(self, delay)              \
     do                                              \
     {                                               \
         UpdateTickInBaseThread(self);               \

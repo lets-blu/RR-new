@@ -23,7 +23,7 @@ PRIVATE void ConstructDeviceManager(DeviceManager *instance)
 
     instance->_task = NULL;
 
-    for (unsigned int i = 0; i < DEVICE_MANAGER_THREAD_NUMBER; i++)
+    for (unsigned int i = 0; i < NUMBER_OF_DEVICE_MANAGER_THREADS; i++)
     {
         ConstructLinkedList(&instance->_threads[i]);
     }
@@ -38,7 +38,7 @@ PUBLIC void DestructDeviceManager(DeviceManager *instance)
 
     DestructLinkedList(&instance->_factories);
 
-    for (unsigned int i = 0; i < DEVICE_MANAGER_THREAD_NUMBER; i++)
+    for (unsigned int i = 0; i < NUMBER_OF_DEVICE_MANAGER_THREADS; i++)
     {
         DestructLinkedList(&instance->_threads[i]);
     }
@@ -83,7 +83,7 @@ PUBLIC void SetSystemToDeviceManager(DeviceManager *self, BaseSystem *sys)
 
 PUBLIC void AddThreadToDeviceManager(
     DeviceManager *self,
-    DeviceManagerThreadType type,
+    DeviceManagerThread type,
     BaseThread *thread)
 {
     if (self != NULL && thread != NULL)
@@ -124,7 +124,7 @@ PRIVATE STATIC void RunDeviceManager(void *parameter)
 
     for (;;)
     {
-        for (unsigned int i = 0; i < DEVICE_MANAGER_THREAD_NUMBER; i++)
+        for (unsigned int i = 0; i < NUMBER_OF_DEVICE_MANAGER_THREADS; i++)
         {
             RunBaseThreads(&self->_threads[i]);
         }

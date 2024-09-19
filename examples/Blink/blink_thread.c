@@ -44,18 +44,18 @@ PUBLIC BaseThreadState RunBlinkThreadBase(BaseThread *thread)
         return BASE_THREAD_STATE_ENDED;
     }
 
-    BASE_THREAD_BEGIN(thread);
+    BEGIN_BASE_THREAD(thread);
 
     for (;;)
     {
         TurnOnLED(self->_led);
-        BASE_THREAD_DELAY(thread, self->_delay);
+        DELAY_BASE_THREAD(thread, self->_delay);
 
         TurnOffLED(self->_led);
-        BASE_THREAD_DELAY(thread, self->_delay);
+        DELAY_BASE_THREAD(thread, self->_delay);
     }
 
-    BASE_THREAD_END(thread);
+    END_BASE_THREAD(thread);
 }
 
 PUBLIC STATIC void RunBlinkThreadTask(void *parameter)
