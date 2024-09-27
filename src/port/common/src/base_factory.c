@@ -47,6 +47,32 @@ PUBLIC void DestroyPortWithBaseFactory(
     self->vtbl->DestroyPort(self, type, port);
 }
 
+PUBLIC BaseSerial *CreateSerialWithBaseFactory(
+    BaseFactory *self,
+    const char *type,
+    BaseSerialParameter *parameter)
+{
+    if (self == NULL || self->vtbl == NULL || self->vtbl->CreateSerial == NULL)
+    {
+        return NULL;
+    }
+
+    return self->vtbl->CreateSerial(self, type, parameter);
+}
+
+PUBLIC void DestroySerialWithBaseFactory(
+    BaseFactory *self,
+    const char *type,
+    BaseSerial *serial)
+{
+    if (self == NULL || self->vtbl == NULL || self->vtbl->DestroySerial == NULL)
+    {
+        return;
+    }
+
+    self->vtbl->DestroySerial(self, type, serial);
+}
+
 PUBLIC BaseTask *CreateTaskWithBaseFactory(
     BaseFactory *self,
     const char *type,
@@ -110,6 +136,48 @@ PUBLIC STATIC void DestroyPortWithBaseFactories(
             = LinkedListNode2BaseFactory(NextInLinkedListIterator(&iterator));
 
         DestroyPortWithBaseFactory(factory, type, port);
+    }
+
+    DestructLinkedListIterator(&iterator);
+}
+
+PUBLIC STATIC BaseSerial *CreateSerialWithBaseFactories(
+    LinkedList *factories,
+    const char *type,
+    BaseSerialParameter *parameter)
+{
+    BaseSerial *serial = NULL;
+    LinkedListIterator iterator;
+
+    ConstructLinkedListIterator(&iterator, factories);
+
+    while (serial == NULL && HasNextInLinkedListIterator(&iterator))
+    {
+        BaseFactory *factory
+            = LinkedListNode2BaseFactory(NextInLinkedListIterator(&iterator));
+
+        serial = CreateSerialWithBaseFactory(factory, type, parameter);
+    }
+
+    DestructLinkedListIterator(&iterator);
+    return serial;
+}
+
+PUBLIC STATIC void DestroySerialWithBaseFactories(
+    LinkedList *factories,
+    const char *type,
+    BaseSerial *serial)
+{
+    LinkedListIterator iterator;
+
+    ConstructLinkedListIterator(&iterator, factories);
+
+    while (HasNextInLinkedListIterator(&iterator))
+    {
+        BaseFactory *factory
+            = LinkedListNode2BaseFactory(NextInLinkedListIterator(&iterator));
+
+        DestroySerialWithBaseFactory(factory, type, serial);
     }
 
     DestructLinkedListIterator(&iterator);

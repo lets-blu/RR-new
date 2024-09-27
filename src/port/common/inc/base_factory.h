@@ -12,6 +12,7 @@ extern "C" {
 #include "core/common/inc/linked_list.h"
 
 #include "port/common/inc/base_port.h"
+#include "port/common/inc/base_serial.h"
 #include "port/common/inc/base_task.h"
 
 #define LinkedListNode2BaseFactory(instance) \
@@ -34,6 +35,16 @@ typedef struct BaseFactoryVtbl {
         BaseFactory *,
         const char *,
         BasePort *);
+
+    BaseSerial *(*CreateSerial)(
+        BaseFactory *,
+        const char *,
+        BaseSerialParameter *);
+
+    void (*DestroySerial)(
+        BaseFactory *,
+        const char *,
+        BaseSerial *);
 
     BaseTask *(*CreateTask)(
         BaseFactory *,
@@ -64,6 +75,16 @@ PUBLIC void DestroyPortWithBaseFactory(
     const char *type,
     BasePort *port);
 
+PUBLIC BaseSerial *CreateSerialWithBaseFactory(
+    BaseFactory *self,
+    const char *type,
+    BaseSerialParameter *parameter);
+
+PUBLIC void DestroySerialWithBaseFactory(
+    BaseFactory *self,
+    const char *type,
+    BaseSerial *serial);
+
 PUBLIC BaseTask *CreateTaskWithBaseFactory(
     BaseFactory *self,
     const char *type,
@@ -83,6 +104,16 @@ PUBLIC STATIC void DestroyPortWithBaseFactories(
     LinkedList *factories,
     const char *type,
     BasePort *port);
+
+PUBLIC STATIC BaseSerial *CreateSerialWithBaseFactories(
+    LinkedList *factories,
+    const char *type,
+    BaseSerialParameter *parameter);
+
+PUBLIC STATIC void DestroySerialWithBaseFactories(
+    LinkedList *factories,
+    const char *type,
+    BaseSerial *serial);
 
 PUBLIC STATIC BaseTask *CreateTaskWithBaseFactories(
     LinkedList *factories,

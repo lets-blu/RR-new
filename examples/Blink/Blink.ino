@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 #include <RR.h>
 #include <port/arduino/inc/arduino_core.h>
 #include <port/none/inc/none_system.h>
@@ -8,6 +6,7 @@
 
 ArduinoCore core;
 NoneSystem sys;
+BaseSerial *serial;
 
 LED led;
 BaseTask *task;
@@ -17,17 +16,28 @@ void setup()
 {
     DeviceManager *manager = InstanceOfDeviceManager();
 
-    Serial.begin(9600);
-    fdevopen(serialPutc, NULL);
+    // 1. Setup core
+    ArduinoUARTParameter uartParameter = {
+        .base = ARDUINO_UART_PARAMETER_BASE,
+        .port = &Serial,
+        .baudrate = 115200
+    };
 
-    // 1. Setup core & system
     ConstructArduinoCore(&core);
     SetCoreToDeviceManager(manager, &core.base);
 
+    serial = CreateSerialWithBaseFactories(
+        GetFactoriesFromDeviceManager(manager),
+        ARDUINO_CORE_UART_SERIAL,
+        &uartParameter.base);
+
+    fdevopen(serialPutc, NULL);
+
+    // 2. Setup system
     ConstructNoneSystem(&sys);
     SetSystemToDeviceManager(manager, &sys.base);
 
-    // 2. Create LED
+    // 3. Create LED
     ArduinoDPortParameter ledParameter = {
         .base = ARDUINO_D_PORT_PARAMETER_BASE,
         .pin = LED_BUILTIN
@@ -39,7 +49,7 @@ void setup()
         &ledParameter.base,
         BASE_PORT_VALUE_HIGH);
 
-    // 3. Create thread & task
+    // 4. Create thread & task
     ConstructBlinkThread(&thread, &led, 1000);
 
     NoneTaskParameter taskParameter = {
@@ -61,7 +71,7 @@ void setup()
             &thread.base);
     }
 
-    // 4. Run system
+    // 5. Run system
     RunBaseSystem(&sys.base);
 }
 
@@ -73,6 +83,6 @@ void loop()
 int serialPutc(char c, FILE *file)
 {
     (void)file;
-    Serial.write(c);
+    WriteBaseSerial(serial, (const uint8_t *)&c, sizeof(char));
     return c;
 }

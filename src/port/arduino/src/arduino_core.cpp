@@ -24,6 +24,26 @@ PUBLIC void DestroyPortWithArduinoCoreBase(
     const char *type,
     BasePort *port);
 
+PUBLIC BaseSerial *CreateSerialWithArduinoCoreBase(
+    BaseFactory *factory,
+    const char *type,
+    BaseSerialParameter *parameter);
+
+PUBLIC void DestroySerialWithArduinoCoreBase(
+    BaseFactory *factory,
+    const char *type,
+    BaseSerial *serial);
+
+PUBLIC BaseTask *CreateTaskWithArduinoCoreBase(
+    BaseFactory *factory,
+    const char *type,
+    BaseTaskParameter *parameter);
+
+PUBLIC void DestroyTaskWithArduinoCoreBase(
+    BaseFactory *factory,
+    const char *type,
+    BaseTask *task);
+
 // Virtual methods table
 static const BaseCoreVtbl baseCoreVtbl = {
     .GetName = GetNameOfArduinoCoreBase,
@@ -31,10 +51,12 @@ static const BaseCoreVtbl baseCoreVtbl = {
 };
 
 static const BaseFactoryVtbl baseFactoryVtbl = {
-    .CreatePort = CreatePortWithArduinoCoreBase,
-    .DestroyPort = DestroyPortWithArduinoCoreBase,
-    .CreateTask = NULL,
-    .DestroyTask = NULL
+    .CreatePort     = CreatePortWithArduinoCoreBase,
+    .DestroyPort    = DestroyPortWithArduinoCoreBase,
+    .CreateSerial   = CreateSerialWithArduinoCoreBase,
+    .DestroySerial  = DestroySerialWithArduinoCoreBase,
+    .CreateTask     = CreateTaskWithArduinoCoreBase,
+    .DestroyTask    = DestroyTaskWithArduinoCoreBase
 };
 
 // Method implement(s)
@@ -149,6 +171,104 @@ PUBLIC void DestroyPortWithArduinoCoreBase(
         DestructArduinoDPort(BasePort2ArduinoDPort(port));
         free(port);
     }
+}
+
+PUBLIC BaseSerial *CreateSerialWithArduinoCoreBase(
+    BaseFactory *factory,
+    const char *type,
+    BaseSerialParameter *parameter)
+{
+    BaseSerial *serial = NULL;
+    ArduinoCore *self = BaseFactory2ArduinoCore(factory);
+
+    if (factory == NULL || type == NULL || parameter == NULL)
+    {
+        return NULL;
+    }
+
+    if (strcmp(type, ARDUINO_CORE_UART) == 0)
+    {
+        serial = (BaseSerial *)malloc(sizeof(ArduinoUART));
+
+        if (serial != NULL)
+        {
+            ConstructArduinoUART(
+                BaseSerial2ArduinoUART(serial),
+                BaseSerialParameter2ArduinoUARTParameter(parameter));
+
+            AddNodeToLinkedList(&self->_ports, &serial->base);
+        }
+    }
+    else if (strcmp(type, GENERAL_UART) == 0)
+    {
+        GeneralUARTParameter *generalParameter
+            = BaseSerialParameter2GeneralUARTParameter(parameter);
+
+        ArduinoUARTParameter arduinoParameter = {
+            .base = ARDUINO_UART_PARAMETER_BASE,
+            .port = (HardwareSerial *)generalParameter->port,
+            .baudrate = generalParameter->baudrate
+        };
+
+        serial = (BaseSerial *)malloc(sizeof(ArduinoUART));
+
+        if (serial != NULL)
+        {
+            ConstructArduinoUART(
+                BaseSerial2ArduinoUART(serial),
+                &arduinoParameter);
+
+            AddNodeToLinkedList(&self->_ports, &serial->base);
+        }
+    }
+
+    return serial;
+}
+
+PUBLIC void DestroySerialWithArduinoCoreBase(
+    BaseFactory *factory,
+    const char *type,
+    BaseSerial *serial)
+{
+    (void)type;
+    ArduinoCore *self = (ArduinoCore *)factory;
+
+    if (factory == NULL || serial == NULL)
+    {
+        return;
+    }
+
+    if (FindNodeInLinkedList(
+            &self->_ports,
+            FindEqualCallbackOfLinkedList,
+            &serial->base) != NULL)
+    {
+        RemoveNodeFromLinkedList(&self->_ports, &serial->base);
+        DestructArduinoUART(BaseSerial2ArduinoUART(serial));
+        free(serial);
+    }
+}
+
+PUBLIC BaseTask *CreateTaskWithArduinoCoreBase(
+    BaseFactory *factory,
+    const char *type,
+    BaseTaskParameter *parameter)
+{
+    (void)factory;
+    (void)type;
+    (void)parameter;
+
+    return NULL;
+}
+
+PUBLIC void DestroyTaskWithArduinoCoreBase(
+    BaseFactory *factory,
+    const char *type,
+    BaseTask *task)
+{
+    (void)factory;
+    (void)type;
+    (void)task;
 }
 
 #ifdef __cplusplus

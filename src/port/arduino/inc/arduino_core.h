@@ -13,10 +13,15 @@ extern "C" {
 #include "core/common/inc/linked_list.h"
 
 #include "port/common/inc/base_core.h"
-#include "port/arduino/inc/arduino_port.h"
-#include "port/general/inc/general_port.h"
+#include "port/common/inc/base_task.h"
 
-#define ARDUINO_CORE_DIGITAL_PORT "ArduinoDPort"
+#include "port/arduino/inc/arduino_port.h"
+#include "port/arduino/inc/arduino_uart.h"
+#include "port/general/inc/general_port.h"
+#include "port/general/inc/general_uart.h"
+
+#define ARDUINO_CORE_DIGITAL_PORT   "ArduinoDPort"
+#define ARDUINO_CORE_UART_SERIAL    "ArduinoUART"
 
 #define BaseCore2ArduinoCore(instance) \
     BASE2SUB(instance, ArduinoCore, base)
