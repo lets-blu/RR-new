@@ -7,11 +7,11 @@ extern "C" {
 
 #include <stdbool.h>
 #include <stddef.h>
-#include <stdio.h>
 #include <string.h>
 
 #include "core/common/inc/keywords.h"
 #include "core/common/inc/linked_list.h"
+#include "core/logger/inc/logger.h"
 #include "core/thread/inc/base_thread.h"
 
 #include "port/common/inc/base_core.h"

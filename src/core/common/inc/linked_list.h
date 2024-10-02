@@ -11,6 +11,11 @@ extern "C" {
 
 #include "core/common/inc/keywords.h"
 
+#define STATIC_LINKED_LIST() {  \
+    ._head = NULL,              \
+    ._tail = NULL,              \
+}
+
 struct LinkedListNode;
 
 typedef struct {

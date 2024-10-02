@@ -1,5 +1,8 @@
 #include "basics/led/inc/led.h"
 
+// Private member(s)
+PRIVATE STATIC Logger logger;
+
 // Method implement(s)
 PUBLIC void ConstructLED(
     LED *instance,
@@ -12,6 +15,11 @@ PUBLIC void ConstructLED(
     if (instance == NULL)
     {
         return;
+    }
+
+    if (!IS_LOGGER_CONSTRUCTED(&logger))
+    {
+        ConstructLogger(&logger, "LED", LOGGER_LEVEL_INFO);
     }
 
     instance->_port = CreatePortWithBaseFactories(
@@ -48,7 +56,7 @@ PUBLIC void TurnOnLED(LED *self)
         return;
     }
 
-    printf("[LED][I] Turn on  %p\r\n", self);
+    LOGGER_I(&logger, "Turn on  %p", self);
 
     if (self->_onValue == BASE_PORT_VALUE_LOW)
     {
@@ -67,7 +75,7 @@ PUBLIC void TurnOffLED(LED *self)
         return;
     }
 
-    printf("[LED][I] Turn off %p\r\n", self);
+    LOGGER_I(&logger, "Turn off %p", self);
 
     if (self->_onValue == BASE_PORT_VALUE_LOW)
     {

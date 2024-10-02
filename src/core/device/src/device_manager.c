@@ -1,6 +1,7 @@
 #include "core/device/inc/device_manager.h"
 
 // Private member(s)
+PRIVATE STATIC Logger logger;
 PRIVATE STATIC DeviceManager instance;
 
 // Private method(s)
@@ -13,6 +14,11 @@ PRIVATE void ConstructDeviceManager(DeviceManager *instance)
     if (instance == NULL)
     {
         return;
+    }
+
+    if (!IS_LOGGER_CONSTRUCTED(&logger))
+    {
+        ConstructLogger(&logger, "DeviceManager", LOGGER_LEVEL_INFO);
     }
 
     instance->_isConstructed = true;
@@ -52,7 +58,7 @@ PUBLIC void SetCoreToDeviceManager(DeviceManager *self, BaseCore *core)
     {
         self->_core = core;
         AddNodeToLinkedList(&self->_factories, &core->base.base);
-        printf("[DeviceManager][D] Set core: %s\r\n", GetNameOfBaseCore(core));
+        LOGGER_D(&logger, "Set core: %s", GetNameOfBaseCore(core));
     }
 }
 
@@ -71,14 +77,14 @@ PUBLIC void SetSystemToDeviceManager(DeviceManager *self, BaseSystem *sys)
 
     self->_sys = sys;
     AddNodeToLinkedList(&self->_factories, &sys->base.base);
-    printf("[DeviceManager][D] Set system: %s\r\n", GetNameOfBaseSystem(sys));
+    LOGGER_D(&logger, "Set system: %s", GetNameOfBaseSystem(sys));
 
     self->_task = CreateTaskWithBaseFactories(
         &self->_factories,
         GENERAL_TASK,
         &parameter.base);
 
-    printf("[DeviceManager][I] Set system, create task %p\r\n", self->_task);
+    LOGGER_I(&logger, "Set system, create task %p", self->_task);
 }
 
 PUBLIC void AddThreadToDeviceManager(
@@ -89,7 +95,7 @@ PUBLIC void AddThreadToDeviceManager(
     if (self != NULL && thread != NULL)
     {
         AddNodeToLinkedList(&self->_threads[type], &thread->base);
-        printf("[DeviceManager][D] Add thread: %p (type %d)\r\n", thread, type);
+        LOGGER_D(&logger, "Add thread: %p (type %d)", thread, type);
     }
 }
 

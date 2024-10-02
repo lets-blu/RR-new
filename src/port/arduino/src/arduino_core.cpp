@@ -186,7 +186,7 @@ PUBLIC BaseSerial *CreateSerialWithArduinoCoreBase(
         return NULL;
     }
 
-    if (strcmp(type, ARDUINO_CORE_UART) == 0)
+    if (strcmp(type, ARDUINO_CORE_UART_SERIAL) == 0)
     {
         serial = (BaseSerial *)malloc(sizeof(ArduinoUART));
 
@@ -199,7 +199,7 @@ PUBLIC BaseSerial *CreateSerialWithArduinoCoreBase(
             AddNodeToLinkedList(&self->_ports, &serial->base);
         }
     }
-    else if (strcmp(type, GENERAL_UART) == 0)
+    else if (strcmp(type, GENERAL_UART_SERIAL) == 0)
     {
         GeneralUARTParameter *generalParameter
             = BaseSerialParameter2GeneralUARTParameter(parameter);

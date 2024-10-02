@@ -30,6 +30,24 @@ GetSystemFromDeviceManager					KEYWORD2
 GetFactoriesFromDeviceManager				KEYWORD2
 InstanceOfDeviceManager						KEYWORD2
 
+# core/logger/inc/logger.h
+IS_LOGGER_CONSTRUCTED						LITERAL2
+LOGGER_D									LITERAL2
+LOGGER_I									LITERAL2
+LOGGER_W									LITERAL2
+LOGGER_E									LITERAL2
+LOGGER_LEVEL_DEBUG							LITERAL1
+LOGGER_LEVEL_INFO							LITERAL1
+LOGGER_LEVEL_WARN							LITERAL1
+LOGGER_LEVEL_ERROR							LITERAL1
+LOGGER_LEVEL_OFF							LITERAL1
+LoggerLevel									KEYWORD1
+Logger										KEYWORD3
+ConstructLogger								KEYWORD2
+DestructLogger								KEYWORD2
+PrintStringWithLogger						KEYWORD2
+SetLevelToLogger							KEYWORD2
+
 # core/thread/inc/base_thread.h
 BEGIN_BASE_THREAD							LITERAL1
 END_BASE_THREAD								LITERAL1
