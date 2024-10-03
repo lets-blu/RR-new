@@ -1,12 +1,12 @@
 #ifndef __GENERAL_TASK_H__
 #define __GENERAL_TASK_H__
 
+#include "core/common/inc/keywords.h"
+#include "port/common/inc/base_task.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
-
-#include "core/common/inc/keywords.h"
-#include "port/common/inc/base_task.h"
 
 #define GENERAL_TASK "GeneralTask"
 

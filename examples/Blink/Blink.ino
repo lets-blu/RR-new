@@ -50,13 +50,13 @@ void setup()
         BASE_PORT_VALUE_HIGH);
 
     // 4. Create thread & task
-    ConstructBlinkThread(&thread, &led, 1000);
-
     NoneTaskParameter taskParameter = {
         .base = NONE_TASK_PARAMETER_BASE,
         .entry = RunBlinkThreadTask,
         .parameter = &thread
     };
+
+    ConstructBlinkThread(&thread, &led, 1000);
 
     task = CreateTaskWithBaseFactories(
         GetFactoriesFromDeviceManager(manager),

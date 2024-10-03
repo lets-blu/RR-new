@@ -1,10 +1,6 @@
 #ifndef __DEVICE_MANAGER_H__
 #define __DEVICE_MANAGER_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
-
 #include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
@@ -17,6 +13,10 @@ extern "C" {
 #include "port/common/inc/base_core.h"
 #include "port/common/inc/base_system.h"
 #include "port/general/inc/general_task.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
 
 typedef enum {
     DEVICE_MANAGER_THREAD_DRIVER_INPUT,

@@ -1,10 +1,6 @@
 #ifndef __NONE_SYSTEM_H__
 #define __NONE_SYSTEM_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
-
 #include <stddef.h>
 #include <string.h>
 
@@ -14,6 +10,10 @@ extern "C" {
 #include "port/common/inc/base_task.h"
 #include "port/general/inc/general_task.h"
 #include "port/none/inc/none_task.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
 
 #define NONE_SYSTEM_TASK "NoneTask"
 

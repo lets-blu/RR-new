@@ -1,15 +1,15 @@
 #ifndef __BASE_PORT_H__
 #define __BASE_PORT_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
-
 #include <stddef.h>
 #include <string.h>
 
 #include "core/common/inc/keywords.h"
 #include "core/common/inc/linked_list.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
 
 #define BASE_PORT_VALUE_LOW             0
 #define BASE_PORT_VALUE_HIGH            1
@@ -36,9 +36,9 @@ typedef enum {
 } BasePortMode;
 
 typedef struct BasePortVtbl {
-    void (*Setup)(BasePort *, BasePortMode);
-    unsigned int (*Read)(BasePort *);
-    void (*Write)(BasePort *, unsigned int);
+    void (*Setup)(BasePort *self, BasePortMode mode);
+    unsigned int (*Read)(BasePort *self);
+    void (*Write)(BasePort *self, unsigned int value);
 } BasePortVtbl;
 
 // Constructor(s) & Destructor(s)

@@ -1,15 +1,15 @@
 #ifndef __BASE_TASK_H__
 #define __BASE_TASK_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
-
 #include <stddef.h>
 #include <string.h>
 
 #include "core/common/inc/keywords.h"
 #include "core/common/inc/linked_list.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
 
 #define BASE_TASK_PARAMETER_RESERVED 0
 
@@ -28,7 +28,7 @@ typedef struct {
 } BaseTaskParameter;
 
 typedef struct BaseTaskVtbl {
-    void (*Run)(BaseTask *);
+    void (*Run)(BaseTask *self);
 } BaseTaskVtbl;
 
 // Constructor(s) & Destructor(s)

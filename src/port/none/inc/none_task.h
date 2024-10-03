@@ -1,15 +1,15 @@
 #ifndef __NONE_TASK_H__
 #define __NONE_TASK_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
-
 #include <stddef.h>
 #include <string.h>
 
 #include "core/common/inc/keywords.h"
 #include "port/common/inc/base_task.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
 
 #define NONE_TASK_PARAMETER_BASE \
     {BASE_TASK_PARAMETER_RESERVED}

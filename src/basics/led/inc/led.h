@@ -1,10 +1,6 @@
 #ifndef __LED_H__
 #define __LED_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
-
 #include <stddef.h>
 #include <string.h>
 
@@ -14,6 +10,10 @@ extern "C" {
 
 #include "port/common/inc/base_factory.h"
 #include "port/common/inc/base_port.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
 
 typedef struct {
     BasePort *_port;

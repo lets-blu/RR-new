@@ -1,15 +1,15 @@
 #ifndef __BASE_SYSTEM_H__
 #define __BASE_SYSTEM_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
-
 #include <stddef.h>
 #include <string.h>
 
 #include "core/common/inc/keywords.h"
 #include "port/common/inc/base_factory.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
 
 #define BaseFactory2BaseSystem(instance) \
     BASE2SUB(instance, BaseSystem, base)
@@ -22,8 +22,8 @@ typedef struct {
 } BaseSystem;
 
 typedef struct BaseSystemVtbl {
-    void (*Run)(BaseSystem *);
-    const char *(*GetName)(BaseSystem *);
+    void (*Run)(BaseSystem *self);
+    const char *(*GetName)(BaseSystem *self);
 } BaseSystemVtbl;
 
 // Constructor(s) & Destructor(s)

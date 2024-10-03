@@ -1,15 +1,15 @@
 #ifndef __BASE_CORE_H__
 #define __BASE_CORE_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
-
 #include <stddef.h>
 #include <string.h>
 
 #include "core/common/inc/keywords.h"
 #include "port/common/inc/base_factory.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
 
 #define BaseFactory2BaseCore(instance) \
     BASE2SUB(instance, BaseCore, base)
@@ -22,8 +22,8 @@ typedef struct {
 } BaseCore;
 
 typedef struct BaseCoreVtbl {
-    const char *(*GetName)(BaseCore *);
-    unsigned long (*GetTick)(BaseCore *);
+    const char *(*GetName)(BaseCore *self);
+    unsigned long (*GetTick)(BaseCore *self);
 } BaseCoreVtbl;
 
 // Constructor(s) & Destructor(s)

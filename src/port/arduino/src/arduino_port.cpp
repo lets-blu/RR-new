@@ -27,8 +27,8 @@ PUBLIC void ConstructArduinoDPort(
     if (instance != NULL && parameter != NULL)
     {
         ConstructBasePort(&instance->base, &parameter->base);
-        instance->_pin = parameter->pin;
         instance->base.vtbl = &baseVtbl;
+        instance->_pin = parameter->pin;
     }
 }
 

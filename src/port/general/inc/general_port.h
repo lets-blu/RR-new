@@ -1,12 +1,12 @@
 #ifndef __GENERAL_PORT_H__
 #define __GENERAL_PORT_H__
 
+#include "core/common/inc/keywords.h"
+#include "port/common/inc/base_port.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
-
-#include "core/common/inc/keywords.h"
-#include "port/common/inc/base_port.h"
 
 #define GENERAL_ANALOG_PORT     "GeneralAPort"
 #define GENERAL_DIGITAL_PORT    "GeneralDPort"

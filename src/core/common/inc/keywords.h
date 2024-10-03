@@ -1,11 +1,11 @@
 #ifndef __KEYWORDS_H__
 #define __KEYWORDS_H__
 
+#include <stddef.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
-
-#include <stddef.h>
 
 #define PUBLIC
 #define PROTECTED

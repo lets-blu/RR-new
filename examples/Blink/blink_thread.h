@@ -1,16 +1,16 @@
 #ifndef __BLINK_THREAD_H__
 #define __BLINK_THREAD_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
-
 #include <stddef.h>
 #include <string.h>
 
 #include <core/common/inc/keywords.h>
 #include <core/thread/inc/base_thread.h>
 #include <basics/led/inc/led.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
 
 #define BaseThread2BlinkThread(instance) \
     BASE2SUB(instance, BlinkThread, base)

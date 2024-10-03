@@ -1,10 +1,6 @@
 #ifndef __BASE_FACTORY_H__
 #define __BASE_FACTORY_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
-
 #include <stddef.h>
 #include <string.h>
 
@@ -14,6 +10,10 @@ extern "C" {
 #include "port/common/inc/base_port.h"
 #include "port/common/inc/base_serial.h"
 #include "port/common/inc/base_task.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
 
 #define LinkedListNode2BaseFactory(instance) \
     BASE2SUB(instance, BaseFactory, base)
@@ -27,34 +27,34 @@ typedef struct {
 
 typedef struct BaseFactoryVtbl {
     BasePort *(*CreatePort)(
-        BaseFactory *,
-        const char *,
-        BasePortParameter *);
+        BaseFactory *self,
+        const char *type,
+        BasePortParameter *parameter);
 
     void (*DestroyPort)(
-        BaseFactory *,
-        const char *,
-        BasePort *);
+        BaseFactory *self,
+        const char *type,
+        BasePort *port);
 
     BaseSerial *(*CreateSerial)(
-        BaseFactory *,
-        const char *,
-        BaseSerialParameter *);
+        BaseFactory *self,
+        const char *type,
+        BaseSerialParameter *parameter);
 
     void (*DestroySerial)(
-        BaseFactory *,
-        const char *,
-        BaseSerial *);
+        BaseFactory *self,
+        const char *type,
+        BaseSerial *serial);
 
     BaseTask *(*CreateTask)(
-        BaseFactory *,
-        const char *,
-        BaseTaskParameter *);
+        BaseFactory *self,
+        const char *type,
+        BaseTaskParameter *parameter);
 
     void (*DestroyTask)(
-        BaseFactory *,
-        const char *,
-        BaseTask *);
+        BaseFactory *self,
+        const char *type,
+        BaseTask *task);
 } BaseFactoryVtbl;
 
 // Constructor(s) & Destructor(s)

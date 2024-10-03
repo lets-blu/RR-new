@@ -38,14 +38,12 @@ PUBLIC int PrintStringWithLogger(
     va_list args;
     int result = 0;
 
-    if (self == NULL || self->_level > level)
+    if (self != NULL && self->_level <= level)
     {
-        return 0;
+        va_start(args, format);
+        result = vprintf(format, args);
+        va_end(args);
     }
-
-    va_start(args, format);
-    result = vprintf(format, args);
-    va_end(args);
 
     return result;
 }

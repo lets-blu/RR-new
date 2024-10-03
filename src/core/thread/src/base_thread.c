@@ -37,8 +37,12 @@ PUBLIC void UpdateTickInBaseThread(BaseThread *self)
 
 PUBLIC bool IsTimeoutOfBaseThread(BaseThread *self, unsigned long delay)
 {
-    DeviceManager *manager = InstanceOfDeviceManager();
-    unsigned long current = GetTickOfBaseCore(GetCoreFromDeviceManager(manager));
+    DeviceManager *manager
+        = InstanceOfDeviceManager();
+
+    unsigned long current
+        = GetTickOfBaseCore(GetCoreFromDeviceManager(manager));
+
     return (self == NULL) ? false : (current - self->_tick > delay);
 }
 

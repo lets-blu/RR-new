@@ -1,19 +1,19 @@
 #ifndef __LINKED_LIST_H__
 #define __LINKED_LIST_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
-
 #include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
 
 #include "core/common/inc/keywords.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
 #define STATIC_LINKED_LIST() {  \
     ._head = NULL,              \
-    ._tail = NULL,              \
+    ._tail = NULL               \
 }
 
 struct LinkedListNode;

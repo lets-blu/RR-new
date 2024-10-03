@@ -71,7 +71,7 @@ PUBLIC void ConstructArduinoCore(ArduinoCore *instance)
     instance->base.vtbl = &baseCoreVtbl;
     instance->base.base.vtbl = &baseFactoryVtbl;
 
-    ConstructLinkedList(&instance->_ports);
+    ConstructLinkedList(&instance->_devices);
 }
 
 PUBLIC void DestructArduinoCore(ArduinoCore *instance)
@@ -79,7 +79,7 @@ PUBLIC void DestructArduinoCore(ArduinoCore *instance)
     if (instance != NULL)
     {
         DestructBaseCore(&instance->base);
-        DestructLinkedList(&instance->_ports);
+        DestructLinkedList(&instance->_devices);
         memset(instance, 0, sizeof(ArduinoCore));
     }
 }
@@ -121,7 +121,7 @@ PUBLIC BasePort *CreatePortWithArduinoCoreBase(
                 BasePort2ArduinoDPort(port),
                 BasePortParameter2ArduinoDPortParameter(parameter));
 
-            AddNodeToLinkedList(&self->_ports, &port->base);
+            AddNodeToLinkedList(&self->_devices, &port->base);
         }
     }
     else if (strcmp(type, GENERAL_DIGITAL_PORT) == 0)
@@ -142,7 +142,7 @@ PUBLIC BasePort *CreatePortWithArduinoCoreBase(
                 BasePort2ArduinoDPort(port),
                 &arduinoParameter);
 
-            AddNodeToLinkedList(&self->_ports, &port->base);
+            AddNodeToLinkedList(&self->_devices, &port->base);
         }
     }
 
@@ -163,11 +163,11 @@ PUBLIC void DestroyPortWithArduinoCoreBase(
     }
 
     if (FindNodeInLinkedList(
-            &self->_ports,
+            &self->_devices,
             FindEqualCallbackOfLinkedList,
             &port->base) != NULL)
     {
-        RemoveNodeFromLinkedList(&self->_ports, &port->base);
+        RemoveNodeFromLinkedList(&self->_devices, &port->base);
         DestructArduinoDPort(BasePort2ArduinoDPort(port));
         free(port);
     }
@@ -196,7 +196,7 @@ PUBLIC BaseSerial *CreateSerialWithArduinoCoreBase(
                 BaseSerial2ArduinoUART(serial),
                 BaseSerialParameter2ArduinoUARTParameter(parameter));
 
-            AddNodeToLinkedList(&self->_ports, &serial->base);
+            AddNodeToLinkedList(&self->_devices, &serial->base);
         }
     }
     else if (strcmp(type, GENERAL_UART_SERIAL) == 0)
@@ -218,7 +218,7 @@ PUBLIC BaseSerial *CreateSerialWithArduinoCoreBase(
                 BaseSerial2ArduinoUART(serial),
                 &arduinoParameter);
 
-            AddNodeToLinkedList(&self->_ports, &serial->base);
+            AddNodeToLinkedList(&self->_devices, &serial->base);
         }
     }
 
@@ -239,11 +239,11 @@ PUBLIC void DestroySerialWithArduinoCoreBase(
     }
 
     if (FindNodeInLinkedList(
-            &self->_ports,
+            &self->_devices,
             FindEqualCallbackOfLinkedList,
             &serial->base) != NULL)
     {
-        RemoveNodeFromLinkedList(&self->_ports, &serial->base);
+        RemoveNodeFromLinkedList(&self->_devices, &serial->base);
         DestructArduinoUART(BaseSerial2ArduinoUART(serial));
         free(serial);
     }

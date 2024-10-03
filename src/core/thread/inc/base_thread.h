@@ -1,16 +1,16 @@
 #ifndef __BASE_THREAD_H__
 #define __BASE_THREAD_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
-
 #include <stdbool.h>
 #include <stddef.h>
 #include <string.h>
 
 #include "core/common/inc/keywords.h"
 #include "core/common/inc/linked_list.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
 
 #define BEGIN_BASE_THREAD(self)                     \
     switch ((self)->_line)                          \
@@ -30,7 +30,7 @@ extern "C" {
         {                                           \
             return BASE_THREAD_STATE_WAITING;       \
         }                                           \
-    } while (0);
+    } while (0)
 
 #define LinkedListNode2BaseThread(instance)         \
     BASE2SUB(instance, BaseThread, base)
@@ -50,7 +50,7 @@ typedef struct {
 } BaseThread;
 
 typedef struct BaseThreadVtbl {
-    BaseThreadState (*Run)(BaseThread *);
+    BaseThreadState (*Run)(BaseThread *self);
 } BaseThreadVtbl;
 
 // Constructor(s) & Destructor(s)

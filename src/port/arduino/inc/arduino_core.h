@@ -1,10 +1,6 @@
 #ifndef __ARDUINO_CORE_H__
 #define __ARDUINO_CORE_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
-
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,6 +16,10 @@ extern "C" {
 #include "port/general/inc/general_port.h"
 #include "port/general/inc/general_uart.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
+
 #define ARDUINO_CORE_DIGITAL_PORT   "ArduinoDPort"
 #define ARDUINO_CORE_UART_SERIAL    "ArduinoUART"
 
@@ -31,7 +31,7 @@ extern "C" {
 
 typedef struct {
     BaseCore base;
-    LinkedList _ports;
+    LinkedList _devices;
 } ArduinoCore;
 
 // Constructor(s) & Destructor(s)

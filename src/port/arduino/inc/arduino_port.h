@@ -1,16 +1,16 @@
 #ifndef __ARDUINO_D_PORT_H__
 #define __ARDUINO_D_PORT_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
-
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
 
 #include "core/common/inc/keywords.h"
 #include "port/common/inc/base_port.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif // __cplusplus
 
 #define ARDUINO_D_PORT_PARAMETER_BASE \
     {BASE_PORT_PARAMETER_RESERVED}
