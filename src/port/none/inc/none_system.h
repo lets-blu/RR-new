@@ -8,8 +8,11 @@
 
 #include "port/common/inc/base_system.h"
 #include "port/common/inc/base_task.h"
-#include "port/general/inc/general_task.h"
+#include "port/common/inc/base_port.h"
+#include "port/common/inc/base_serial.h"
+
 #include "port/none/inc/none_task.h"
+#include "port/general/inc/general_task.h"
 
 #ifdef __cplusplus
 extern "C" {

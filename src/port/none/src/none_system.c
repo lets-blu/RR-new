@@ -7,6 +7,26 @@ PUBLIC void RunNoneSystemBase(
 PUBLIC const char *GetNameOfNoneSystemBase(
     BaseSystem *sys);
 
+PUBLIC BasePort *CreatePortWithNoneSystemBase(
+    BaseFactory *factory,
+    const char *type,
+    BasePortParameter *parameter);
+
+PUBLIC void DestroyPortWithNoneSystemBase(
+    BaseFactory *factory,
+    const char *type,
+    BasePort *port);
+
+PUBLIC BaseSerial *CreateSerialWithNoneSystemBase(
+    BaseFactory *factory,
+    const char *type,
+    BaseSerialParameter *parameter);
+
+PUBLIC void DestroySerialWithNoneSystemBase(
+    BaseFactory *factory,
+    const char *type,
+    BaseSerial *serial);
+
 PUBLIC BaseTask *CreateTaskWithNoneSystemBase(
     BaseFactory *factory,
     const char *type,
@@ -24,10 +44,12 @@ static const BaseSystemVtbl baseSystemVtbl = {
 };
 
 static const BaseFactoryVtbl baseFactoryVtbl = {
-    .CreatePort = NULL,
-    .DestroyPort = NULL,
-    .CreateTask = CreateTaskWithNoneSystemBase,
-    .DestroyTask = DestroyTaskWithNoneSystemBase
+    .CreatePort     = CreatePortWithNoneSystemBase,
+    .DestroyPort    = DestroyPortWithNoneSystemBase,
+    .CreateSerial   = CreateSerialWithNoneSystemBase,
+    .DestroySerial  = DestroySerialWithNoneSystemBase,
+    .CreateTask     = CreateTaskWithNoneSystemBase,
+    .DestroyTask    = DestroyTaskWithNoneSystemBase
 };
 
 // Method implement(s)
@@ -66,6 +88,50 @@ PUBLIC const char *GetNameOfNoneSystemBase(
 {
     (void)sys;
     return "None";
+}
+
+PUBLIC BasePort *CreatePortWithNoneSystemBase(
+    BaseFactory *factory,
+    const char *type,
+    BasePortParameter *parameter)
+{
+    (void)factory;
+    (void)type;
+    (void)parameter;
+
+    return NULL;
+}
+
+PUBLIC void DestroyPortWithNoneSystemBase(
+    BaseFactory *factory,
+    const char *type,
+    BasePort *port)
+{
+    (void)factory;
+    (void)type;
+    (void)port;
+}
+
+PUBLIC BaseSerial *CreateSerialWithNoneSystemBase(
+    BaseFactory *factory,
+    const char *type,
+    BaseSerialParameter *parameter)
+{
+    (void)factory;
+    (void)type;
+    (void)parameter;
+
+    return NULL;
+}
+
+PUBLIC void DestroySerialWithNoneSystemBase(
+    BaseFactory *factory,
+    const char *type,
+    BaseSerial *serial)
+{
+    (void)factory;
+    (void)type;
+    (void)serial;
 }
 
 PUBLIC BaseTask *CreateTaskWithNoneSystemBase(

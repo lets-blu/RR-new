@@ -115,14 +115,16 @@ PUBLIC BasePort *CreatePortWithArduinoCoreBase(
     {
         port = (BasePort *)malloc(sizeof(ArduinoDPort));
 
-        if (port != NULL)
+        if (port == NULL)
         {
-            ConstructArduinoDPort(
-                BasePort2ArduinoDPort(port),
-                BasePortParameter2ArduinoDPortParameter(parameter));
-
-            AddNodeToLinkedList(&self->_devices, &port->base);
+            return NULL;
         }
+
+        ConstructArduinoDPort(
+            BasePort2ArduinoDPort(port),
+            BasePortParameter2ArduinoDPortParameter(parameter));
+
+        AddNodeToLinkedList(&self->_devices, &port->base);
     }
     else if (strcmp(type, GENERAL_DIGITAL_PORT) == 0)
     {
@@ -136,14 +138,13 @@ PUBLIC BasePort *CreatePortWithArduinoCoreBase(
 
         port = (BasePort *)malloc(sizeof(ArduinoDPort));
 
-        if (port != NULL)
+        if (port == NULL)
         {
-            ConstructArduinoDPort(
-                BasePort2ArduinoDPort(port),
-                &arduinoParameter);
-
-            AddNodeToLinkedList(&self->_devices, &port->base);
+            return NULL;
         }
+
+        ConstructArduinoDPort(BasePort2ArduinoDPort(port), &arduinoParameter);
+        AddNodeToLinkedList(&self->_devices, &port->base);
     }
 
     return port;
@@ -190,14 +191,16 @@ PUBLIC BaseSerial *CreateSerialWithArduinoCoreBase(
     {
         serial = (BaseSerial *)malloc(sizeof(ArduinoUART));
 
-        if (serial != NULL)
+        if (serial == NULL)
         {
-            ConstructArduinoUART(
-                BaseSerial2ArduinoUART(serial),
-                BaseSerialParameter2ArduinoUARTParameter(parameter));
-
-            AddNodeToLinkedList(&self->_devices, &serial->base);
+            return NULL;
         }
+
+        ConstructArduinoUART(
+            BaseSerial2ArduinoUART(serial),
+            BaseSerialParameter2ArduinoUARTParameter(parameter));
+
+        AddNodeToLinkedList(&self->_devices, &serial->base);
     }
     else if (strcmp(type, GENERAL_UART_SERIAL) == 0)
     {
@@ -212,14 +215,13 @@ PUBLIC BaseSerial *CreateSerialWithArduinoCoreBase(
 
         serial = (BaseSerial *)malloc(sizeof(ArduinoUART));
 
-        if (serial != NULL)
+        if (serial == NULL)
         {
-            ConstructArduinoUART(
-                BaseSerial2ArduinoUART(serial),
-                &arduinoParameter);
-
-            AddNodeToLinkedList(&self->_devices, &serial->base);
+            return NULL;
         }
+
+        ConstructArduinoUART(BaseSerial2ArduinoUART(serial), &arduinoParameter);
+        AddNodeToLinkedList(&self->_devices, &serial->base);
     }
 
     return serial;
