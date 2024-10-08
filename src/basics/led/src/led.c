@@ -1,7 +1,7 @@
 #include "basics/led/inc/led.h"
 
 // Private member(s)
-PRIVATE STATIC Logger logger;
+PRIVATE STATIC Logger logger = STATIC_LOGGER("LED", LOGGER_LEVEL_INFO);
 
 // Method implement(s)
 PUBLIC void ConstructLED(
@@ -17,10 +17,7 @@ PUBLIC void ConstructLED(
         return;
     }
 
-    if (!IS_LOGGER_CONSTRUCTED(&logger))
-    {
-        ConstructLogger(&logger, "LED", LOGGER_LEVEL_INFO);
-    }
+    RegisterLogger(&logger);
 
     instance->_port = CreatePortWithBaseFactories(
         GetFactoriesFromDeviceManager(manager),
@@ -28,7 +25,6 @@ PUBLIC void ConstructLED(
         parameter);
 
     instance->_onValue = onValue;
-
     SetupBasePort(instance->_port, BASE_PORT_MODE_OUTPUT);
 }
 

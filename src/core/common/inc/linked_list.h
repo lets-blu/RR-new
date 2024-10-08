@@ -11,9 +11,13 @@
 extern "C" {
 #endif // __cplusplus
 
-#define STATIC_LINKED_LIST() {  \
-    ._head = NULL,              \
-    ._tail = NULL               \
+#define STATIC_LINKED_LIST() {      \
+    ._head = NULL,                  \
+    ._tail = NULL                   \
+}
+
+#define STATIC_LINKED_LIST_NODE() { \
+    ._next = NULL                   \
 }
 
 struct LinkedListNode;

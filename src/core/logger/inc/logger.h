@@ -14,8 +14,11 @@
 extern "C" {
 #endif // __cplusplus
 
-#define IS_LOGGER_CONSTRUCTED(instance) \
-    ((instance)->_name != NULL)
+#define STATIC_LOGGER(name, level) {    \
+    .base = STATIC_LINKED_LIST_NODE(),  \
+    ._name = (name),                    \
+    ._level = (level)                   \
+}
 
 #define LOGGER_D(self, format, args...) \
     PrintStringWithLogger(              \
@@ -77,6 +80,7 @@ PUBLIC int PrintStringWithLogger(
     const char *format,
     ...);
 
+PUBLIC STATIC void RegisterLogger(Logger *instance);
 PUBLIC STATIC void SetLevelToLogger(const char *name, LoggerLevel level);
 
 #ifdef __cplusplus

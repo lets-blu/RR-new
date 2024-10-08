@@ -1,8 +1,10 @@
 #include "core/device/inc/device_manager.h"
 
 // Private member(s)
-PRIVATE STATIC Logger logger;
 PRIVATE STATIC DeviceManager instance;
+
+PRIVATE STATIC Logger logger
+    = STATIC_LOGGER("DeviceManager", LOGGER_LEVEL_INFO);
 
 // Private method(s)
 PRIVATE void ConstructDeviceManager(DeviceManager *instance);
@@ -16,10 +18,7 @@ PRIVATE void ConstructDeviceManager(DeviceManager *instance)
         return;
     }
 
-    if (!IS_LOGGER_CONSTRUCTED(&logger))
-    {
-        ConstructLogger(&logger, "DeviceManager", LOGGER_LEVEL_INFO);
-    }
+    RegisterLogger(&logger);
 
     instance->_isConstructed = true;
 

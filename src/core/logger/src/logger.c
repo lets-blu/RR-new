@@ -48,6 +48,17 @@ PUBLIC int PrintStringWithLogger(
     return result;
 }
 
+PUBLIC STATIC void RegisterLogger(Logger *instance)
+{
+    if (FindNodeInLinkedList(
+            &loggers,
+            FindCallbackOfLogger,
+            (void *)instance->_name) == NULL)
+    {
+        AddNodeToLinkedList(&loggers, &instance->base);
+    }
+}
+
 PUBLIC STATIC void SetLevelToLogger(const char *name, LoggerLevel level)
 {
     LinkedListNode *node
