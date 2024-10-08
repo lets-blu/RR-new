@@ -77,9 +77,21 @@ PUBLIC void RunNoneSystemBase(
 {
     NoneSystem *self = BaseSystem2NoneSystem(sys);
 
-    if (sys != NULL && IS_NONE_TASK_CONSTRUCTED(&self->_task))
+    if (sys == NULL)
+    {
+        return;
+    }
+
+    if (IS_NONE_TASK_CONSTRUCTED(&self->_task))
     {
         RunBaseTask(&self->_task.base);
+    }
+    else
+    {
+        for (;;)
+        {
+            // Do nothing
+        }
     }
 }
 
