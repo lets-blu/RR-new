@@ -49,3 +49,15 @@ PUBLIC size_t WriteBaseSerial(
 
     return self->vtbl->Write(self, buffer, size);
 }
+
+PUBLIC void SetRxCallbackToBaseSerial(
+    BaseSerial *self,
+    RingBufferCallback callback)
+{
+    if (self == NULL || self->vtbl == NULL || self->vtbl->SetRxCallback == NULL)
+    {
+        return;
+    }
+
+    self->vtbl->SetRxCallback(self, callback);
+}

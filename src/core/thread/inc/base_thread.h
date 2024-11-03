@@ -13,6 +13,7 @@ extern "C" {
 #endif // __cplusplus
 
 #define BEGIN_BASE_THREAD(self)                     \
+    bool __isYield = false;                         \
     switch ((self)->_line)                          \
     {                                               \
         case 0:
@@ -20,6 +21,18 @@ extern "C" {
 #define END_BASE_THREAD(self)                       \
     }                                               \
     return BASE_THREAD_STATE_ENDED
+
+#define YIELD_BASE_THREAD(self)                     \
+    do                                              \
+    {                                               \
+        __isYield = true;                           \
+        (self)->_line = __LINE__; case __LINE__:    \
+        if (__isYield)                              \
+        {                                           \
+            return BASE_THREAD_STATE_WAITING;       \
+        }                                           \
+    } while (0)
+
 
 #define DELAY_BASE_THREAD(self, delay)              \
     do                                              \
@@ -39,6 +52,7 @@ struct BaseThreadVtbl;
 
 typedef enum {
     BASE_THREAD_STATE_ENDED,
+    BASE_THREAD_STATE_YIELDED,
     BASE_THREAD_STATE_WAITING
 } BaseThreadState;
 

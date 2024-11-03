@@ -9,10 +9,15 @@
 
 #include "core/common/inc/keywords.h"
 #include "core/common/inc/linked_list.h"
+#include "utils/at_command/inc/at_command.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
+
+#define NUMBER_OF_LOGGER_PARAMETERS     3
+#define LOGGER_PARAMETER_NAME           1
+#define LOGGER_PARAMETER_LEVEL          2
 
 #define STATIC_LOGGER(name, level) {    \
     .base = STATIC_LINKED_LIST_NODE(),  \
@@ -57,6 +62,7 @@ typedef enum {
     LOGGER_LEVEL_WARN,
     LOGGER_LEVEL_ERROR,
     LOGGER_LEVEL_OFF,
+    NUMBER_OF_LOGGER_LEVELS
 } LoggerLevel;
 
 typedef struct {
@@ -81,7 +87,8 @@ PUBLIC int PrintStringWithLogger(
     ...);
 
 PUBLIC STATIC void RegisterLogger(Logger *instance);
-PUBLIC STATIC void SetLevelToLogger(const char *name, LoggerLevel level);
+PUBLIC STATIC void UnregisterLogger(Logger *instance);
+PUBLIC STATIC bool SetLevelToLogger(const char *name, LoggerLevel level);
 
 #ifdef __cplusplus
 }

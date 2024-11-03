@@ -98,6 +98,18 @@ PUBLIC void AddThreadToDeviceManager(
     }
 }
 
+PUBLIC void RemoveThreadFromDeviceManager(
+    DeviceManager *self,
+    DeviceManagerThread type,
+    BaseThread *thread)
+{
+    if (self != NULL && thread != NULL)
+    {
+        RemoveNodeFromLinkedList(&self->_threads[type], &thread->base);
+        LOGGER_D(&logger, "Remove thread: %p (type %d)", thread, type);
+    }
+}
+
 PUBLIC BaseCore *GetCoreFromDeviceManager(DeviceManager *self)
 {
     return (self == NULL) ? NULL : self->_core;

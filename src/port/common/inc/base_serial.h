@@ -7,6 +7,7 @@
 
 #include "core/common/inc/keywords.h"
 #include "core/common/inc/linked_list.h"
+#include "core/common/inc/ring_buffer.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -38,6 +39,10 @@ typedef struct BaseSerialVtbl {
         BaseSerial *self,
         const uint8_t *buffer,
         size_t size);
+
+    void (*SetRxCallback)(
+        BaseSerial *self,
+        RingBufferCallback callback);
 } BaseSerialVtbl;
 
 // Constructor(s) & Destructor(s)
@@ -58,6 +63,10 @@ PUBLIC size_t WriteBaseSerial(
     BaseSerial *self,
     const uint8_t *buffer,
     size_t size);
+
+PUBLIC void SetRxCallbackToBaseSerial(
+    BaseSerial *self,
+    RingBufferCallback callback);
 
 #ifdef __cplusplus
 }

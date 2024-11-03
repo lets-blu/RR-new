@@ -14,6 +14,9 @@ extern "C" {
 // Basics
 #include "basics/led/inc/led.h"
 
+// Utils
+#include "utils/at_command/inc/at_command.h"
+
 // Port
 #include "port/common/inc/base_factory.h"
 #include "port/common/inc/base_port.h"

@@ -210,7 +210,8 @@ PUBLIC BaseSerial *CreateSerialWithArduinoCoreBase(
         ArduinoUARTParameter arduinoParameter = {
             .base = ARDUINO_UART_PARAMETER_BASE,
             .port = (HardwareSerial *)generalParameter->port,
-            .baudrate = generalParameter->baudrate
+            .baudrate = generalParameter->baudrate,
+            .rxBufferSize = 0
         };
 
         serial = (BaseSerial *)malloc(sizeof(ArduinoUART));

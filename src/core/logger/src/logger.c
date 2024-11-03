@@ -1,10 +1,27 @@
 #include "core/logger/inc/logger.h"
 
+// Private method(s)
+PRIVATE STATIC bool FindCallbackOfLogger(
+    LinkedListNode *node,
+    void *data);
+
+PRIVATE STATIC void CommandCallbackOfLogger(
+    unsigned int argc,
+    const char *argv[]);
+
 // Private member(s)
+PRIVATE STATIC const char *levelString[] = {
+    "DEBUG",
+    "INFO",
+    "WARN",
+    "ERROR",
+    "OFF"
+};
+
 PRIVATE STATIC LinkedList loggers = STATIC_LINKED_LIST();
 
-// Private method(s)
-PRIVATE STATIC bool FindCallbackOfLogger(LinkedListNode *node, void *data);
+PRIVATE STATIC ATCommand command
+    = STATIC_AT_COMMAND("+LOGGER", CommandCallbackOfLogger);
 
 // Method implement(s)
 PUBLIC void ConstructLogger(
@@ -16,7 +33,7 @@ PUBLIC void ConstructLogger(
     {
         instance->_name = name;
         instance->_level = level;
-        AddNodeToLinkedList(&loggers, &instance->base);
+        RegisterLogger(instance);
     }
 }
 
@@ -24,7 +41,7 @@ PUBLIC void DestructLogger(Logger *instance)
 {
     if (instance != NULL)
     {
-        RemoveNodeFromLinkedList(&loggers, &instance->base);
+        UnregisterLogger(instance);
         memset(instance, 0, sizeof(Logger));
     }
 }
@@ -50,6 +67,13 @@ PUBLIC int PrintStringWithLogger(
 
 PUBLIC STATIC void RegisterLogger(Logger *instance)
 {
+    if (instance == NULL)
+    {
+        return;
+    }
+
+    RegisterATCommand(&command);
+
     if (FindNodeInLinkedList(
             &loggers,
             FindCallbackOfLogger,
@@ -59,7 +83,15 @@ PUBLIC STATIC void RegisterLogger(Logger *instance)
     }
 }
 
-PUBLIC STATIC void SetLevelToLogger(const char *name, LoggerLevel level)
+PUBLIC STATIC void UnregisterLogger(Logger *instance)
+{
+    if (instance != NULL)
+    {
+        RemoveNodeFromLinkedList(&loggers, &instance->base);
+    }
+}
+
+PUBLIC STATIC bool SetLevelToLogger(const char *name, LoggerLevel level)
 {
     LinkedListNode *node
         = FindNodeInLinkedList(&loggers, FindCallbackOfLogger, (void *)name);
@@ -67,10 +99,41 @@ PUBLIC STATIC void SetLevelToLogger(const char *name, LoggerLevel level)
     if (node != NULL)
     {
         LinkedListNode2Logger(node)->_level = level;
+        return true;
     }
+
+    return false;
 }
 
-PRIVATE STATIC bool FindCallbackOfLogger(LinkedListNode *node, void *data)
+PRIVATE STATIC bool FindCallbackOfLogger(
+    LinkedListNode *node,
+    void *data)
 {
     return (strcmp(LinkedListNode2Logger(node)->_name, data) == 0);
+}
+
+PRIVATE STATIC void CommandCallbackOfLogger(
+    unsigned int argc,
+    const char *argv[])
+{
+    if (argc < NUMBER_OF_LOGGER_PARAMETERS)
+    {
+        ResponseATCommand(&command, "Invalid parameters");
+        return;
+    }
+
+    for (unsigned int i = 0; i < NUMBER_OF_LOGGER_LEVELS; i++)
+    {
+        if (strcmp(argv[LOGGER_PARAMETER_LEVEL], levelString[i]) == 0)
+        {
+            if (!SetLevelToLogger(argv[LOGGER_PARAMETER_NAME], (LoggerLevel)i))
+            {
+                ResponseATCommand(&command, "Unkown name");
+            }
+
+            return;
+        }
+    }
+
+    ResponseATCommand(&command, "Unkown level");
 }

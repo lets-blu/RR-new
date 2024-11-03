@@ -20,7 +20,8 @@ void setup()
     ArduinoUARTParameter uartParameter = {
         .base = ARDUINO_UART_PARAMETER_BASE,
         .port = &Serial,
-        .baudrate = 115200
+        .baudrate = 115200,
+        .rxBufferSize = 80
     };
 
     ConstructArduinoCore(&core);
@@ -32,6 +33,7 @@ void setup()
         &uartParameter.base);
 
     fdevopen(serialPutc, NULL);
+    SetRxCallbackToBaseSerial(serial, RingBufferCallbackOfATCommand);
 
     // 2. Setup system
     ConstructNoneSystem(&sys);

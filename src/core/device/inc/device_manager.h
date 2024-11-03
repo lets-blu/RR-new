@@ -48,6 +48,11 @@ PUBLIC void AddThreadToDeviceManager(
     DeviceManagerThread type,
     BaseThread *thread);
 
+PUBLIC void RemoveThreadFromDeviceManager(
+    DeviceManager *self,
+    DeviceManagerThread type,
+    BaseThread *thread);
+
 PUBLIC BaseCore *GetCoreFromDeviceManager(DeviceManager *self);
 PUBLIC BaseSystem *GetSystemFromDeviceManager(DeviceManager *self);
 PUBLIC LinkedList *GetFactoriesFromDeviceManager(DeviceManager *self);

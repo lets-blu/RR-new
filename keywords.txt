@@ -25,35 +25,45 @@ DestructDeviceManager						KEYWORD2
 SetCoreToDeviceManager						KEYWORD2
 SetSystemToDeviceManager					KEYWORD2
 AddThreadToDeviceManager					KEYWORD2
+RemoveThreadFromDeviceManager				KEYWORD2
 GetCoreFromDeviceManager					KEYWORD2
 GetSystemFromDeviceManager					KEYWORD2
 GetFactoriesFromDeviceManager				KEYWORD2
 InstanceOfDeviceManager						KEYWORD2
 
 # core/logger/inc/logger.h
-IS_LOGGER_CONSTRUCTED						LITERAL2
+NUMBER_OF_LOGGER_PARAMETERS					LITERAL1
+LOGGER_PARAMETER_NAME						LITERAL1
+LOGGER_PARAMETER_LEVEL						LITERAL1
+STATIC_LOGGER								LITERAL2
 LOGGER_D									LITERAL2
 LOGGER_I									LITERAL2
 LOGGER_W									LITERAL2
 LOGGER_E									LITERAL2
+LinkedListNode2Logger						LITERAL2
 LOGGER_LEVEL_DEBUG							LITERAL1
 LOGGER_LEVEL_INFO							LITERAL1
 LOGGER_LEVEL_WARN							LITERAL1
 LOGGER_LEVEL_ERROR							LITERAL1
 LOGGER_LEVEL_OFF							LITERAL1
+NUMBER_OF_LOGGER_LEVELS						LITERAL1
 LoggerLevel									KEYWORD1
 Logger										KEYWORD3
 ConstructLogger								KEYWORD2
 DestructLogger								KEYWORD2
 PrintStringWithLogger						KEYWORD2
+RegisterLogger								KEYWORD2
+UnregisterLogger							KEYWORD2
 SetLevelToLogger							KEYWORD2
 
 # core/thread/inc/base_thread.h
 BEGIN_BASE_THREAD							LITERAL1
 END_BASE_THREAD								LITERAL1
+YIELD_BASE_THREAD							LITERAL1
 DELAY_BASE_THREAD							LITERAL1
 LinkedListNode2BaseThread					LITERAL2
 BASE_THREAD_STATE_ENDED						LITERAL1
+BASE_THREAD_STATE_YIELDED					LITERAL1
 BASE_THREAD_STATE_WAITING					LITERAL1
 BaseThreadState								KEYWORD1
 BaseThread									KEYWORD3
@@ -72,6 +82,26 @@ ConstructLED								KEYWORD2
 DestructLED									KEYWORD2
 TurnOnLED									KEYWORD2
 TurnOffLED									KEYWORD2
+
+# Utils ############################################
+# utils/at_command/inc/at_command.h
+MAX_LENGTH_OF_AT_COMMAND					LITERAL1
+MAX_NUMBER_OF_AT_COMMAND_PARAMETERS			LITERAL1
+AT_COMMAND_HEADER							LITERAL1
+AT_COMMAND_HEADER_LENGTH					LITERAL1
+AT_COMMAND_FOOTER							LITERAL1
+AT_COMMAND_FOOTER_LENGTH					LITERAL1
+STATIC_AT_COMMAND							LITERAL2
+LinkedList2ATCommand						LITERAL2
+ATCommand									KEYWORD3
+ATCommandCallback							KEYWORD1
+ConstructATCommand							KEYWORD2
+DestructATCommand							KEYWORD2
+ResponseATCommand							KEYWORD2
+RegisterATCommand							KEYWORD2
+UnregisterATCommand							KEYWORD2
+RingBufferCallbackOfATCommand				KEYWORD2
+ProcessATCommand							KEYWORD2
 
 # Port (Common) ####################################
 # port/common/inc/base_factory.h
@@ -120,6 +150,7 @@ ConstructBaseSerial							KEYWORD2
 DestructBaseSerial							KEYWORD2
 ReadBaseSerial								KEYWORD2
 WriteBaseSerial								KEYWORD2
+SetRxCallbackToBaseSerial					KEYWORD2
 
 # port/common/inc/base_core.h
 
@@ -154,12 +185,16 @@ DestructArduinoDPort						KEYWORD2
 
 # port/arduino/inc/arduino_uart.h
 ARDUINO_UART_PARAMETER_BASE					LITERAL1
+BaseThread2ArduinoUARTThread				LITERAL2
 BaseSerial2ArduinoSerial					LITERAL2
 BaseSerialParameter2ArduinoSerialParameter	LITERAL2
+ArduinoUARTThread							KEYWORD3
 ArduinoUART									KEYWORD3
 ArduinoUARTParameter						KEYWORD3
 ConstructArduinoUART						KEYWORD2
 DestructArduinoUART							KEYWORD2
+ConstructArduinoUARTThread					KEYWORD2
+DestructArduinoUARTThread					KEYWORD2
 
 # port/arduino/inc/arduino_core.h
 ARDUINO_CORE_DIGITAL_PORT					LITERAL1
