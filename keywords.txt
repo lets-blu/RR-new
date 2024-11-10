@@ -76,12 +76,26 @@ RunBaseThread								KEYWORD2
 RunBaseThreads								KEYWORD2
 
 # Basics ##########################################
-# basics/led/inc/LED.h
+# basics/led/inc/led.h
 LED											KEYWORD3
 ConstructLED								KEYWORD2
 DestructLED									KEYWORD2
 TurnOnLED									KEYWORD2
 TurnOffLED									KEYWORD2
+# basics/button/inc/digital_button.h
+DIGITAL_BUTTON_SCAN_INTERVAL				LITERAL1
+BaseThread2DigitalButtonThread				LITERAL2
+BaseButton2DigitalButton					LITERAL2
+DigitalButtonThread							KEYWORD3
+DigitalButton								KEYWORD3
+DigitalButtonClickCallback					KEYWORD1
+ConstructDigitalButton						KEYWORD2
+DestructDigitalButton						KEYWORD2
+ConstructDigitalButtonThread				KEYWORD2
+DestructDigitalButtonThread					KEYWORD2
+SetClickCallbackToDigitalButton				KEYWORD2
+EnableAutoScanToDigitalButton				KEYWORD2
+ScanDigitalButton							KEYWORD2
 
 # Utils ############################################
 # utils/at_command/inc/at_command.h

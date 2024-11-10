@@ -1,0 +1,33 @@
+<circuit version="1.1.0-SR0" rev="1917" stepSize="1000000" stepsPS="1000000" NLsteps="100000" reaStep="1000000" animate="0" >
+
+<item itemtype="Subcircuit" CircId="Uno-1" mainComp="false" Show_id="true" Show_Val="false" Pos="-124,-148" rotation="0" hflip="1" vflip="1" label="Uno-1" idLabPos="0,-20" labelrot="0" valLabPos="-16,20" valLabRot="0" Logic_Symbol="false">
+<mainCompProps MainCompId="mega328-109" Frequency="16 MHz" Program="DigitalButton.hex" Auto_Load="false" saveEepr="true" varList="instance,button" SerialMon="-1" />
+</item>
+
+<item itemtype="SerialTerm" CircId="SerialTerm-2" mainComp="false" Show_id="false" Show_Val="false" Pos="-92,-188" rotation="0" hflip="1" vflip="1" label="SerialTerm-2" idLabPos="-20,-32" labelrot="0" valLabPos="-16,20" valLabRot="0" Baudrate="115200 _Bd" DataBits="8 _bits" StopBits="1 _bits" SerialMon="true" />
+
+<item itemtype="Push" CircId="Push-3" mainComp="false" Show_id="false" Show_Val="false" Pos="76,-92" rotation="0" hflip="1" vflip="1" label="Push-3" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Norm_Close="false" Poles="1" />
+
+<item itemtype="Resistor" CircId="Resistor-4" mainComp="false" ShowProp="Resistance" Show_id="false" Show_Val="true" Pos="52,-124" rotation="-90" hflip="1" vflip="1" label="Resistor-4" idLabPos="-16,-24" labelrot="0" valLabPos="-16,6" valLabRot="0" Resistance="10 kΩ" />
+
+<item itemtype="Rail" CircId="Rail-6" mainComp="false" ShowProp="Voltage" Show_id="false" Show_Val="true" Pos="52,-164" rotation="90" hflip="1" vflip="1" label="Rail-6" idLabPos="-5,-10" labelrot="-90" valLabPos="-12,6" valLabRot="-90" Voltage="5 V" />
+
+<item itemtype="Ground" CircId="Ground-7" mainComp="false" Show_id="false" Show_Val="false" Pos="100,-60" rotation="0" hflip="1" vflip="1" label="Ground-7" idLabPos="-16,8" labelrot="0" valLabPos="-16,20" valLabRot="0" />
+
+<item itemtype="Node" CircId="Node-8" mainComp="false" Pos="52,-92" />
+
+<item itemtype="Connector" uid="Connector-1" startpinid="SerialTerm-2-pin1" endpinid="Uno-1-1" pointList="-116,-180,-132,-180,-132,-124,-116,-124" />
+
+<item itemtype="Connector" uid="Connector-2" startpinid="SerialTerm-2-pin0" endpinid="Uno-1-0" pointList="-116,-196,-140,-196,-140,-132,-116,-132" />
+
+<item itemtype="Connector" uid="Connector-4" startpinid="Resistor-4-lPin" endpinid="Node-8-1" pointList="52,-108,52,-92" />
+
+<item itemtype="Connector" uid="Connector-5" startpinid="Push-3-pinP0" endpinid="Node-8-0" pointList="60,-92,52,-92" />
+
+<item itemtype="Connector" uid="Connector-6" startpinid="Node-8-2" endpinid="Uno-1-A0" pointList="52,-92,28,-92" />
+
+<item itemtype="Connector" uid="Connector-7" startpinid="Rail-6-outnod" endpinid="Resistor-4-rPin" pointList="52,-148,52,-140" />
+
+<item itemtype="Connector" uid="Connector-8" startpinid="Push-3-switch0pinN" endpinid="Ground-7-Gnd" pointList="92,-92,100,-92,100,-76" />
+
+</circuit>

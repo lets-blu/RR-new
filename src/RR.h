@@ -13,6 +13,7 @@ extern "C" {
 
 // Basics
 #include "basics/led/inc/led.h"
+#include "basics/button/inc/digital_button.h"
 
 // Utils
 #include "utils/at_command/inc/at_command.h"

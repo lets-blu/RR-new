@@ -4,7 +4,7 @@
 PRIVATE STATIC DeviceManager instance;
 
 PRIVATE STATIC Logger logger
-    = STATIC_LOGGER("DeviceManager", LOGGER_LEVEL_INFO);
+    = STATIC_LOGGER("DeviceManager", LOGGER_LEVEL_DEBUG);
 
 // Private method(s)
 PRIVATE void ConstructDeviceManager(DeviceManager *instance);
