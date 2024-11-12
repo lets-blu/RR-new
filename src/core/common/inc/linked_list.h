@@ -35,7 +35,7 @@ typedef struct {
     struct LinkedListNode *_next;
 } LinkedListIterator;
 
-typedef bool (*LinkedListFindCallback)(LinkedListNode *, void *);
+typedef bool (*LinkedListFindCallback)(LinkedListNode *, const void *);
 
 // Constructor(s) & Destructor(s)
 PUBLIC void ConstructLinkedList(LinkedList *instance);
@@ -66,7 +66,7 @@ PUBLIC LinkedListNode *FindNodeInLinkedList(
 
 PUBLIC STATIC bool FindEqualCallbackOfLinkedList(
     LinkedListNode *node,
-    void *data);
+    const void *data);
 
 PUBLIC bool HasNextInLinkedListIterator(LinkedListIterator *self);
 PUBLIC LinkedListNode *NextInLinkedListIterator(LinkedListIterator *self);

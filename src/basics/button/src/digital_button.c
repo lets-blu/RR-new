@@ -7,11 +7,10 @@ PUBLIC void SetStateToDigitalButtonBase(
 
 PUBLIC const ButtonState *GetStateFromDigitalButtonBase(BaseButton *button);
 PUBLIC void OnClickDigitalButtonBase(BaseButton *button);
-
 PUBLIC BaseThreadState RunDigitalButtonThreadBase(BaseThread *thread);
 
 // Virtual methods table
-static const BaseButtonVtbl baseVtbl = {
+static const BaseButtonVtbl buttonVtbl = {
     .SetState = SetStateToDigitalButtonBase,
     .GetState = GetStateFromDigitalButtonBase,
     .OnClick = OnClickDigitalButtonBase
@@ -36,7 +35,7 @@ PUBLIC void ConstructDigitalButton(
     }
 
     ConstructBaseButton(&instance->base);
-    instance->base.vtbl = &baseVtbl;
+    instance->base.vtbl = &buttonVtbl;
     instance->_currentState = BUTTON_STATE_RELEASED;
 
     instance->_port = CreatePortWithBaseFactories(
@@ -47,6 +46,7 @@ PUBLIC void ConstructDigitalButton(
     instance->_pressValue = pressValue;
     instance->_clickCallback = NULL;
     SetupBasePort(instance->_port, BASE_PORT_MODE_INPUT);
+
     ConstructDigitalButtonThread(&instance->_thread, instance);
 }
 

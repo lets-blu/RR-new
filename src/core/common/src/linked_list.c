@@ -145,7 +145,7 @@ PUBLIC LinkedListNode *FindNodeInLinkedList(
 
 PUBLIC STATIC bool FindEqualCallbackOfLinkedList(
     LinkedListNode *node,
-    void *data)
+    const void *data)
 {
     return (node == data);
 }

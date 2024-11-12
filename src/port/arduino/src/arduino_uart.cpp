@@ -8,15 +8,15 @@ extern "C" {
 #endif // __cplusplus
 
 // Override method(s)
-PUBLIC size_t ReadArduinoUARTBase(
+PUBLIC unsigned int ReadArduinoUARTBase(
     BaseSerial *serial,
     uint8_t *buffer,
-    size_t size);
+    unsigned int size);
 
-PUBLIC size_t WriteArduinoUARTBase(
+PUBLIC unsigned int WriteArduinoUARTBase(
     BaseSerial *serial,
     const uint8_t *buffer,
-    size_t size);
+    unsigned int size);
 
 PUBLIC void SetRxCallbackToUARTBase(
     BaseSerial *serial,
@@ -25,7 +25,7 @@ PUBLIC void SetRxCallbackToUARTBase(
 PUBLIC BaseThreadState RunArduinoUARTThreadBase(BaseThread *thread);
 
 // Virtual methods table
-static const BaseSerialVtbl baseVtbl = {
+static const BaseSerialVtbl serialVtbl = {
     .Read = ReadArduinoUARTBase,
     .Write = WriteArduinoUARTBase,
     .SetRxCallback = SetRxCallbackToUARTBase
@@ -48,7 +48,7 @@ PUBLIC void ConstructArduinoUART(
     }
 
     ConstructBaseSerial(&instance->base, &parameter->base);
-    instance->base.vtbl = &baseVtbl;
+    instance->base.vtbl = &serialVtbl;
 
     instance->_port = parameter->port;
     instance->_port->begin(parameter->baudrate);
@@ -118,10 +118,10 @@ PUBLIC void DestructArduinoUARTThread(ArduinoUARTThread *instance)
     }
 }
 
-PUBLIC size_t ReadArduinoUARTBase(
+PUBLIC unsigned int ReadArduinoUARTBase(
     BaseSerial *serial,
     uint8_t *buffer,
-    size_t size)
+    unsigned int size)
 {
     ArduinoUART *self = BaseSerial2ArduinoUART(serial);
 
@@ -138,10 +138,10 @@ PUBLIC size_t ReadArduinoUARTBase(
     return self->_port->readBytes(buffer, size);
 }
 
-PUBLIC size_t WriteArduinoUARTBase(
+PUBLIC unsigned int WriteArduinoUARTBase(
     BaseSerial *serial,
     const uint8_t *buffer,
-    size_t size)
+    unsigned int size)
 {
     ArduinoUART *self = BaseSerial2ArduinoUART(serial);
 

@@ -1,23 +1,13 @@
 <circuit version="1.1.0-SR0" rev="1917" stepSize="1000000" stepsPS="1000000" NLsteps="100000" reaStep="1000000" animate="0" >
 
-<item itemtype="MCU" CircId="mega328-1" mainComp="false" Show_id="true" Show_Val="false" Pos="-28,-44" rotation="0" hflip="1" vflip="1" label="mega328-1" idLabPos="0,-20" labelrot="0" valLabPos="-16,20" valLabRot="0" Frequency="16 MHz" Program="Blink.hex" Auto_Load="false" saveEepr="true" Logic_Symbol="false" Rst_enabled="false" Ext_Osc="false" Wdt_enabled="false" Clk_Out="false" SerialMon="-1" />
+<item itemtype="Subcircuit" CircId="Uno-6" mainComp="false" Show_id="true" Show_Val="false" Pos="-100,-52" rotation="0" hflip="1" vflip="1" label="Uno-6" idLabPos="0,-20" labelrot="0" valLabPos="-16,20" valLabRot="0" Logic_Symbol="false">
+<mainCompProps MainCompId="mega328-109" Frequency="16 MHz" Program="Blink.hex" Auto_Load="false" saveEepr="true" SerialMon="-1" />
+</item>
 
-<item itemtype="Resistor" CircId="Resistor-2" mainComp="false" ShowProp="Resistance" Show_id="false" Show_Val="true" Pos="36,36" rotation="0" hflip="1" vflip="1" label="Resistor-2" idLabPos="-16,-24" labelrot="0" valLabPos="-16,6" valLabRot="0" Resistance="100 Ω" />
+<item itemtype="SerialTerm" CircId="SerialTerm-7" mainComp="false" Show_id="false" Show_Val="false" Pos="-76,-92" rotation="0" hflip="1" vflip="1" label="SerialTerm-7" idLabPos="-20,-32" labelrot="0" valLabPos="-16,20" valLabRot="0" Baudrate="115200 _Bd" DataBits="8 _bits" StopBits="1 _bits" SerialMon="true" />
 
-<item itemtype="Led" CircId="Led-3" mainComp="false" Show_id="false" Show_Val="false" Pos="60,60" rotation="90" hflip="1" vflip="1" label="Led-3" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Color="Yellow" Grounded="false" Threshold="2.4 V" MaxCurrent="30 mA" Resistance="0.6 Ω" />
+<item itemtype="Connector" uid="Connector-12" startpinid="SerialTerm-7-pin1" endpinid="Uno-6-1" pointList="-100,-84,-108,-84,-108,-28,-92,-28" />
 
-<item itemtype="Ground" CircId="Ground-4" mainComp="false" Show_id="false" Show_Val="false" Pos="60,100" rotation="0" hflip="1" vflip="1" label="Ground-4" idLabPos="-16,8" labelrot="0" valLabPos="-16,20" valLabRot="0" />
-
-<item itemtype="SerialTerm" CircId="SerialTerm-5" mainComp="false" Show_id="false" Show_Val="false" Pos="-76,-20" rotation="0" hflip="-1" vflip="1" label="SerialTerm-5" idLabPos="-20,-32" labelrot="0" valLabPos="-16,20" valLabRot="0" Baudrate="115200 _Bd" DataBits="8 _bits" StopBits="1 _bits" SerialMon="false" />
-
-<item itemtype="Connector" uid="Connector-1" startpinid="Resistor-2-lPin" endpinid="mega328-1-PORTB5" pointList="20,36,12,36" />
-
-<item itemtype="Connector" uid="Connector-2" startpinid="Resistor-2-rPin" endpinid="Led-3-lPin" pointList="52,36,60,36,60,44" />
-
-<item itemtype="Connector" uid="Connector-3" startpinid="Led-3-rPin" endpinid="Ground-4-Gnd" pointList="60,76,60,84" />
-
-<item itemtype="Connector" uid="Connector-10" startpinid="SerialTerm-5-pin0" endpinid="mega328-1-PORTD0" pointList="-52,-28,-36,-28" />
-
-<item itemtype="Connector" uid="Connector-11" startpinid="SerialTerm-5-pin1" endpinid="mega328-1-PORTD1" pointList="-52,-12,-44,-12,-44,-20,-36,-20" />
+<item itemtype="Connector" uid="Connector-13" startpinid="SerialTerm-7-pin0" endpinid="Uno-6-0" pointList="-100,-100,-116,-100,-116,-36,-92,-36" />
 
 </circuit>

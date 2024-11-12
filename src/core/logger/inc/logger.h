@@ -15,7 +15,7 @@
 extern "C" {
 #endif // __cplusplus
 
-#define NUMBER_OF_LOGGER_PARAMETERS     3
+#define LOGGER_PARAMETERS_NUMBER        3
 #define LOGGER_PARAMETER_NAME           1
 #define LOGGER_PARAMETER_LEVEL          2
 

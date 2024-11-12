@@ -14,8 +14,8 @@
 extern "C" {
 #endif // __cplusplus
 
-#define MAX_LENGTH_OF_AT_COMMAND                80
-#define MAX_NUMBER_OF_AT_COMMAND_PARAMETERS     10
+#define AT_COMMAND_MAX_LENGTH                   80
+#define AT_COMMAND_MAX_PARAMETERS_NUMBER        10
 
 #define AT_COMMAND_HEADER                       "AT"
 #define AT_COMMAND_HEADER_LENGTH                2

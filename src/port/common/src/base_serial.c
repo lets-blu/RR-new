@@ -24,10 +24,10 @@ PROTECTED void DestructBaseSerial(
     }
 }
 
-PUBLIC size_t ReadBaseSerial(
+PUBLIC unsigned int ReadBaseSerial(
     BaseSerial *self,
     uint8_t *buffer,
-    size_t size)
+    unsigned int size)
 {
     if (self == NULL || self->vtbl == NULL || self->vtbl->Read == NULL)
     {
@@ -37,10 +37,10 @@ PUBLIC size_t ReadBaseSerial(
     return self->vtbl->Read(self, buffer, size);
 }
 
-PUBLIC size_t WriteBaseSerial(
+PUBLIC unsigned int WriteBaseSerial(
     BaseSerial *self,
     const uint8_t *buffer,
-    size_t size)
+    unsigned int size)
 {
     if (self == NULL || self->vtbl == NULL || self->vtbl->Write == NULL)
     {

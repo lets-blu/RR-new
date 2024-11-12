@@ -5,7 +5,10 @@ PRIVATE STATIC LinkedList commands = STATIC_LINKED_LIST();
 
 // Private method(s)
 PRIVATE void SendResponseATCommand(ATCommand *self, const char *responseString);
-PRIVATE STATIC bool FindCallbackOfATCommand(LinkedListNode *node, void *data);
+
+PRIVATE STATIC bool FindCallbackOfATCommand(
+    LinkedListNode *node,
+    const void *data);
 
 // Method implement(s)
 PUBLIC void ConstructATCommand(
@@ -38,7 +41,7 @@ PUBLIC void DestructATCommand(ATCommand *instance)
 PUBLIC void ResponseATCommand(ATCommand *self, const char *responseString)
 {
     unsigned int length = 0;
-    char buffer[MAX_LENGTH_OF_AT_COMMAND] = {0};
+    char buffer[AT_COMMAND_MAX_LENGTH] = {0};
 
     if (self == NULL || responseString == NULL)
     {
@@ -89,7 +92,7 @@ PUBLIC STATIC void RingBufferCallbackOfATCommand(
     RingBufferEventParameter *parameter)
 {
     RingBufferPacketResult result = {0};
-    uint8_t buffer[MAX_LENGTH_OF_AT_COMMAND] = {0};
+    uint8_t buffer[AT_COMMAND_MAX_LENGTH] = {0};
 
     RingBufferPacketParameter packetParameter = {
         .header = (uint8_t *)AT_COMMAND_HEADER,
@@ -126,7 +129,7 @@ PUBLIC STATIC void ProcessATCommand(char *commandString)
     const char *parameter = NULL;
 
     unsigned int argc = 1;
-    const char *argv[MAX_NUMBER_OF_AT_COMMAND_PARAMETERS] = {commandString};
+    const char *argv[AT_COMMAND_MAX_PARAMETERS_NUMBER] = {commandString};
 
     // 1. Check parameters
     if (commandString == NULL)
@@ -168,7 +171,7 @@ PUBLIC STATIC void ProcessATCommand(char *commandString)
     *parameters = '\0';
     parameter = strtok(parameters + 1, ",");
 
-    while (parameter != NULL && argc < MAX_NUMBER_OF_AT_COMMAND_PARAMETERS)
+    while (parameter != NULL && argc < AT_COMMAND_MAX_PARAMETERS_NUMBER)
     {
         argv[argc++] = parameter;
         parameter = strtok(NULL, ",");
@@ -178,7 +181,9 @@ PUBLIC STATIC void ProcessATCommand(char *commandString)
     SendResponseATCommand(command, "OK");
 }
 
-PRIVATE STATIC bool FindCallbackOfATCommand(LinkedListNode *node, void *data)
+PRIVATE STATIC bool FindCallbackOfATCommand(
+    LinkedListNode *node,
+    const void *data)
 {
     ATCommand *command = LinkedListNode2ATCommand(node);
     return (strncmp(command->_command, data, strlen(command->_command)) == 0);

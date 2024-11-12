@@ -22,7 +22,7 @@ typedef enum {
     DEVICE_MANAGER_THREAD_DRIVER_INPUT,
     DEVICE_MANAGER_THREAD_APPLICATION,
     DEVICE_MANAGER_THREAD_DRIVER_OUTPUT,
-    NUMBER_OF_DEVICE_MANAGER_THREADS
+    DEVICE_MANAGER_THREADS_NUMBER
 } DeviceManagerThread;
 
 typedef struct {
@@ -33,7 +33,7 @@ typedef struct {
     LinkedList _factories;
 
     BaseTask *_task;
-    LinkedList _threads[NUMBER_OF_DEVICE_MANAGER_THREADS];
+    LinkedList _threads[DEVICE_MANAGER_THREADS_NUMBER];
 } DeviceManager;
 
 // Constructor(s) & Destructor(s)

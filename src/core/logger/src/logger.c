@@ -3,7 +3,7 @@
 // Private method(s)
 PRIVATE STATIC bool FindCallbackOfLogger(
     LinkedListNode *node,
-    void *data);
+    const void *data);
 
 PRIVATE STATIC void CommandCallbackOfLogger(
     unsigned int argc,
@@ -11,11 +11,7 @@ PRIVATE STATIC void CommandCallbackOfLogger(
 
 // Private member(s)
 PRIVATE STATIC const char *levelString[] = {
-    "DEBUG",
-    "INFO",
-    "WARN",
-    "ERROR",
-    "OFF"
+    "DEBUG", "INFO", "WARN", "ERROR", "OFF"
 };
 
 PRIVATE STATIC LinkedList loggers = STATIC_LINKED_LIST();
@@ -96,18 +92,18 @@ PUBLIC STATIC bool SetLevelToLogger(const char *name, LoggerLevel level)
     LinkedListNode *node
         = FindNodeInLinkedList(&loggers, FindCallbackOfLogger, (void *)name);
 
-    if (node != NULL)
+    if (node == NULL)
     {
-        LinkedListNode2Logger(node)->_level = level;
-        return true;
+        return false;
     }
 
-    return false;
+    LinkedListNode2Logger(node)->_level = level;
+    return true;
 }
 
 PRIVATE STATIC bool FindCallbackOfLogger(
     LinkedListNode *node,
-    void *data)
+    const void *data)
 {
     return (strcmp(LinkedListNode2Logger(node)->_name, data) == 0);
 }
@@ -116,7 +112,7 @@ PRIVATE STATIC void CommandCallbackOfLogger(
     unsigned int argc,
     const char *argv[])
 {
-    if (argc < NUMBER_OF_LOGGER_PARAMETERS)
+    if (argc < LOGGER_PARAMETERS_NUMBER)
     {
         ResponseATCommand(&command, "Invalid parameters");
         return;
@@ -124,15 +120,17 @@ PRIVATE STATIC void CommandCallbackOfLogger(
 
     for (unsigned int i = 0; i < NUMBER_OF_LOGGER_LEVELS; i++)
     {
-        if (strcmp(argv[LOGGER_PARAMETER_LEVEL], levelString[i]) == 0)
+        if (strcmp(argv[LOGGER_PARAMETER_LEVEL], levelString[i]) != 0)
         {
-            if (!SetLevelToLogger(argv[LOGGER_PARAMETER_NAME], (LoggerLevel)i))
-            {
-                ResponseATCommand(&command, "Unkown name");
-            }
-
-            return;
+            continue;
         }
+
+        if (!SetLevelToLogger(argv[LOGGER_PARAMETER_NAME], (LoggerLevel)i))
+        {
+            ResponseATCommand(&command, "Unkown name");
+        }
+
+        return;
     }
 
     ResponseATCommand(&command, "Unkown level");

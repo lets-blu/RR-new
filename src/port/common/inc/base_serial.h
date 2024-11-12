@@ -30,15 +30,15 @@ typedef struct {
 } BaseSerialParameter;
 
 typedef struct BaseSerialVtbl {
-    size_t (*Read)(
+    unsigned int (*Read)(
         BaseSerial *self,
         uint8_t *buffer,
-        size_t size);
+        unsigned int size);
 
-    size_t (*Write)(
+    unsigned int (*Write)(
         BaseSerial *self,
         const uint8_t *buffer,
-        size_t size);
+        unsigned int size);
 
     void (*SetRxCallback)(
         BaseSerial *self,
@@ -54,15 +54,15 @@ PROTECTED void DestructBaseSerial(
     BaseSerial *instance);
 
 //  Public method(s)
-PUBLIC size_t ReadBaseSerial(
+PUBLIC unsigned int ReadBaseSerial(
     BaseSerial *self,
     uint8_t *buffer,
-    size_t size);
+    unsigned int size);
 
-PUBLIC size_t WriteBaseSerial(
+PUBLIC unsigned int WriteBaseSerial(
     BaseSerial *self,
     const uint8_t *buffer,
-    size_t size);
+    unsigned int size);
 
 PUBLIC void SetRxCallbackToBaseSerial(
     BaseSerial *self,

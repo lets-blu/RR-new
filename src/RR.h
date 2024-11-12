@@ -1,10 +1,6 @@
 #ifndef __RR_H__
 #define __RR_H__
 
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
-
 // Core
 #include "core/common/inc/keywords.h"
 #include "core/device/inc/device_manager.h"
@@ -24,9 +20,5 @@ extern "C" {
 #include "port/common/inc/base_serial.h"
 #include "port/common/inc/base_task.h"
 #include "port/common/inc/base_system.h"
-
-#ifdef __cplusplus
-}
-#endif // __cplusplus
 
 #endif // __RR_H__

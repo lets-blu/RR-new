@@ -17,15 +17,16 @@ void setup()
     DeviceManager *manager = InstanceOfDeviceManager();
 
     // 1. Setup core
+    ConstructArduinoCore(&core);
+    SetCoreToDeviceManager(manager, &core.base);
+
+    // 2. Setup logger and AT command
     ArduinoUARTParameter uartParameter = {
         .base = ARDUINO_UART_PARAMETER_BASE,
         .port = &Serial,
         .baudrate = 115200,
         .rxBufferSize = 80
     };
-
-    ConstructArduinoCore(&core);
-    SetCoreToDeviceManager(manager, &core.base);
 
     serial = CreateSerialWithBaseFactories(
         GetFactoriesFromDeviceManager(manager),
@@ -35,11 +36,11 @@ void setup()
     fdevopen(serialPutc, NULL);
     SetRxCallbackToBaseSerial(serial, RingBufferCallbackOfATCommand);
 
-    // 2. Setup system
+    // 3. Setup system
     ConstructNoneSystem(&sys);
     SetSystemToDeviceManager(manager, &sys.base);
 
-    // 3. Create LED
+    // 4. Create LED
     ArduinoDPortParameter ledParameter = {
         .base = ARDUINO_D_PORT_PARAMETER_BASE,
         .pin = LED_BUILTIN
@@ -51,14 +52,14 @@ void setup()
         &ledParameter.base,
         BASE_PORT_VALUE_HIGH);
 
-    // 4. Create thread & task
+    // 5. Create thread and task
+    ConstructBlinkThread(&thread, &led, 1000);
+
     NoneTaskParameter taskParameter = {
         .base = NONE_TASK_PARAMETER_BASE,
         .entry = RunBlinkThreadTask,
         .parameter = &thread
     };
-
-    ConstructBlinkThread(&thread, &led, 1000);
 
     task = CreateTaskWithBaseFactories(
         GetFactoriesFromDeviceManager(manager),
@@ -73,7 +74,7 @@ void setup()
             &thread.base);
     }
 
-    // 5. Run system
+    // 6. Run system
     RunBaseSystem(&sys.base);
 }
 
