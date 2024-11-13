@@ -5,7 +5,7 @@ PRIVATE STATIC bool FindCallbackOfLogger(
     LinkedListNode *node,
     const void *data);
 
-PRIVATE STATIC void CommandCallbackOfLogger(
+PRIVATE STATIC void CommandHandlerOfLogger(
     unsigned int argc,
     const char *argv[]);
 
@@ -17,7 +17,7 @@ PRIVATE STATIC const char *levelString[] = {
 PRIVATE STATIC LinkedList loggers = STATIC_LINKED_LIST();
 
 PRIVATE STATIC ATCommand command
-    = STATIC_AT_COMMAND("+LOGGER", CommandCallbackOfLogger);
+    = STATIC_AT_COMMAND("+LOGGER", CommandHandlerOfLogger);
 
 // Method implement(s)
 PUBLIC void ConstructLogger(
@@ -108,7 +108,7 @@ PRIVATE STATIC bool FindCallbackOfLogger(
     return (strcmp(LinkedListNode2Logger(node)->_name, data) == 0);
 }
 
-PRIVATE STATIC void CommandCallbackOfLogger(
+PRIVATE STATIC void CommandHandlerOfLogger(
     unsigned int argc,
     const char *argv[])
 {

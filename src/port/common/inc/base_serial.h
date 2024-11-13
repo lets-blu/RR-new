@@ -40,9 +40,9 @@ typedef struct BaseSerialVtbl {
         const uint8_t *buffer,
         unsigned int size);
 
-    void (*SetRxCallback)(
+    void (*SetRxHandler)(
         BaseSerial *self,
-        RingBufferCallback callback);
+        RingBufferEventHandler handler);
 } BaseSerialVtbl;
 
 // Constructor(s) & Destructor(s)
@@ -64,9 +64,9 @@ PUBLIC unsigned int WriteBaseSerial(
     const uint8_t *buffer,
     unsigned int size);
 
-PUBLIC void SetRxCallbackToBaseSerial(
+PUBLIC void SetRxHandlerToBaseSerial(
     BaseSerial *self,
-    RingBufferCallback callback);
+    RingBufferEventHandler handler);
 
 #ifdef __cplusplus
 }

@@ -50,14 +50,14 @@ PUBLIC unsigned int WriteBaseSerial(
     return self->vtbl->Write(self, buffer, size);
 }
 
-PUBLIC void SetRxCallbackToBaseSerial(
+PUBLIC void SetRxHandlerToBaseSerial(
     BaseSerial *self,
-    RingBufferCallback callback)
+    RingBufferEventHandler handler)
 {
-    if (self == NULL || self->vtbl == NULL || self->vtbl->SetRxCallback == NULL)
+    if (self == NULL || self->vtbl == NULL || self->vtbl->SetRxHandler == NULL)
     {
         return;
     }
 
-    self->vtbl->SetRxCallback(self, callback);
+    self->vtbl->SetRxHandler(self, handler);
 }

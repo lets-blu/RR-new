@@ -18,9 +18,9 @@ PUBLIC unsigned int WriteArduinoUARTBase(
     const uint8_t *buffer,
     unsigned int size);
 
-PUBLIC void SetRxCallbackToUARTBase(
+PUBLIC void SetRxHandlerToArduinoUARTBase(
     BaseSerial *serial,
-    RingBufferCallback callback);
+    RingBufferEventHandler handler);
 
 PUBLIC BaseThreadState RunArduinoUARTThreadBase(BaseThread *thread);
 
@@ -28,7 +28,7 @@ PUBLIC BaseThreadState RunArduinoUARTThreadBase(BaseThread *thread);
 static const BaseSerialVtbl serialVtbl = {
     .Read = ReadArduinoUARTBase,
     .Write = WriteArduinoUARTBase,
-    .SetRxCallback = SetRxCallbackToUARTBase
+    .SetRxHandler = SetRxHandlerToArduinoUARTBase
 };
 
 static const BaseThreadVtbl threadVtbl = {
@@ -153,15 +153,15 @@ PUBLIC unsigned int WriteArduinoUARTBase(
     return self->_port->write(buffer, size);
 }
 
-PUBLIC void SetRxCallbackToUARTBase(
+PUBLIC void SetRxHandlerToArduinoUARTBase(
     BaseSerial *serial,
-    RingBufferCallback callback)
+    RingBufferEventHandler handler)
 {
     ArduinoUART *self = BaseSerial2ArduinoUART(serial);
 
     if (serial != NULL)
     {
-        SetCallbackToRingBuffer(&self->_rxRingBuffer, callback);
+        SetEventHandlerToRingBuffer(&self->_rxRingBuffer, handler);
     }
 }
 

@@ -14,16 +14,16 @@ PRIVATE STATIC bool FindCallbackOfATCommand(
 PUBLIC void ConstructATCommand(
     ATCommand *instance,
     const char *command,
-    ATCommandCallback callback)
+    ATCommandHandler handler)
 {
-    if (instance == NULL || command == NULL || callback == NULL)
+    if (instance == NULL || command == NULL || handler == NULL)
     {
         return;
     }
 
     ConstructLinkedListNode(&instance->base);
     instance->_command = command;
-    instance->_callback = callback;
+    instance->_handler = handler;
 
     RegisterATCommand(instance);
 }
@@ -87,8 +87,8 @@ PUBLIC STATIC void UnregisterATCommand(ATCommand *instance)
     }
 }
 
-PUBLIC STATIC void RingBufferCallbackOfATCommand(
-    RingBufferEvent event,
+PUBLIC STATIC void RingBufferHandlerOfATCommand(
+    RingBuffer *sender,
     RingBufferEventParameter *parameter)
 {
     RingBufferPacketResult result = {0};
@@ -101,21 +101,21 @@ PUBLIC STATIC void RingBufferCallbackOfATCommand(
         .footerLength = AT_COMMAND_FOOTER_LENGTH
     };
 
-    if (event != RING_BUFFER_EVENT_READY_TO_READ)
+    if (parameter->event != RING_BUFFER_EVENT_READY_TO_READ)
     {
         return;
     }
 
-    result = FindPacketInRingBuffer(parameter->buffer, &packetParameter);
+    result = FindPacketInRingBuffer(sender, &packetParameter);
 
     if (result.invalidLength != 0)
     {
-        ReadRingBuffer(parameter->buffer, buffer, result.invalidLength);
+        ReadRingBuffer(sender, buffer, result.invalidLength);
     }
 
     if (result.packetLength != 0)
     {
-        ReadRingBuffer(parameter->buffer, buffer, result.packetLength);
+        ReadRingBuffer(sender, buffer, result.packetLength);
         ProcessATCommand((char *)buffer);
     }
 }
@@ -162,7 +162,7 @@ PUBLIC STATIC void ProcessATCommand(char *commandString)
 
     if (parameters == NULL)
     {
-        command->_callback(argc, argv);
+        command->_handler(argc, argv);
         SendResponseATCommand(command, "OK");
         return;
     }
@@ -177,7 +177,7 @@ PUBLIC STATIC void ProcessATCommand(char *commandString)
         parameter = strtok(NULL, ",");
     }
 
-    command->_callback(argc, argv);
+    command->_handler(argc, argv);
     SendResponseATCommand(command, "OK");
 }
 

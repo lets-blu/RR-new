@@ -22,7 +22,7 @@ void setup()
         .base = ARDUINO_UART_PARAMETER_BASE,
         .port = &Serial,
         .baudrate = 115200,
-        .rxBufferSize = 80
+        .rxBufferSize = AT_COMMAND_MAX_LENGTH
     };
 
     serial = CreateSerialWithBaseFactories(
@@ -32,7 +32,7 @@ void setup()
 
     fdevopen(serialPutc, NULL);
     RegisterLogger(&logger);
-    SetRxCallbackToBaseSerial(serial, RingBufferCallbackOfATCommand);
+    SetRxHandlerToBaseSerial(serial, RingBufferHandlerOfATCommand);
 
     // 3. Setup system
     ConstructNoneSystem(&sys);
@@ -50,7 +50,7 @@ void setup()
         &buttonParameter.base,
         BASE_PORT_VALUE_LOW);
 
-    SetClickCallbackToDigitalButton(&button, clickCallback);
+    SetEventHandlerToDigitalButton(&button, buttonEventHandler);
     EnableAutoScanToDigitalButton(&button, true);
 
     // 5. Run system
@@ -69,8 +69,12 @@ int serialPutc(char c, FILE *file)
     return c;
 }
 
-void clickCallback(DigitalButton *button)
+void buttonEventHandler(
+    DigitalButton *sender,
+    DigitalButtonEventParameter *parameter)
 {
-    (void)button;
-    LOGGER_I(&logger, "Button clicked!");
+    if (sender == &button && parameter->event == DIGITAL_BUTTON_EVENT_CLICK)
+    {
+        LOGGER_I(&logger, "Button clicked!");
+    }
 }

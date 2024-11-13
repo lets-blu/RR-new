@@ -44,7 +44,7 @@ PUBLIC void ConstructDigitalButton(
         parameter);
 
     instance->_pressValue = pressValue;
-    instance->_clickCallback = NULL;
+    instance->_eventHandler = NULL;
     SetupBasePort(instance->_port, BASE_PORT_MODE_INPUT);
 
     ConstructDigitalButtonThread(&instance->_thread, instance);
@@ -91,13 +91,13 @@ PUBLIC void DestructDigitalButtonThread(DigitalButtonThread *instance)
     }
 }
 
-PUBLIC void SetClickCallbackToDigitalButton(
+PUBLIC void SetEventHandlerToDigitalButton(
     DigitalButton *self,
-    DigitalButtonClickCallback callback)
+    DigitalButtonEventHandler handler)
 {
     if (self != NULL)
     {
-        self->_clickCallback = callback;
+        self->_eventHandler = handler;
     }
 }
 
@@ -167,11 +167,15 @@ PUBLIC const ButtonState *GetStateFromDigitalButtonBase(BaseButton *button)
 
 PUBLIC void OnClickDigitalButtonBase(BaseButton *button)
 {
+    DigitalButtonEventParameter parameter = {
+        .event = DIGITAL_BUTTON_EVENT_CLICK
+    };
+
     DigitalButton *self = BaseButton2DigitalButton(button);
 
-    if (button != NULL && self->_clickCallback != NULL)
+    if (button != NULL && self->_eventHandler != NULL)
     {
-        self->_clickCallback(self);
+        self->_eventHandler(self, &parameter);
     }
 }
 

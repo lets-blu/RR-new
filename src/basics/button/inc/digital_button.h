@@ -29,6 +29,14 @@ extern "C" {
 
 struct DigitalButton;
 
+typedef enum {
+    DIGITAL_BUTTON_EVENT_CLICK
+} DigitalButtonEvent;
+
+typedef struct {
+    DigitalButtonEvent event;
+} DigitalButtonEventParameter;
+
 typedef struct {
     BaseThread base;
     struct DigitalButton *_button;
@@ -40,12 +48,17 @@ typedef struct DigitalButton {
 
     BasePort *_port;
     unsigned int _pressValue;
-    void (*_clickCallback)(struct DigitalButton *button);
+
+    void (*_eventHandler)(
+        struct DigitalButton *sender,
+        DigitalButtonEventParameter *parameter);
 
     DigitalButtonThread _thread;
 } DigitalButton;
 
-typedef void (*DigitalButtonClickCallback)(DigitalButton *);
+typedef void (*DigitalButtonEventHandler)(
+    DigitalButton *,
+    DigitalButtonEventParameter *);
 
 // Constructor(s) & Destructor(s)
 PUBLIC void ConstructDigitalButton(
@@ -63,9 +76,9 @@ PUBLIC void ConstructDigitalButtonThread(
 PUBLIC void DestructDigitalButtonThread(DigitalButtonThread *instance);
 
 // Public Method(s)
-PUBLIC void SetClickCallbackToDigitalButton(
+PUBLIC void SetEventHandlerToDigitalButton(
     DigitalButton *self,
-    DigitalButtonClickCallback callback);
+    DigitalButtonEventHandler handler);
 
 PUBLIC void EnableAutoScanToDigitalButton(DigitalButton *self, bool enable);
 PUBLIC void ScanDigitalButton(DigitalButton *self);

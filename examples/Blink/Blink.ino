@@ -25,7 +25,7 @@ void setup()
         .base = ARDUINO_UART_PARAMETER_BASE,
         .port = &Serial,
         .baudrate = 115200,
-        .rxBufferSize = 80
+        .rxBufferSize = AT_COMMAND_MAX_LENGTH
     };
 
     serial = CreateSerialWithBaseFactories(
@@ -34,7 +34,7 @@ void setup()
         &uartParameter.base);
 
     fdevopen(serialPutc, NULL);
-    SetRxCallbackToBaseSerial(serial, RingBufferCallbackOfATCommand);
+    SetRxHandlerToBaseSerial(serial, RingBufferHandlerOfATCommand);
 
     // 3. Setup system
     ConstructNoneSystem(&sys);

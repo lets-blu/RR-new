@@ -22,10 +22,10 @@ extern "C" {
 #define AT_COMMAND_FOOTER                       "\r"
 #define AT_COMMAND_FOOTER_LENGTH                1
 
-#define STATIC_AT_COMMAND(command, callback) {  \
+#define STATIC_AT_COMMAND(command, handler) {   \
     .base = STATIC_LINKED_LIST_NODE(),          \
     ._command = (command),                      \
-    ._callback = (callback)                     \
+    ._handler = (handler)                       \
 }
 
 #define LinkedListNode2ATCommand(instance)      \
@@ -34,16 +34,16 @@ extern "C" {
 typedef struct {
     LinkedListNode base;
     const char *_command;
-    void (*_callback)(unsigned int argc, const char *argv[]);
+    void (*_handler)(unsigned int argc, const char *argv[]);
 } ATCommand;
 
-typedef void (*ATCommandCallback)(unsigned int argc, const char *argv[]);
+typedef void (*ATCommandHandler)(unsigned int argc, const char *argv[]);
 
 // Constructor(s) & Destructor(s)
 PUBLIC void ConstructATCommand(
     ATCommand *instance,
     const char *command,
-    ATCommandCallback callback);
+    ATCommandHandler handler);
 
 PUBLIC void DestructATCommand(ATCommand *instance);
 
@@ -52,8 +52,8 @@ PUBLIC void ResponseATCommand(ATCommand *self, const char *responseString);
 PUBLIC STATIC void RegisterATCommand(ATCommand *instance);
 PUBLIC STATIC void UnregisterATCommand(ATCommand *instance);
 
-PUBLIC STATIC void RingBufferCallbackOfATCommand(
-    RingBufferEvent event,
+PUBLIC STATIC void RingBufferHandlerOfATCommand(
+    RingBuffer *sender,
     RingBufferEventParameter *parameter);
 
 PUBLIC STATIC void ProcessATCommand(char *commandString);

@@ -19,7 +19,7 @@ DEVICE_MANAGER_THREAD_DRIVER_INPUT			LITERAL1
 DEVICE_MANAGER_THREAD_APPLICATION			LITERAL1
 DEVICE_MANAGER_THREAD_DRIVER_OUTPUT			LITERAL1
 DEVICE_MANAGER_THREADS_NUMBER				LITERAL1
-DeviceManagerThreadType						KEYWORD1
+DeviceManagerThread							KEYWORD1
 DeviceManager								KEYWORD3
 DestructDeviceManager						KEYWORD2
 SetCoreToDeviceManager						KEYWORD2
@@ -86,14 +86,17 @@ TurnOffLED									KEYWORD2
 DIGITAL_BUTTON_SCAN_INTERVAL				LITERAL1
 BaseThread2DigitalButtonThread				LITERAL2
 BaseButton2DigitalButton					LITERAL2
+DIGITAL_BUTTON_EVENT_CLICK					LITERAL1
+DigitalButtonEvent							KEYWORD1
+DigitalButtonEventParameter					KEYWORD3
 DigitalButtonThread							KEYWORD3
 DigitalButton								KEYWORD3
-DigitalButtonClickCallback					KEYWORD1
+DigitalButtonEventHandler					KEYWORD1
 ConstructDigitalButton						KEYWORD2
 DestructDigitalButton						KEYWORD2
 ConstructDigitalButtonThread				KEYWORD2
 DestructDigitalButtonThread					KEYWORD2
-SetClickCallbackToDigitalButton				KEYWORD2
+SetEventHandlerToDigitalButton				KEYWORD2
 EnableAutoScanToDigitalButton				KEYWORD2
 ScanDigitalButton							KEYWORD2
 
@@ -108,13 +111,13 @@ AT_COMMAND_FOOTER_LENGTH					LITERAL1
 STATIC_AT_COMMAND							LITERAL2
 LinkedList2ATCommand						LITERAL2
 ATCommand									KEYWORD3
-ATCommandCallback							KEYWORD1
+ATCommandHandler							KEYWORD1
 ConstructATCommand							KEYWORD2
 DestructATCommand							KEYWORD2
 ResponseATCommand							KEYWORD2
 RegisterATCommand							KEYWORD2
 UnregisterATCommand							KEYWORD2
-RingBufferCallbackOfATCommand				KEYWORD2
+RingBufferHandlerOfATCommand				KEYWORD2
 ProcessATCommand							KEYWORD2
 
 # Port (Common) ####################################
@@ -164,7 +167,7 @@ ConstructBaseSerial							KEYWORD2
 DestructBaseSerial							KEYWORD2
 ReadBaseSerial								KEYWORD2
 WriteBaseSerial								KEYWORD2
-SetRxCallbackToBaseSerial					KEYWORD2
+SetRxHandlerToBaseSerial					KEYWORD2
 
 # port/common/inc/base_core.h
 

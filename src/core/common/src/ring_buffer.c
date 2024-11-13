@@ -25,7 +25,7 @@ PUBLIC void ConstructRingBuffer(
     instance->_readIndex = 0;
     instance->_writeIndex = 0;
 
-    instance->_callback = NULL;
+    instance->_eventHandler = NULL;
 }
 
 PUBLIC void DestructRingBuffer(
@@ -93,7 +93,7 @@ PUBLIC bool WriteRingBuffer(
     unsigned int rightLength = 0;
 
     RingBufferEventParameter parameter = {
-        .buffer = self
+        .event = RING_BUFFER_EVENT_READY_TO_READ
     };
 
     // 1. Check parameters
@@ -125,22 +125,22 @@ PUBLIC bool WriteRingBuffer(
     self->_writeIndex = (self->_writeIndex + bufferLength) % self->_bufferLength;
     self->_freeLength -= bufferLength;
 
-    // 5. Invoke callback
-    if (self->_callback != NULL)
+    // 5. Invoke handler
+    if (self->_eventHandler != NULL)
     {
-        self->_callback(RING_BUFFER_EVENT_READY_TO_READ, &parameter);
+        self->_eventHandler(self, &parameter);
     }
 
     return true;
 }
 
-PUBLIC void SetCallbackToRingBuffer(
+PUBLIC void SetEventHandlerToRingBuffer(
     RingBuffer *self,
-    RingBufferCallback callback)
+    RingBufferEventHandler handler)
 {
     if (self != NULL)
     {
-        self->_callback = callback;
+        self->_eventHandler = handler;
     }
 }
 
