@@ -11,11 +11,16 @@
 extern "C" {
 #endif // __cplusplus
 
-#define BASE_PORT_VALUE_LOW             0
-#define BASE_PORT_VALUE_HIGH            1
-#define BASE_PORT_PARAMETER_RESERVED    0
+#define BASE_PORT_VALUE_LOW                 0
+#define BASE_PORT_VALUE_HIGH                1
+#define BASE_PORT_PARAMETER_RESERVED        0
 
-#define LinkedListNode2BasePort(instance) \
+#define STATIC_BASE_PORT(baseVtbl) {        \
+    .base = STATIC_LINKED_LIST_NODE(),      \
+    .vtbl = (baseVtbl)                      \
+}
+
+#define LinkedListNode2BasePort(instance)   \
     BASE2SUB(instance, BasePort, base)
 
 struct BasePortVtbl;
@@ -36,9 +41,10 @@ typedef enum {
 } BasePortMode;
 
 typedef struct BasePortVtbl {
-    void (*Setup)(BasePort *self, BasePortMode mode);
-    unsigned int (*Read)(BasePort *self);
-    void (*Write)(BasePort *self, unsigned int value);
+    void (*Setup)(BasePort *self, unsigned int pin, BasePortMode mode);
+    void (*Sample)(BasePort *self);
+    unsigned int (*Read)(BasePort *self, unsigned int pin);
+    void (*Write)(BasePort *self, unsigned int pin, unsigned int value);
 } BasePortVtbl;
 
 // Constructor(s) & Destructor(s)
@@ -49,9 +55,10 @@ PROTECTED void ConstructBasePort(
 PROTECTED void DestructBasePort(BasePort *instance);
 
 // Public method(s)
-PUBLIC void SetupBasePort(BasePort *self, BasePortMode mode);
-PUBLIC unsigned int ReadBasePort(BasePort *self);
-PUBLIC void WriteBasePort(BasePort *self, unsigned int value);
+PUBLIC void SetupBasePort(BasePort *self, unsigned int pin, BasePortMode mode);
+PUBLIC void SampleBasePort(BasePort *self);
+PUBLIC unsigned int ReadBasePort(BasePort *self, unsigned int pin);
+PUBLIC void WriteBasePort(BasePort *self, unsigned int pin, unsigned int value);
 
 #ifdef __cplusplus
 }

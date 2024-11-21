@@ -39,17 +39,7 @@ void setup()
     SetSystemToDeviceManager(manager, &sys.base);
 
     // 4. Create button
-    ArduinoDPortParameter buttonParameter = {
-        .base = ARDUINO_D_PORT_PARAMETER_BASE,
-        .pin = A0
-    };
-
-    ConstructDigitalButton(
-        &button,
-        ARDUINO_CORE_DIGITAL_PORT,
-        &buttonParameter.base,
-        BASE_PORT_VALUE_LOW);
-
+    ConstructDigitalButton(&button, NULL, 14, BASE_PORT_VALUE_LOW);
     SetEventHandlerToDigitalButton(&button, buttonEventHandler);
     EnableAutoScanToDigitalButton(&button, true);
 

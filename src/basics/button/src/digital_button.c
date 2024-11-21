@@ -23,10 +23,16 @@ static const BaseThreadVtbl threadVtbl = {
 // Method implement(s)
 PUBLIC void ConstructDigitalButton(
     DigitalButton *instance,
-    const char *type,
-    BasePortParameter *parameter,
+    void *port,
+    unsigned int pin,
     unsigned int pressValue)
 {
+    GeneralPortParameter parameter = {
+        .base = GENERAL_PORT_PARAMETER_BASE,
+        .port = port,
+        .pin = pin
+    };
+
     DeviceManager *manager = InstanceOfDeviceManager();
 
     if (instance == NULL)
@@ -40,13 +46,14 @@ PUBLIC void ConstructDigitalButton(
 
     instance->_port = CreatePortWithBaseFactories(
         GetFactoriesFromDeviceManager(manager),
-        type,
-        parameter);
+        GENERAL_DIGITAL_PORT,
+        &parameter.base);
 
+    instance->_pin = pin;
     instance->_pressValue = pressValue;
-    instance->_eventHandler = NULL;
-    SetupBasePort(instance->_port, BASE_PORT_MODE_INPUT);
+    SetupBasePort(instance->_port, pin, BASE_PORT_MODE_INPUT);
 
+    instance->_eventHandler = NULL;
     ConstructDigitalButtonThread(&instance->_thread, instance);
 }
 
@@ -63,7 +70,7 @@ PUBLIC void DestructDigitalButton(DigitalButton *instance)
 
     DestroyPortWithBaseFactories(
         GetFactoriesFromDeviceManager(manager),
-        NULL,
+        GENERAL_DIGITAL_PORT,
         instance->_port);
 
     DestructBaseButton(&instance->base);
@@ -135,7 +142,7 @@ PUBLIC void ScanDigitalButton(DigitalButton *self)
         return;
     }
 
-    value = ReadBasePort(self->_port);
+    value = ReadBasePort(self->_port, self->_pin);
 
     if (value == self->_pressValue)
     {

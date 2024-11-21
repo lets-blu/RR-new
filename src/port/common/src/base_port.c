@@ -23,32 +23,42 @@ PROTECTED void DestructBasePort(BasePort *instance)
     }
 }
 
-PUBLIC void SetupBasePort(BasePort *self, BasePortMode mode)
+PUBLIC void SetupBasePort(BasePort *self, unsigned int pin, BasePortMode mode)
 {
     if (self == NULL || self->vtbl == NULL || self->vtbl->Setup == NULL)
     {
         return;
     }
 
-    self->vtbl->Setup(self, mode);
+    self->vtbl->Setup(self, pin, mode);
 }
 
-PUBLIC unsigned int ReadBasePort(BasePort *self)
+PUBLIC void SampleBasePort(BasePort *self)
+{
+    if (self == NULL || self->vtbl == NULL || self->vtbl->Sample == NULL)
+    {
+        return;
+    }
+
+    self->vtbl->Sample(self);
+}
+
+PUBLIC unsigned int ReadBasePort(BasePort *self, unsigned int pin)
 {
     if (self == NULL || self->vtbl == NULL || self->vtbl->Read == NULL)
     {
         return 0;
     }
 
-    return self->vtbl->Read(self);
+    return self->vtbl->Read(self, pin);
 }
 
-PUBLIC void WriteBasePort(BasePort *self, unsigned int value)
+PUBLIC void WriteBasePort(BasePort *self, unsigned int pin, unsigned int value)
 {
     if (self == NULL || self->vtbl == NULL || self->vtbl->Write == NULL)
     {
         return;
     }
 
-    self->vtbl->Write(self, value);
+    self->vtbl->Write(self, pin, value);
 }

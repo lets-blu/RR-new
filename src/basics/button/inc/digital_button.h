@@ -11,6 +11,7 @@
 
 #include "port/common/inc/base_factory.h"
 #include "port/common/inc/base_port.h"
+#include "port/general/inc/general_port.h"
 
 #include "basics/button/inc/base_button.h"
 #include "basics/button/inc/button_state.h"
@@ -47,6 +48,7 @@ typedef struct DigitalButton {
     const ButtonState *_currentState;
 
     BasePort *_port;
+    unsigned int _pin;
     unsigned int _pressValue;
 
     void (*_eventHandler)(
@@ -63,8 +65,8 @@ typedef void (*DigitalButtonEventHandler)(
 // Constructor(s) & Destructor(s)
 PUBLIC void ConstructDigitalButton(
     DigitalButton *instance,
-    const char *type,
-    BasePortParameter *parameter,
+    void *port,
+    unsigned int pin,
     unsigned int pressValue);
 
 PUBLIC void DestructDigitalButton(DigitalButton *instance);

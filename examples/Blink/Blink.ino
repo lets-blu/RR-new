@@ -41,16 +41,7 @@ void setup()
     SetSystemToDeviceManager(manager, &sys.base);
 
     // 4. Create LED
-    ArduinoDPortParameter ledParameter = {
-        .base = ARDUINO_D_PORT_PARAMETER_BASE,
-        .pin = LED_BUILTIN
-    };
-
-    ConstructLED(
-        &led,
-        ARDUINO_CORE_DIGITAL_PORT,
-        &ledParameter.base,
-        BASE_PORT_VALUE_HIGH);
+    ConstructLED(&led, NULL, LED_BUILTIN, BASE_PORT_VALUE_HIGH);
 
     // 5. Create thread and task
     ConstructBlinkThread(&thread, &led, 1000);

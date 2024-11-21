@@ -11,7 +11,7 @@
 #include "port/common/inc/base_core.h"
 #include "port/common/inc/base_task.h"
 
-#include "port/arduino/inc/arduino_port.h"
+#include "port/arduino/inc/arduino_digital_port.h"
 #include "port/arduino/inc/arduino_uart.h"
 #include "port/general/inc/general_port.h"
 #include "port/general/inc/general_uart.h"
@@ -20,7 +20,7 @@
 extern "C" {
 #endif // __cplusplus
 
-#define ARDUINO_CORE_DIGITAL_PORT   "ArduinoDPort"
+#define ARDUINO_CORE_DIGITAL_PORT   "ArduinoDigitalPort"
 #define ARDUINO_CORE_UART_SERIAL    "ArduinoUART"
 
 #define BaseCore2ArduinoCore(instance) \
@@ -32,6 +32,7 @@ extern "C" {
 typedef struct {
     BaseCore base;
     LinkedList _devices;
+    LinkedList _digitalPorts;
 } ArduinoCore;
 
 // Constructor(s) & Destructor(s)

@@ -6,10 +6,16 @@ PRIVATE STATIC Logger logger = STATIC_LOGGER("LED", LOGGER_LEVEL_INFO);
 // Method implement(s)
 PUBLIC void ConstructLED(
     LED *instance,
-    const char *type,
-    BasePortParameter *parameter,
+    void *port,
+    unsigned int pin,
     unsigned int onValue)
 {
+    GeneralPortParameter parameter = {
+        .base   = GENERAL_PORT_PARAMETER_BASE,
+        .port   = port,
+        .pin    = pin
+    };
+
     DeviceManager *manager = InstanceOfDeviceManager();
 
     if (instance == NULL)
@@ -21,11 +27,12 @@ PUBLIC void ConstructLED(
 
     instance->_port = CreatePortWithBaseFactories(
         GetFactoriesFromDeviceManager(manager),
-        type,
-        parameter);
+        GENERAL_DIGITAL_PORT,
+        &parameter.base);
 
+    instance->_pin = pin;
     instance->_onValue = onValue;
-    SetupBasePort(instance->_port, BASE_PORT_MODE_OUTPUT);
+    SetupBasePort(instance->_port, pin, BASE_PORT_MODE_OUTPUT);
 }
 
 PUBLIC void DestructLED(LED *instance)
@@ -39,7 +46,7 @@ PUBLIC void DestructLED(LED *instance)
 
     DestroyPortWithBaseFactories(
         GetFactoriesFromDeviceManager(manager),
-        NULL,
+        GENERAL_DIGITAL_PORT,
         instance->_port);
 
     memset(instance, 0, sizeof(LED));
@@ -56,11 +63,11 @@ PUBLIC void TurnOnLED(LED *self)
 
     if (self->_onValue == BASE_PORT_VALUE_LOW)
     {
-        WriteBasePort(self->_port, BASE_PORT_VALUE_LOW);
+        WriteBasePort(self->_port, self->_pin, BASE_PORT_VALUE_LOW);
     }
     else
     {
-        WriteBasePort(self->_port, BASE_PORT_VALUE_HIGH);
+        WriteBasePort(self->_port, self->_pin, BASE_PORT_VALUE_HIGH);
     }
 }
 
@@ -75,10 +82,10 @@ PUBLIC void TurnOffLED(LED *self)
 
     if (self->_onValue == BASE_PORT_VALUE_LOW)
     {
-        WriteBasePort(self->_port, BASE_PORT_VALUE_HIGH);
+        WriteBasePort(self->_port, self->_pin, BASE_PORT_VALUE_HIGH);
     }
     else
     {
-        WriteBasePort(self->_port, BASE_PORT_VALUE_LOW);
+        WriteBasePort(self->_port, self->_pin, BASE_PORT_VALUE_LOW);
     }
 }

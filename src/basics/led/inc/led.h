@@ -10,6 +10,7 @@
 
 #include "port/common/inc/base_factory.h"
 #include "port/common/inc/base_port.h"
+#include "port/general/inc/general_port.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -17,14 +18,15 @@ extern "C" {
 
 typedef struct {
     BasePort *_port;
+    unsigned int _pin;
     unsigned int _onValue;
 } LED;
 
 // Constructor(s) & Destructor(s)
 PUBLIC void ConstructLED(
     LED *instance,
-    const char *type,
-    BasePortParameter *parameter,
+    void *port,
+    unsigned int pin,
     unsigned int onValue);
 
 PUBLIC void DestructLED(LED *instance);
