@@ -12,7 +12,7 @@ extern "C" {
 #define GENERAL_DIGITAL_PORT    "GeneralDPort"
 
 #define GENERAL_PORT_PARAMETER_BASE \
-    {BASE_PORT_PARAMETER_RESERVED}
+    {._reserved = BASE_PORT_PARAMETER_RESERVED}
 
 #define BasePortParameter2GeneralPortParameter(instance) \
     BASE2SUB(instance, GeneralPortParameter, base)

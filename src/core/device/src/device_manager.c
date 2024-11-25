@@ -60,6 +60,11 @@ PUBLIC void SetCoreToDeviceManager(DeviceManager *self, BaseCore *core)
     }
 }
 
+PUBLIC BaseCore *GetCoreFromDeviceManager(DeviceManager *self)
+{
+    return (self == NULL) ? NULL : self->_core;
+}
+
 PUBLIC void SetSystemToDeviceManager(DeviceManager *self, BaseSystem *sys)
 {
     GeneralTaskParameter parameter = {
@@ -85,6 +90,16 @@ PUBLIC void SetSystemToDeviceManager(DeviceManager *self, BaseSystem *sys)
     LOGGER_I(&logger, "Set system, create task %p", self->_task);
 }
 
+PUBLIC BaseSystem *GetSystemFromDeviceManager(DeviceManager *self)
+{
+    return (self == NULL) ? NULL : self->_sys;
+}
+
+PUBLIC LinkedList *GetFactoriesFromDeviceManager(DeviceManager *self)
+{
+    return (self == NULL) ? NULL : &self->_factories;
+}
+
 PUBLIC void AddThreadToDeviceManager(
     DeviceManager *self,
     DeviceManagerThread type,
@@ -107,21 +122,6 @@ PUBLIC void RemoveThreadFromDeviceManager(
         RemoveNodeFromLinkedList(&self->_threads[type], &thread->base);
         LOGGER_D(&logger, "Remove thread: %p (type %d)", thread, type);
     }
-}
-
-PUBLIC BaseCore *GetCoreFromDeviceManager(DeviceManager *self)
-{
-    return (self == NULL) ? NULL : self->_core;
-}
-
-PUBLIC BaseSystem *GetSystemFromDeviceManager(DeviceManager *self)
-{
-    return (self == NULL) ? NULL : self->_sys;
-}
-
-PUBLIC LinkedList *GetFactoriesFromDeviceManager(DeviceManager *self)
-{
-    return (self == NULL) ? NULL : &self->_factories;
 }
 
 PUBLIC STATIC DeviceManager *InstanceOfDeviceManager(void)

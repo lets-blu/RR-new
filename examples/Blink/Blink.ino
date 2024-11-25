@@ -6,11 +6,14 @@
 
 ArduinoCore core;
 NoneSystem sys;
-BaseSerial *serial;
 
 LED led;
 BaseTask *task;
 BlinkThread thread;
+
+BaseSerial *serial;
+RingBuffer ringBuffer;
+uint8_t buffer[AT_COMMAND_MAX_LENGTH];
 
 void setup()
 {
@@ -21,11 +24,12 @@ void setup()
     SetCoreToDeviceManager(manager, &core.base);
 
     // 2. Setup logger and AT command
-    ArduinoUARTParameter uartParameter = {
-        .base = ARDUINO_UART_PARAMETER_BASE,
-        .port = &Serial,
+    ConstructRingBuffer(&ringBuffer, buffer, AT_COMMAND_MAX_LENGTH);
+
+    ArduinoUARTSerialParameter uartParameter = {
+        .base = ARDUINO_UART_SERIAL_PARAMETER_BASE,
         .baudrate = 115200,
-        .rxBufferSize = AT_COMMAND_MAX_LENGTH
+        .buffer = &ringBuffer
     };
 
     serial = CreateSerialWithBaseFactories(
@@ -34,7 +38,7 @@ void setup()
         &uartParameter.base);
 
     fdevopen(serialPutc, NULL);
-    SetRxHandlerToBaseSerial(serial, RingBufferHandlerOfATCommand);
+    AddEventHandlerToBaseSerial(serial, EventHandlerOfATCommand());
 
     // 3. Setup system
     ConstructNoneSystem(&sys);

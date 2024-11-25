@@ -2,6 +2,7 @@
 
 #include <Arduino.h>
 #include "port/arduino/inc/arduino_core.h"
+#include "core/device/inc/device_manager.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -44,6 +45,9 @@ PUBLIC void DestroyTaskWithArduinoCoreBase(
     const char *type,
     BaseTask *task);
 
+PUBLIC BaseThreadState RunArduinoCoreThreadBase(
+    BaseThread *thread);
+
 // Virtual methods table
 static const BaseCoreVtbl baseCoreVtbl = {
     .GetName = GetNameOfArduinoCoreBase,
@@ -59,9 +63,15 @@ static const BaseFactoryVtbl baseFactoryVtbl = {
     .DestroyTask    = DestroyTaskWithArduinoCoreBase
 };
 
+static const BaseThreadVtbl baseThreadVtbl = {
+    .Run = RunArduinoCoreThreadBase
+};
+
 // Method implement(s)
 PUBLIC void ConstructArduinoCore(ArduinoCore *instance)
 {
+    DeviceManager *manager = InstanceOfDeviceManager();
+
     if (instance == NULL)
     {
         return;
@@ -71,22 +81,54 @@ PUBLIC void ConstructArduinoCore(ArduinoCore *instance)
     instance->base.vtbl = &baseCoreVtbl;
     instance->base.base.vtbl = &baseFactoryVtbl;
 
-    ConstructLinkedList(&instance->_devices);
-    ConstructLinkedList(&instance->_digitalPorts);
+    ConstructArduinoCoreThread(
+        &instance->_thread,
+        instance);
+
+    AddThreadToDeviceManager(
+        manager,
+        DEVICE_MANAGER_THREAD_DRIVER_INPUT,
+        &instance->_thread.base);
 }
 
 PUBLIC void DestructArduinoCore(ArduinoCore *instance)
 {
+    DeviceManager *manager = InstanceOfDeviceManager();
+
     if (instance == NULL)
     {
         return;
     }
 
-    DestructLinkedList(&instance->_digitalPorts);
-    DestructLinkedList(&instance->_devices);
-    DestructBaseCore(&instance->base);
+    RemoveThreadFromDeviceManager(
+        manager,
+        DEVICE_MANAGER_THREAD_DRIVER_INPUT,
+        &instance->_thread.base);
 
+    DestructArduinoCoreThread(&instance->_thread);
+    DestructBaseCore(&instance->base);
     memset(instance, 0, sizeof(ArduinoCore));
+}
+
+PUBLIC void ConstructArduinoCoreThread(
+    ArduinoCoreThread *instance,
+    ArduinoCore *core)
+{
+    if (instance != NULL)
+    {
+        ConstructBaseThread(&instance->base);
+        instance->base.vtbl = &baseThreadVtbl;
+        instance->_core = core;
+    }
+}
+
+PUBLIC void DestructArduinoCoreThread(ArduinoCoreThread *instance)
+{
+    if (instance != NULL)
+    {
+        DestructBaseThread(&instance->base);
+        memset(instance, 0, sizeof(ArduinoCoreThread));
+    }
 }
 
 PUBLIC const char *GetNameOfArduinoCoreBase(
@@ -108,49 +150,48 @@ PUBLIC BasePort *CreatePortWithArduinoCoreBase(
     const char *type,
     BasePortParameter *parameter)
 {
-    uint8_t *port = NULL;
-    LinkedListNode *node = NULL;
-    ArduinoDigitalPort *digitalPort = NULL;
-
+    BasePort *port = NULL;
     ArduinoCore *self = BaseFactory2ArduinoCore(factory);
 
-    // 1. Check parameter(s)
     if (factory == NULL || type == NULL || parameter == NULL)
     {
         return NULL;
     }
 
-    // 2. Check type
-    if (strcmp(type, GENERAL_DIGITAL_PORT) == 0)
+    if (strcmp(type, ARDUINO_CORE_DIGITAL_PORT) == 0)
     {
-        port = (uint8_t *)BasePortParameter2GeneralPortParameter(
-            parameter)->port;
+        if (!IS_ARDUINO_DIGITAL_PORT_CONSTRUCTED(&self->_digitalPort))
+        {
+            ConstructArduinoDigitalPort(
+                &self->_digitalPort,
+                BasePortParameter2ArduinoDigitalPortParameter(parameter));
+        }
+
+        port = &self->_digitalPort.base;
     }
-    else if (strcmp(type, ARDUINO_CORE_DIGITAL_PORT) == 0)
+    else if (strcmp(type, GENERAL_DIGITAL_PORT) == 0)
     {
-        port = BasePortParameter2ArduinoDigitalPortParameter(parameter)->port;
-    }
-    else
-    {
-        return NULL;
+        GeneralPortParameter *generalParameter
+            = BasePortParameter2GeneralPortParameter(parameter);
+
+        ArduinoDigitalPortParameter arduinoParameter = {
+            .base = ARDUINO_DIGITAL_PORT_PARAMETER_BASE
+        };
+
+        if (generalParameter->port != NULL)
+        {
+            return NULL;
+        }
+
+        if (!IS_ARDUINO_DIGITAL_PORT_CONSTRUCTED(&self->_digitalPort))
+        {
+            ConstructArduinoDigitalPort(&self->_digitalPort, &arduinoParameter);
+        }
+
+        port = &self->_digitalPort.base;
     }
 
-    // 3. Check if port is already created
-    node = FindNodeInLinkedList(
-        &self->_digitalPorts,
-        FindCallbackOfArduinoDigitalPort,
-        port);
-
-    if (node != NULL)
-    {
-        return LinkedListNode2BasePort(node);
-    }
-
-    // 4. Create port
-    digitalPort = InstanceOfArduinoDigitalPort(port);
-    AddNodeToLinkedList(&self->_digitalPorts, &digitalPort->base.base);
-
-    return &digitalPort->base;
+    return port;
 }
 
 PUBLIC void DestroyPortWithArduinoCoreBase(
@@ -178,40 +219,37 @@ PUBLIC BaseSerial *CreateSerialWithArduinoCoreBase(
 
     if (strcmp(type, ARDUINO_CORE_UART_SERIAL) == 0)
     {
-        serial = (BaseSerial *)malloc(sizeof(ArduinoUART));
-
-        if (serial == NULL)
+        if (!IS_ARDUINO_UART_SERIAL_CONSTRUCTED(&self->_uartSerial))
         {
-            return NULL;
+            ConstructArduinoUARTSerial(
+                &self->_uartSerial,
+                BaseSerialParameter2ArduinoUARTSerialParameter(parameter));
         }
 
-        ConstructArduinoUART(
-            BaseSerial2ArduinoUART(serial),
-            BaseSerialParameter2ArduinoUARTParameter(parameter));
-
-        AddNodeToLinkedList(&self->_devices, &serial->base);
+        serial = &self->_uartSerial.base;
     }
     else if (strcmp(type, GENERAL_UART_SERIAL) == 0)
     {
-        GeneralUARTParameter *generalParameter
-            = BaseSerialParameter2GeneralUARTParameter(parameter);
+        GeneralUARTSerialParameter *generalParameter
+            = BaseSerialParameter2GeneralUARTSerialParameter(parameter);
 
-        ArduinoUARTParameter arduinoParameter = {
-            .base = ARDUINO_UART_PARAMETER_BASE,
-            .port = (HardwareSerial *)generalParameter->port,
+        ArduinoUARTSerialParameter arduinoParameter = {
+            .base = ARDUINO_UART_SERIAL_PARAMETER_BASE,
             .baudrate = generalParameter->baudrate,
-            .rxBufferSize = 0
+            .buffer = NULL
         };
 
-        serial = (BaseSerial *)malloc(sizeof(ArduinoUART));
-
-        if (serial == NULL)
+        if (generalParameter->port != &Serial)
         {
             return NULL;
         }
 
-        ConstructArduinoUART(BaseSerial2ArduinoUART(serial), &arduinoParameter);
-        AddNodeToLinkedList(&self->_devices, &serial->base);
+        if (!IS_ARDUINO_UART_SERIAL_CONSTRUCTED(&self->_uartSerial))
+        {
+            ConstructArduinoUARTSerial(&self->_uartSerial, &arduinoParameter);
+        }
+
+        serial = &self->_uartSerial.base;
     }
 
     return serial;
@@ -222,23 +260,9 @@ PUBLIC void DestroySerialWithArduinoCoreBase(
     const char *type,
     BaseSerial *serial)
 {
+    (void)factory;
     (void)type;
-    ArduinoCore *self = (ArduinoCore *)factory;
-
-    if (factory == NULL || serial == NULL)
-    {
-        return;
-    }
-
-    if (FindNodeInLinkedList(
-            &self->_devices,
-            FindEqualCallbackOfLinkedList,
-            &serial->base) != NULL)
-    {
-        RemoveNodeFromLinkedList(&self->_devices, &serial->base);
-        DestructArduinoUART(BaseSerial2ArduinoUART(serial));
-        free(serial);
-    }
+    (void)serial;
 }
 
 PUBLIC BaseTask *CreateTaskWithArduinoCoreBase(
@@ -261,6 +285,33 @@ PUBLIC void DestroyTaskWithArduinoCoreBase(
     (void)factory;
     (void)type;
     (void)task;
+}
+
+PUBLIC BaseThreadState RunArduinoCoreThreadBase(
+    BaseThread *thread)
+{
+    ArduinoCore *core = NULL;
+    ArduinoCoreThread *self = BaseThread2ArduinoCoreThread(thread);
+
+    if (self == NULL)
+    {
+        return BASE_THREAD_STATE_ENDED;
+    }
+
+    core = self->_core;
+    BEGIN_BASE_THREAD(thread);
+
+    for (;;)
+    {
+        if (IS_ARDUINO_UART_SERIAL_CONSTRUCTED(&core->_uartSerial))
+        {
+            SampleBaseSerial(&core->_uartSerial.base);
+        }
+
+        YIELD_BASE_THREAD(thread);
+    }
+
+    END_BASE_THREAD(thread);
 }
 
 #ifdef __cplusplus

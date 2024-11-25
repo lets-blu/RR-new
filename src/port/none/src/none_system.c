@@ -153,7 +153,12 @@ PUBLIC BaseTask *CreateTaskWithNoneSystemBase(
 {
     NoneSystem *self = BaseSystem2NoneSystem(factory);
 
-    if (factory == NULL || type == NULL ||IS_NONE_TASK_CONSTRUCTED(&self->_task))
+    if (factory == NULL || type == NULL || parameter == NULL)
+    {
+        return NULL;
+    }
+
+    if (IS_NONE_TASK_CONSTRUCTED(&self->_task))
     {
         return NULL;
     }

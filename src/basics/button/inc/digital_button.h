@@ -6,7 +6,9 @@
 #include <string.h>
 
 #include "core/common/inc/keywords.h"
+#include "core/common/inc/linked_list.h"
 #include "core/device/inc/device_manager.h"
+#include "core/event/inc/event_handler.h"
 #include "core/thread/inc/base_thread.h"
 
 #include "port/common/inc/base_factory.h"
@@ -20,23 +22,21 @@
 extern "C" {
 #endif // __cplusplus
 
-#define DIGITAL_BUTTON_SCAN_INTERVAL 50
+#define DIGITAL_BUTTON_SCAN_INTERVAL                50
 
-#define BaseThread2DigitalButtonThread(instance) \
-    BASE2SUB(instance, DigitalButtonThread, base)
+#define DIGITAL_BUTTON_EVENT_PARAMETER_BASE         \
+    {._reserved = EVENT_PARAMETER_RESERVED}
 
-#define BaseButton2DigitalButton(instance) \
+#define BaseButton2DigitalButton(instance)          \
     BASE2SUB(instance, DigitalButton, base)
 
+#define BaseThread2DigitalButtonThread(instance)    \
+    BASE2SUB(instance, DigitalButtonThread, base)
+
+#define EventParameter2DigitalButtonEventParameter(instance)    \
+    BASE2SUB(instance, DigitalButtonEventParameter, base)
+
 struct DigitalButton;
-
-typedef enum {
-    DIGITAL_BUTTON_EVENT_CLICK
-} DigitalButtonEvent;
-
-typedef struct {
-    DigitalButtonEvent event;
-} DigitalButtonEventParameter;
 
 typedef struct {
     BaseThread base;
@@ -51,16 +51,18 @@ typedef struct DigitalButton {
     unsigned int _pin;
     unsigned int _pressValue;
 
-    void (*_eventHandler)(
-        struct DigitalButton *sender,
-        DigitalButtonEventParameter *parameter);
-
+    LinkedList _handlers;
     DigitalButtonThread _thread;
 } DigitalButton;
 
-typedef void (*DigitalButtonEventHandler)(
-    DigitalButton *,
-    DigitalButtonEventParameter *);
+typedef enum {
+    DIGITAL_BUTTON_EVENT_CLICKED
+} DigitalButtonEvent;
+
+typedef struct {
+    EventParameter base;
+    DigitalButtonEvent event;
+} DigitalButtonEventParameter;
 
 // Constructor(s) & Destructor(s)
 PUBLIC void ConstructDigitalButton(
@@ -78,12 +80,12 @@ PUBLIC void ConstructDigitalButtonThread(
 PUBLIC void DestructDigitalButtonThread(DigitalButtonThread *instance);
 
 // Public Method(s)
-PUBLIC void SetEventHandlerToDigitalButton(
+PUBLIC void AddEventHandlerToDigitalButton(
     DigitalButton *self,
-    DigitalButtonEventHandler handler);
+    EventHandler *handler);
 
-PUBLIC void EnableAutoScanToDigitalButton(DigitalButton *self, bool enable);
 PUBLIC void ScanDigitalButton(DigitalButton *self);
+PUBLIC void EnableAutoScanToDigitalButton(DigitalButton *self, bool enable);
 
 #ifdef __cplusplus
 }

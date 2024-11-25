@@ -9,7 +9,6 @@ PROTECTED void ConstructBaseTask(
 
     if (instance != NULL)
     {
-        ConstructLinkedListNode(&instance->base);
         instance->vtbl = NULL;
     }
 }
@@ -18,7 +17,6 @@ PROTECTED void DestructBaseTask(BaseTask *instance)
 {
     if (instance != NULL)
     {
-        DestructLinkedListNode(&instance->base);
         memset(instance, 0, sizeof(BaseTask));
     }
 }

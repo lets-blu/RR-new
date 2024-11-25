@@ -7,12 +7,13 @@
 
 #include "core/common/inc/keywords.h"
 #include "core/common/inc/linked_list.h"
-#include "core/logger/inc/logger.h"
 #include "core/thread/inc/base_thread.h"
 
 #include "port/common/inc/base_core.h"
 #include "port/common/inc/base_system.h"
 #include "port/general/inc/general_task.h"
+
+#include "utils/logger/inc/logger.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -41,7 +42,10 @@ PUBLIC void DestructDeviceManager(DeviceManager *instance);
 
 // Public method(s)
 PUBLIC void SetCoreToDeviceManager(DeviceManager *self, BaseCore *core);
+PUBLIC BaseCore *GetCoreFromDeviceManager(DeviceManager *self);
 PUBLIC void SetSystemToDeviceManager(DeviceManager *self, BaseSystem *sys);
+PUBLIC BaseSystem *GetSystemFromDeviceManager(DeviceManager *self);
+PUBLIC LinkedList *GetFactoriesFromDeviceManager(DeviceManager *self);
 
 PUBLIC void AddThreadToDeviceManager(
     DeviceManager *self,
@@ -52,10 +56,6 @@ PUBLIC void RemoveThreadFromDeviceManager(
     DeviceManager *self,
     DeviceManagerThread type,
     BaseThread *thread);
-
-PUBLIC BaseCore *GetCoreFromDeviceManager(DeviceManager *self);
-PUBLIC BaseSystem *GetSystemFromDeviceManager(DeviceManager *self);
-PUBLIC LinkedList *GetFactoriesFromDeviceManager(DeviceManager *self);
 
 PUBLIC STATIC DeviceManager *InstanceOfDeviceManager(void);
 

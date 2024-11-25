@@ -2,6 +2,7 @@
 #define __KEYWORDS_H__
 
 #include <stddef.h>
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -14,7 +15,7 @@ extern "C" {
 #define STATIC
 
 #define BASE2SUB(instance, SubType, baseMember) \
-    ((SubType *)((char *)(instance) - offsetof(SubType, baseMember)))
+    ((SubType *)((uint8_t *)(instance) - offsetof(SubType, baseMember)))
 
 #ifdef __cplusplus
 }

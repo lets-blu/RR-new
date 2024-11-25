@@ -20,12 +20,10 @@ PUBLIC void ConstructRingBuffer(
 
     instance->_buffer = buffer;
     instance->_bufferLength = bufferLength;
-    instance->_freeLength = bufferLength;
+    instance->_usedLength = 0;
 
     instance->_readIndex = 0;
     instance->_writeIndex = 0;
-
-    instance->_eventHandler = NULL;
 }
 
 PUBLIC void DestructRingBuffer(
@@ -52,13 +50,13 @@ PUBLIC unsigned int ReadRingBuffer(
     }
 
     // 2. Check buffer status
-    if (self->_buffer == NULL || self->_freeLength == self->_bufferLength)
+    if (self->_buffer == NULL || self->_usedLength == 0)
     {
         return 0;
     }
 
     // 3. Calculate copy length
-    copyLength = self->_bufferLength - self->_freeLength;
+    copyLength = self->_usedLength;
 
     if (bufferLength < copyLength)
     {
@@ -80,7 +78,7 @@ PUBLIC unsigned int ReadRingBuffer(
 
     // 5. Update read index
     self->_readIndex = (self->_readIndex + copyLength) % self->_bufferLength;
-    self->_freeLength += copyLength;
+    self->_usedLength -= copyLength;
 
     return copyLength;
 }
@@ -92,10 +90,6 @@ PUBLIC bool WriteRingBuffer(
 {
     unsigned int rightLength = 0;
 
-    RingBufferEventParameter parameter = {
-        .event = RING_BUFFER_EVENT_READY_TO_READ
-    };
-
     // 1. Check parameters
     if (self == NULL || buffer == NULL || bufferLength == 0)
     {
@@ -103,7 +97,8 @@ PUBLIC bool WriteRingBuffer(
     }
 
     // 2. Check buffer status
-    if (self->_buffer == NULL || self->_freeLength < bufferLength)
+    if (self->_buffer == NULL
+        || self->_bufferLength - self->_usedLength < bufferLength)
     {
         return false;
     }
@@ -123,25 +118,9 @@ PUBLIC bool WriteRingBuffer(
 
     // 4. Update write index
     self->_writeIndex = (self->_writeIndex + bufferLength) % self->_bufferLength;
-    self->_freeLength -= bufferLength;
-
-    // 5. Invoke handler
-    if (self->_eventHandler != NULL)
-    {
-        self->_eventHandler(self, &parameter);
-    }
+    self->_usedLength += bufferLength;
 
     return true;
-}
-
-PUBLIC void SetEventHandlerToRingBuffer(
-    RingBuffer *self,
-    RingBufferEventHandler handler)
-{
-    if (self != NULL)
-    {
-        self->_eventHandler = handler;
-    }
 }
 
 PUBLIC RingBufferPacketResult FindPacketInRingBuffer(
@@ -154,7 +133,7 @@ PUBLIC RingBufferPacketResult FindPacketInRingBuffer(
     };
 
     unsigned int start = self->_readIndex;
-    unsigned int end = start + self->_bufferLength - self->_freeLength;
+    unsigned int end = start + self->_usedLength;
 
     // 1. Check parameters
     if (self == NULL || parameter == NULL)

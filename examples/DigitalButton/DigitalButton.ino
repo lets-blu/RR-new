@@ -4,9 +4,13 @@
 
 ArduinoCore core;
 NoneSystem sys;
-BaseSerial *serial;
 
 DigitalButton button;
+EventHandler handler;
+
+BaseSerial *serial;
+RingBuffer ringBuffer;
+uint8_t buffer[AT_COMMAND_MAX_LENGTH];
 Logger logger = STATIC_LOGGER("Main", LOGGER_LEVEL_INFO);
 
 void setup()
@@ -18,11 +22,12 @@ void setup()
     SetCoreToDeviceManager(manager, &core.base);
 
     // 2. Setup logger and AT command
-    ArduinoUARTParameter uartParameter = {
-        .base = ARDUINO_UART_PARAMETER_BASE,
-        .port = &Serial,
+    ConstructRingBuffer(&ringBuffer, buffer, AT_COMMAND_MAX_LENGTH);
+
+    ArduinoUARTSerialParameter uartParameter = {
+        .base = ARDUINO_UART_SERIAL_PARAMETER_BASE,
         .baudrate = 115200,
-        .rxBufferSize = AT_COMMAND_MAX_LENGTH
+        .buffer = &ringBuffer
     };
 
     serial = CreateSerialWithBaseFactories(
@@ -32,7 +37,7 @@ void setup()
 
     fdevopen(serialPutc, NULL);
     RegisterLogger(&logger);
-    SetRxHandlerToBaseSerial(serial, RingBufferHandlerOfATCommand);
+    AddEventHandlerToBaseSerial(serial, EventHandlerOfATCommand());
 
     // 3. Setup system
     ConstructNoneSystem(&sys);
@@ -40,7 +45,8 @@ void setup()
 
     // 4. Create button
     ConstructDigitalButton(&button, NULL, 14, BASE_PORT_VALUE_LOW);
-    SetEventHandlerToDigitalButton(&button, buttonEventHandler);
+    ConstructEventHandler(&handler, eventHandler);
+    AddEventHandlerToDigitalButton(&button, &handler);
     EnableAutoScanToDigitalButton(&button, true);
 
     // 5. Run system
@@ -59,11 +65,14 @@ int serialPutc(char c, FILE *file)
     return c;
 }
 
-void buttonEventHandler(
-    DigitalButton *sender,
-    DigitalButtonEventParameter *parameter)
+void eventHandler(void *sender, EventParameter *parameter)
 {
-    if (sender == &button && parameter->event == DIGITAL_BUTTON_EVENT_CLICK)
+    DigitalButtonEventParameter *buttonParameter
+        = EventParameter2DigitalButtonEventParameter(parameter);
+
+    if (sender == &button
+        && parameter != NULL
+        && buttonParameter->event == DIGITAL_BUTTON_EVENT_CLICKED)
     {
         LOGGER_I(&logger, "Button clicked!");
     }

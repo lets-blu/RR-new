@@ -2,42 +2,58 @@
 #define __ARDUINO_CORE_H__
 
 #include <stddef.h>
-#include <stdlib.h>
 #include <string.h>
 
 #include "core/common/inc/keywords.h"
-#include "core/common/inc/linked_list.h"
+#include "core/thread/inc/base_thread.h"
 
 #include "port/common/inc/base_core.h"
 #include "port/common/inc/base_task.h"
+#include "port/general/inc/general_port.h"
+#include "port/general/inc/general_uart_serial.h"
 
 #include "port/arduino/inc/arduino_digital_port.h"
-#include "port/arduino/inc/arduino_uart.h"
-#include "port/general/inc/general_port.h"
-#include "port/general/inc/general_uart.h"
+#include "port/arduino/inc/arduino_uart_serial.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
 
 #define ARDUINO_CORE_DIGITAL_PORT   "ArduinoDigitalPort"
-#define ARDUINO_CORE_UART_SERIAL    "ArduinoUART"
+#define ARDUINO_CORE_UART_SERIAL    "ArduinoUARTSerial"
 
-#define BaseCore2ArduinoCore(instance) \
+#define BaseCore2ArduinoCore(instance)          \
     BASE2SUB(instance, ArduinoCore, base)
 
-#define BaseFactory2ArduinoCore(instance) \
+#define BaseFactory2ArduinoCore(instance)       \
     BaseCore2ArduinoCore(BaseFactory2BaseCore(instance))
 
+#define BaseThread2ArduinoCoreThread(instance)  \
+    BASE2SUB(instance, ArduinoCoreThread, base)
+
+struct ArduinoCore;
+
 typedef struct {
+    BaseThread base;
+    struct ArduinoCore *_core;
+} ArduinoCoreThread;
+
+typedef struct ArduinoCore {
     BaseCore base;
-    LinkedList _devices;
-    LinkedList _digitalPorts;
+    ArduinoCoreThread _thread;
+    ArduinoDigitalPort _digitalPort;
+    ArduinoUARTSerial _uartSerial;
 } ArduinoCore;
 
 // Constructor(s) & Destructor(s)
 PUBLIC void ConstructArduinoCore(ArduinoCore *instance);
 PUBLIC void DestructArduinoCore(ArduinoCore *instance);
+
+PUBLIC void ConstructArduinoCoreThread(
+    ArduinoCoreThread *instance,
+    ArduinoCore *core);
+
+PUBLIC void DestructArduinoCoreThread(ArduinoCoreThread *instance);
 
 #ifdef __cplusplus
 }

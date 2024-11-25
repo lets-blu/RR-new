@@ -72,10 +72,10 @@ PROTECTED void ConstructBaseThread(BaseThread *instance);
 PROTECTED void DestructBaseThread(BaseThread *instance);
 
 // Public method(s)
-PUBLIC void UpdateTickInBaseThread(BaseThread *self);
-PUBLIC bool IsTimeoutOfBaseThread(BaseThread *self, unsigned long delay);
-PUBLIC BaseThreadState RunBaseThread(BaseThread *self);
+PROTECTED void UpdateTickInBaseThread(BaseThread *self);
+PROTECTED bool IsTimeoutOfBaseThread(BaseThread *self, unsigned long delay);
 
+PUBLIC BaseThreadState RunBaseThread(BaseThread *self);
 PUBLIC STATIC void RunBaseThreads(LinkedList *threads);
 
 #ifdef __cplusplus

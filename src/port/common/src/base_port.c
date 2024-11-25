@@ -9,7 +9,6 @@ PROTECTED void ConstructBasePort(
 
     if (instance != NULL)
     {
-        ConstructLinkedListNode(&instance->base);
         instance->vtbl = NULL;
     }
 }
@@ -18,7 +17,6 @@ PROTECTED void DestructBasePort(BasePort *instance)
 {
     if (instance != NULL)
     {
-        DestructLinkedListNode(&instance->base);
         memset(instance, 0, sizeof(BasePort));
     }
 }
@@ -31,16 +29,6 @@ PUBLIC void SetupBasePort(BasePort *self, unsigned int pin, BasePortMode mode)
     }
 
     self->vtbl->Setup(self, pin, mode);
-}
-
-PUBLIC void SampleBasePort(BasePort *self)
-{
-    if (self == NULL || self->vtbl == NULL || self->vtbl->Sample == NULL)
-    {
-        return;
-    }
-
-    self->vtbl->Sample(self);
 }
 
 PUBLIC unsigned int ReadBasePort(BasePort *self, unsigned int pin)
@@ -61,4 +49,26 @@ PUBLIC void WriteBasePort(BasePort *self, unsigned int pin, unsigned int value)
     }
 
     self->vtbl->Write(self, pin, value);
+}
+
+PUBLIC void AddEventHandlerToBasePort(BasePort *self, EventHandler *handler)
+{
+    if (self == NULL
+        || self->vtbl == NULL
+        || self->vtbl->AddEventHandler == NULL)
+    {
+        return;
+    }
+
+    self->vtbl->AddEventHandler(self, handler);
+}
+
+PUBLIC void SampleBasePort(BasePort *self)
+{
+    if (self == NULL || self->vtbl == NULL || self->vtbl->Sample == NULL)
+    {
+        return;
+    }
+
+    self->vtbl->Sample(self);
 }

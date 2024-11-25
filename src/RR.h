@@ -3,8 +3,9 @@
 
 // Core
 #include "core/common/inc/keywords.h"
+#include "core/common/inc/ring_buffer.h"
 #include "core/device/inc/device_manager.h"
-#include "core/logger/inc/logger.h"
+#include "core/event/inc/event_handler.h"
 #include "core/thread/inc/base_thread.h"
 
 // Basics
@@ -13,6 +14,7 @@
 
 // Utils
 #include "utils/at_command/inc/at_command.h"
+#include "utils/logger/inc/logger.h"
 
 // Port
 #include "port/common/inc/base_factory.h"

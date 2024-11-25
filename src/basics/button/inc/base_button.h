@@ -5,8 +5,8 @@
 #include <string.h>
 
 #include "core/common/inc/keywords.h"
-#include "core/logger/inc/logger.h"
 #include "basics/button/inc/button_state.h"
+#include "utils/logger/inc/logger.h"
 
 #ifdef __cplusplus
 extern "C" {

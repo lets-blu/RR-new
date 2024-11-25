@@ -53,7 +53,7 @@ PUBLIC void ConstructDigitalButton(
     instance->_pressValue = pressValue;
     SetupBasePort(instance->_port, pin, BASE_PORT_MODE_INPUT);
 
-    instance->_eventHandler = NULL;
+    ConstructLinkedList(&instance->_handlers);
     ConstructDigitalButtonThread(&instance->_thread, instance);
 }
 
@@ -67,6 +67,7 @@ PUBLIC void DestructDigitalButton(DigitalButton *instance)
     }
 
     DestructDigitalButtonThread(&instance->_thread);
+    DestructLinkedList(&instance->_handlers);
 
     DestroyPortWithBaseFactories(
         GetFactoriesFromDeviceManager(manager),
@@ -98,13 +99,34 @@ PUBLIC void DestructDigitalButtonThread(DigitalButtonThread *instance)
     }
 }
 
-PUBLIC void SetEventHandlerToDigitalButton(
+PUBLIC void AddEventHandlerToDigitalButton(
     DigitalButton *self,
-    DigitalButtonEventHandler handler)
+    EventHandler *handler)
 {
-    if (self != NULL)
+    if (self != NULL && handler != NULL)
     {
-        self->_eventHandler = handler;
+        AddNodeToLinkedList(&self->_handlers, &handler->base);
+    }
+}
+
+PUBLIC void ScanDigitalButton(DigitalButton *self)
+{
+    unsigned int value = BASE_PORT_VALUE_LOW;
+
+    if (self == NULL)
+    {
+        return;
+    }
+
+    value = ReadBasePort(self->_port, self->_pin);
+
+    if (value == self->_pressValue)
+    {
+        OnPressInButtonState(self->_currentState, &self->base);
+    }
+    else
+    {
+        OnReleaseInButtonState(self->_currentState, &self->base);
     }
 }
 
@@ -133,27 +155,6 @@ PUBLIC void EnableAutoScanToDigitalButton(DigitalButton *self, bool enable)
     }
 }
 
-PUBLIC void ScanDigitalButton(DigitalButton *self)
-{
-    unsigned int value = BASE_PORT_VALUE_LOW;
-
-    if (self == NULL)
-    {
-        return;
-    }
-
-    value = ReadBasePort(self->_port, self->_pin);
-
-    if (value == self->_pressValue)
-    {
-        OnPressInButtonState(self->_currentState, &self->base);
-    }
-    else
-    {
-        OnReleaseInButtonState(self->_currentState, &self->base);
-    }
-}
-
 PUBLIC void SetStateToDigitalButtonBase(
     BaseButton *button,
     const ButtonState *state)
@@ -175,14 +176,15 @@ PUBLIC const ButtonState *GetStateFromDigitalButtonBase(BaseButton *button)
 PUBLIC void OnClickDigitalButtonBase(BaseButton *button)
 {
     DigitalButtonEventParameter parameter = {
-        .event = DIGITAL_BUTTON_EVENT_CLICK
+        .base = DIGITAL_BUTTON_EVENT_PARAMETER_BASE,
+        .event = DIGITAL_BUTTON_EVENT_CLICKED
     };
 
     DigitalButton *self = BaseButton2DigitalButton(button);
 
-    if (button != NULL && self->_eventHandler != NULL)
+    if (button != NULL)
     {
-        self->_eventHandler(self, &parameter);
+        InvokeEventHandlers(&self->_handlers, self, &parameter.base);
     }
 }
 

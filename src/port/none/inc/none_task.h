@@ -11,13 +11,13 @@
 extern "C" {
 #endif // __cplusplus
 
-#define NONE_TASK_PARAMETER_BASE \
-    {BASE_TASK_PARAMETER_RESERVED}
+#define NONE_TASK_PARAMETER_BASE            \
+    {._reserved = BASE_TASK_PARAMETER_RESERVED}
 
-#define IS_NONE_TASK_CONSTRUCTED(instance) \
-    ((instance)->_entry != NULL)
+#define IS_NONE_TASK_CONSTRUCTED(instance)  \
+    ((instance)->base.vtbl != NULL)
 
-#define BaseTask2NoneTask(instance) \
+#define BaseTask2NoneTask(instance)         \
     BASE2SUB(instance, NoneTask, base)
 
 #define BaseTaskParameter2NoneTaskParameter(instance) \

@@ -1,4 +1,4 @@
-#include "core/logger/inc/logger.h"
+#include "utils/logger/inc/logger.h"
 
 // Private method(s)
 PRIVATE STATIC bool FindCallbackOfLogger(
@@ -25,18 +25,23 @@ PUBLIC void ConstructLogger(
     const char *name,
     LoggerLevel level)
 {
-    if (instance != NULL)
+    if (instance == NULL)
     {
-        instance->_name = name;
-        instance->_level = level;
-        RegisterLogger(instance);
+        return;
     }
+
+    ConstructLinkedListNode(&instance->base);
+    instance->_name = name;
+    instance->_level = level;
+
+    RegisterLogger(instance);
 }
 
 PUBLIC void DestructLogger(Logger *instance)
 {
     if (instance != NULL)
     {
+        DestructLinkedListNode(&instance->base);
         UnregisterLogger(instance);
         memset(instance, 0, sizeof(Logger));
     }
@@ -92,13 +97,13 @@ PUBLIC STATIC bool SetLevelToLogger(const char *name, LoggerLevel level)
     LinkedListNode *node
         = FindNodeInLinkedList(&loggers, FindCallbackOfLogger, (void *)name);
 
-    if (node == NULL)
+    if (node != NULL)
     {
-        return false;
+        LinkedListNode2Logger(node)->_level = level;
+        return true;
     }
 
-    LinkedListNode2Logger(node)->_level = level;
-    return true;
+    return false;
 }
 
 PRIVATE STATIC bool FindCallbackOfLogger(

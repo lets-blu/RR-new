@@ -13,13 +13,9 @@ extern "C" {
 
 #define BASE_TASK_PARAMETER_RESERVED 0
 
-#define LinkedListNode2BaseTask(instance) \
-    BASE2SUB(instance, BaseTask, base)
-
 struct BaseTaskVtbl;
 
 typedef struct {
-    LinkedListNode base;
     const struct BaseTaskVtbl *vtbl;
 } BaseTask;
 

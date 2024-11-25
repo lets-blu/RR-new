@@ -11,7 +11,7 @@ extern "C" {
 #define GENERAL_TASK "GeneralTask"
 
 #define GENERAL_TASK_PARAMETER_BASE \
-    {BASE_TASK_PARAMETER_RESERVED}
+    {._reserved = BASE_TASK_PARAMETER_RESERVED}
 
 #define BaseTaskParameter2GeneralTaskParameter(instance) \
     BASE2SUB(instance, GeneralTaskParameter, base)

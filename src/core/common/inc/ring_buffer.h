@@ -12,25 +12,13 @@
 extern "C" {
 #endif // __cplusplus
 
-typedef enum {
-    RING_BUFFER_EVENT_READY_TO_READ
-} RingBufferEvent;
-
-typedef struct {
-    RingBufferEvent event;
-} RingBufferEventParameter;
-
 typedef struct RingBuffer {
     uint8_t *_buffer;
     unsigned int _bufferLength;
-    unsigned int _freeLength;
+    unsigned int _usedLength;
 
     unsigned int _readIndex;
     unsigned int _writeIndex;
-
-    void (*_eventHandler)(
-        struct RingBuffer *sender,
-        RingBufferEventParameter *parameter);
 } RingBuffer;
 
 typedef struct {
@@ -41,13 +29,9 @@ typedef struct {
 } RingBufferPacketParameter;
 
 typedef struct {
-    unsigned int packetLength;
     unsigned int invalidLength;
+    unsigned int packetLength;
 } RingBufferPacketResult;
-
-typedef void (*RingBufferEventHandler)(
-    RingBuffer *,
-    RingBufferEventParameter *);
 
 // Constructor(s) and Destructor(s)
 PUBLIC void ConstructRingBuffer(
@@ -68,10 +52,6 @@ PUBLIC bool WriteRingBuffer(
     RingBuffer *self,
     uint8_t *buffer,
     unsigned int bufferLength);
-
-PUBLIC void SetEventHandlerToRingBuffer(
-    RingBuffer *self,
-    RingBufferEventHandler handler);
 
 PUBLIC RingBufferPacketResult FindPacketInRingBuffer(
     RingBuffer *self,

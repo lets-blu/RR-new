@@ -9,7 +9,6 @@ PROTECTED void ConstructBaseSerial(
 
     if (instance != NULL)
     {
-        ConstructLinkedListNode(&instance->base);
         instance->vtbl = NULL;
     }
 }
@@ -19,7 +18,6 @@ PROTECTED void DestructBaseSerial(
 {
     if (instance != NULL)
     {
-        DestructLinkedListNode(&instance->base);
         memset(instance, 0, sizeof(BaseSerial));
     }
 }
@@ -50,14 +48,26 @@ PUBLIC unsigned int WriteBaseSerial(
     return self->vtbl->Write(self, buffer, size);
 }
 
-PUBLIC void SetRxHandlerToBaseSerial(
+PUBLIC void AddEventHandlerToBaseSerial(
     BaseSerial *self,
-    RingBufferEventHandler handler)
+    EventHandler *handler)
 {
-    if (self == NULL || self->vtbl == NULL || self->vtbl->SetRxHandler == NULL)
+    if (self == NULL
+        || self->vtbl == NULL
+        || self->vtbl->AddEventHandler == NULL)
     {
         return;
     }
 
-    self->vtbl->SetRxHandler(self, handler);
+    self->vtbl->AddEventHandler(self, handler);
+}
+
+PUBLIC void SampleBaseSerial(BaseSerial *self)
+{
+    if (self == NULL || self->vtbl == NULL || self->vtbl->Sample == NULL)
+    {
+        return;
+    }
+
+    self->vtbl->Sample(self);
 }

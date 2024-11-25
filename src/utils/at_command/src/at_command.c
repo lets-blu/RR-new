@@ -1,14 +1,21 @@
 #include "utils/at_command/inc/at_command.h"
 
-// Private member(s)
-PRIVATE STATIC LinkedList commands = STATIC_LINKED_LIST();
-
 // Private method(s)
-PRIVATE void SendResponseATCommand(ATCommand *self, const char *responseString);
+PRIVATE void SendResponseATCommand(
+    ATCommand *self,
+    const char *responseString);
+
+PRIVATE STATIC void HandlerOfATCommand(
+    void *sender,
+    EventParameter *parameter);
 
 PRIVATE STATIC bool FindCallbackOfATCommand(
     LinkedListNode *node,
     const void *data);
+
+// Private member(s)
+PRIVATE STATIC LinkedList commands = STATIC_LINKED_LIST();
+PRIVATE STATIC EventHandler handler = STATIC_EVENT_HANDLER(HandlerOfATCommand);
 
 // Method implement(s)
 PUBLIC void ConstructATCommand(
@@ -87,37 +94,9 @@ PUBLIC STATIC void UnregisterATCommand(ATCommand *instance)
     }
 }
 
-PUBLIC STATIC void RingBufferHandlerOfATCommand(
-    RingBuffer *sender,
-    RingBufferEventParameter *parameter)
+PUBLIC STATIC EventHandler *EventHandlerOfATCommand(void)
 {
-    RingBufferPacketResult result = {0};
-    uint8_t buffer[AT_COMMAND_MAX_LENGTH] = {0};
-
-    RingBufferPacketParameter packetParameter = {
-        .header = (uint8_t *)AT_COMMAND_HEADER,
-        .headerLength = AT_COMMAND_HEADER_LENGTH,
-        .footer = (uint8_t *)AT_COMMAND_FOOTER,
-        .footerLength = AT_COMMAND_FOOTER_LENGTH
-    };
-
-    if (parameter->event != RING_BUFFER_EVENT_READY_TO_READ)
-    {
-        return;
-    }
-
-    result = FindPacketInRingBuffer(sender, &packetParameter);
-
-    if (result.invalidLength != 0)
-    {
-        ReadRingBuffer(sender, buffer, result.invalidLength);
-    }
-
-    if (result.packetLength != 0)
-    {
-        ReadRingBuffer(sender, buffer, result.packetLength);
-        ProcessATCommand((char *)buffer);
-    }
+    return &handler;
 }
 
 PUBLIC STATIC void ProcessATCommand(char *commandString)
@@ -179,6 +158,53 @@ PUBLIC STATIC void ProcessATCommand(char *commandString)
 
     command->_handler(argc, argv);
     SendResponseATCommand(command, "OK");
+}
+
+PRIVATE STATIC void HandlerOfATCommand(
+    void *sender,
+    EventParameter *parameter)
+{
+    (void)sender;
+    RingBufferPacketResult packetResult = {0};
+    uint8_t buffer[AT_COMMAND_MAX_LENGTH] = {0};
+
+    RingBufferPacketParameter packetParameter = {
+        .header = (uint8_t *)AT_COMMAND_HEADER,
+        .headerLength = AT_COMMAND_HEADER_LENGTH,
+        .footer = (uint8_t *)AT_COMMAND_FOOTER,
+        .footerLength = AT_COMMAND_FOOTER_LENGTH
+    };
+
+    BaseSerialEventParameter *serialParameter
+        = EventParameter2BaseSerialEventParameter(parameter);
+
+    if (parameter == NULL
+        || serialParameter->event != BASE_SERIAL_EVENT_DATA_RECEIVED)
+    {
+        return;
+    }
+
+    packetResult = FindPacketInRingBuffer(
+            serialParameter->buffer,
+            &packetParameter);
+
+    if (packetResult.invalidLength != 0)
+    {
+        ReadRingBuffer(
+            serialParameter->buffer,
+            buffer,
+            packetResult.invalidLength);
+    }
+
+    if (packetResult.packetLength != 0)
+    {
+        ReadRingBuffer(
+            serialParameter->buffer,
+            buffer,
+            packetResult.packetLength);
+
+        ProcessATCommand((char *)buffer);
+    }
 }
 
 PRIVATE STATIC bool FindCallbackOfATCommand(

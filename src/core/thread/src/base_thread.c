@@ -25,7 +25,7 @@ PROTECTED void DestructBaseThread(BaseThread *instance)
     }
 }
 
-PUBLIC void UpdateTickInBaseThread(BaseThread *self)
+PROTECTED void UpdateTickInBaseThread(BaseThread *self)
 {
     DeviceManager *manager = InstanceOfDeviceManager();
 
@@ -35,7 +35,7 @@ PUBLIC void UpdateTickInBaseThread(BaseThread *self)
     }
 }
 
-PUBLIC bool IsTimeoutOfBaseThread(BaseThread *self, unsigned long delay)
+PROTECTED bool IsTimeoutOfBaseThread(BaseThread *self, unsigned long delay)
 {
     DeviceManager *manager
         = InstanceOfDeviceManager();

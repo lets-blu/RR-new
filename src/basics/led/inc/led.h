@@ -6,11 +6,12 @@
 
 #include "core/common/inc/keywords.h"
 #include "core/device/inc/device_manager.h"
-#include "core/logger/inc/logger.h"
 
 #include "port/common/inc/base_factory.h"
 #include "port/common/inc/base_port.h"
 #include "port/general/inc/general_port.h"
+
+#include "utils/logger/inc/logger.h"
 
 #ifdef __cplusplus
 extern "C" {

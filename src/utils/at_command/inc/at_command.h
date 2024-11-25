@@ -9,6 +9,9 @@
 #include "core/common/inc/keywords.h"
 #include "core/common/inc/linked_list.h"
 #include "core/common/inc/ring_buffer.h"
+#include "core/event/inc/event_handler.h"
+
+#include "port/common/inc/base_serial.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -49,13 +52,10 @@ PUBLIC void DestructATCommand(ATCommand *instance);
 
 // Public method(s)
 PUBLIC void ResponseATCommand(ATCommand *self, const char *responseString);
+
 PUBLIC STATIC void RegisterATCommand(ATCommand *instance);
 PUBLIC STATIC void UnregisterATCommand(ATCommand *instance);
-
-PUBLIC STATIC void RingBufferHandlerOfATCommand(
-    RingBuffer *sender,
-    RingBufferEventParameter *parameter);
-
+PUBLIC STATIC EventHandler *EventHandlerOfATCommand(void);
 PUBLIC STATIC void ProcessATCommand(char *commandString);
 
 #ifdef __cplusplus
