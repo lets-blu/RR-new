@@ -1,66 +1,56 @@
 #ifndef __DEVICE_MANAGER_H__
 #define __DEVICE_MANAGER_H__
 
-#include <stdbool.h>
 #include <stddef.h>
-#include <string.h>
 
-#include "core/common/inc/keywords.h"
-#include "core/common/inc/linked_list.h"
-#include "core/thread/inc/base_thread.h"
+#include "core/coroutine/inc/linked_coroutine.h"
+#include "core/utils/inc/keywords.h"
+#include "core/utils/inc/linked_list.h"
 
-#include "port/common/inc/base_core.h"
-#include "port/common/inc/base_system.h"
-#include "port/general/inc/general_task.h"
-
-#include "utils/logger/inc/logger.h"
+#include "port/component/inc/base_component.h"
+#include "port/core/inc/base_core.h"
+#include "port/system/inc/base_system.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
 
-typedef enum {
-    DEVICE_MANAGER_THREAD_DRIVER_INPUT,
-    DEVICE_MANAGER_THREAD_APPLICATION,
-    DEVICE_MANAGER_THREAD_DRIVER_OUTPUT,
-    DEVICE_MANAGER_THREADS_NUMBER
-} DeviceManagerThread;
-
 typedef struct {
-    bool _isConstructed;
-
     BaseCore *_core;
-    BaseSystem *_sys;
-    LinkedList _factories;
-
-    BaseTask *_task;
-    LinkedList _threads[DEVICE_MANAGER_THREADS_NUMBER];
+    BaseSystem *_system;
+    LinkedList _components;
+    LinkedList _coroutines;
 } DeviceManager;
 
-// Constructor(s) & Destructor(s)
-PUBLIC void DestructDeviceManager(DeviceManager *instance);
-
 // Public method(s)
-PUBLIC void SetCoreToDeviceManager(DeviceManager *self, BaseCore *core);
-PUBLIC BaseCore *GetCoreFromDeviceManager(DeviceManager *self);
-PUBLIC void SetSystemToDeviceManager(DeviceManager *self, BaseSystem *sys);
-PUBLIC BaseSystem *GetSystemFromDeviceManager(DeviceManager *self);
-PUBLIC LinkedList *GetFactoriesFromDeviceManager(DeviceManager *self);
+PUBLIC void DeviceManager_SetCore(DeviceManager *pThis, BaseCore *core);
+PUBLIC BaseCore *DeviceManager_GetCore(DeviceManager *pThis);
 
-PUBLIC void AddThreadToDeviceManager(
-    DeviceManager *self,
-    DeviceManagerThread type,
-    BaseThread *thread);
+PUBLIC void DeviceManager_SetSystem(DeviceManager *pThis, BaseSystem *system);
+PUBLIC BaseSystem *DeviceManager_GetSystem(DeviceManager *pThis);
 
-PUBLIC void RemoveThreadFromDeviceManager(
-    DeviceManager *self,
-    DeviceManagerThread type,
-    BaseThread *thread);
+PUBLIC void DeviceManager_AddComponent(
+    DeviceManager *pThis,
+    BaseComponent *component);
 
-PUBLIC STATIC DeviceManager *InstanceOfDeviceManager(void);
+PUBLIC void DeviceManager_RemoveComponent(
+    DeviceManager *pThis,
+    BaseComponent *component);
+
+PUBLIC void DeviceManager_AddCoroutine(
+    DeviceManager *pThis,
+    LinkedCoroutine *coroutine);
+
+PUBLIC void DeviceManager_RemoveCoroutine(
+    DeviceManager *pThis,
+    LinkedCoroutine *coroutine);
+
+PUBLIC LinkedList *DeviceManager_GetComponents(DeviceManager *pThis);
+PUBLIC STATIC DeviceManager *DeviceManager_GetInstance(void);
+PUBLIC STATIC void DeviceManager_TaskEntry(void *parameter);
 
 #ifdef __cplusplus
 }
 #endif // __cplusplus
 
-#endif // __DEVICE_MANAGER_H__
+#endif //__DEVICE_MANAGER_H__

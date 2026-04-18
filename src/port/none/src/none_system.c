@@ -1,203 +1,175 @@
 #include "port/none/inc/none_system.h"
 
+// Private method(s)
+PRIVATE NoneTimer *NoneSystem_AllocTimer(NoneSystem *pThis);
+
 // Override method(s)
-PUBLIC void RunNoneSystemBase(
-    BaseSystem *sys);
-
-PUBLIC const char *GetNameOfNoneSystemBase(
-    BaseSystem *sys);
-
-PUBLIC BasePort *CreatePortWithNoneSystemBase(
-    BaseFactory *factory,
-    const char *type,
-    BasePortParameter *parameter);
-
-PUBLIC void DestroyPortWithNoneSystemBase(
-    BaseFactory *factory,
-    const char *type,
-    BasePort *port);
-
-PUBLIC BaseSerial *CreateSerialWithNoneSystemBase(
-    BaseFactory *factory,
-    const char *type,
-    BaseSerialParameter *parameter);
-
-PUBLIC void DestroySerialWithNoneSystemBase(
-    BaseFactory *factory,
-    const char *type,
-    BaseSerial *serial);
-
-PUBLIC BaseTask *CreateTaskWithNoneSystemBase(
-    BaseFactory *factory,
+PUBLIC BaseTask *NoneSystem_CreateTask(
+    BaseSystem *system,
     const char *type,
     BaseTaskParameter *parameter);
 
-PUBLIC void DestroyTaskWithNoneSystemBase(
-    BaseFactory *factory,
+PUBLIC void NoneSystem_DestroyTask(BaseSystem *system, BaseTask *task);
+
+PUBLIC BaseTimer *NoneSystem_CreateTimer(
+    BaseSystem *system,
     const char *type,
-    BaseTask *task);
+    BaseTimerParameter *parameter);
 
-// Virtual methods table
-static const BaseSystemVtbl baseSystemVtbl = {
-    .Run = RunNoneSystemBase,
-    .GetName = GetNameOfNoneSystemBase
-};
+PUBLIC void NoneSystem_DestroyTimer(BaseSystem *system, BaseTimer *timer);
 
-static const BaseFactoryVtbl baseFactoryVtbl = {
-    .CreatePort     = CreatePortWithNoneSystemBase,
-    .DestroyPort    = DestroyPortWithNoneSystemBase,
-    .CreateSerial   = CreateSerialWithNoneSystemBase,
-    .DestroySerial  = DestroySerialWithNoneSystemBase,
-    .CreateTask     = CreateTaskWithNoneSystemBase,
-    .DestroyTask    = DestroyTaskWithNoneSystemBase
+PUBLIC void NoneSystem_Run(BaseSystem *system);
+
+// Virtual methods table(s)
+static const BaseSystemVtbl baseVtbl = {
+    .CreateTask = NoneSystem_CreateTask,
+    .DestroyTask = NoneSystem_DestroyTask,
+    .CreateTimer = NoneSystem_CreateTimer,
+    .DestroyTimer = NoneSystem_DestroyTimer,
+    .Run = NoneSystem_Run,
 };
 
 // Method implement(s)
-PROTECTED void ConstructNoneSystem(NoneSystem *instance)
+PUBLIC void NoneSystem_Construct(NoneSystem *pThis)
 {
-    if (instance != NULL)
-    {
-        ConstructBaseSystem(&instance->base);
-        instance->base.vtbl = &baseSystemVtbl;
-        instance->base.base.vtbl = &baseFactoryVtbl;
-    }
-}
-
-PROTECTED void DestructNoneSystem(NoneSystem *instance)
-{
-    if (instance != NULL)
-    {
-        DestructBaseSystem(&instance->base);
-        memset(instance, 0, sizeof(NoneSystem));
-    }
-}
-
-PUBLIC void RunNoneSystemBase(
-    BaseSystem *sys)
-{
-    NoneSystem *self = BaseSystem2NoneSystem(sys);
-
-    if (sys == NULL)
-    {
+    if (pThis == NULL) {
         return;
     }
 
-    if (IS_NONE_TASK_CONSTRUCTED(&self->_task))
-    {
-        RunBaseTask(&self->_task.base);
+    BaseSystem_Construct(&pThis->base);
+    pThis->base.vtbl = &baseVtbl;
+
+    memset(&pThis->_task, 0, sizeof(NoneTask));
+    memset(&pThis->_timers, 0, NONE_SYSTEM_TIMERS_NUMBER * sizeof(NoneTimer));
+}
+
+PUBLIC void NoneSystem_Destruct(NoneSystem *pThis)
+{
+    if (pThis != NULL) {
+        BaseSystem_Destruct(&pThis->base);
+        memset(pThis, 0, sizeof(NoneSystem));
     }
-    else
-    {
-        for (;;)
-        {
-            // Do nothing
+}
+
+PRIVATE NoneTimer *NoneSystem_AllocTimer(NoneSystem *pThis)
+{
+    for (unsigned int i = 0; i < NONE_SYSTEM_TIMERS_NUMBER; i++) {
+        if (!NONE_TIMER_IS_CONSTRUCTED(&pThis->_timers[i])) {
+            return &pThis->_timers[i];
         }
     }
-}
-
-PUBLIC const char *GetNameOfNoneSystemBase(
-    BaseSystem *sys)
-{
-    (void)sys;
-    return "None";
-}
-
-PUBLIC BasePort *CreatePortWithNoneSystemBase(
-    BaseFactory *factory,
-    const char *type,
-    BasePortParameter *parameter)
-{
-    (void)factory;
-    (void)type;
-    (void)parameter;
 
     return NULL;
 }
 
-PUBLIC void DestroyPortWithNoneSystemBase(
-    BaseFactory *factory,
-    const char *type,
-    BasePort *port)
-{
-    (void)factory;
-    (void)type;
-    (void)port;
-}
-
-PUBLIC BaseSerial *CreateSerialWithNoneSystemBase(
-    BaseFactory *factory,
-    const char *type,
-    BaseSerialParameter *parameter)
-{
-    (void)factory;
-    (void)type;
-    (void)parameter;
-
-    return NULL;
-}
-
-PUBLIC void DestroySerialWithNoneSystemBase(
-    BaseFactory *factory,
-    const char *type,
-    BaseSerial *serial)
-{
-    (void)factory;
-    (void)type;
-    (void)serial;
-}
-
-PUBLIC BaseTask *CreateTaskWithNoneSystemBase(
-    BaseFactory *factory,
+PUBLIC BaseTask *NoneSystem_CreateTask(
+    BaseSystem *system,
     const char *type,
     BaseTaskParameter *parameter)
 {
-    NoneSystem *self = BaseSystem2NoneSystem(factory);
+    NoneSystem *pThis = BaseSystem2NoneSystem(system);
 
-    if (factory == NULL || type == NULL || parameter == NULL)
-    {
+    if (system == NULL || type == NULL || parameter == NULL) {
         return NULL;
     }
 
-    if (IS_NONE_TASK_CONSTRUCTED(&self->_task))
-    {
-        return NULL;
-    }
+    if (strcmp(type, NONE_SYSTEM_TASK) == 0) {
+        if (!NONE_TASK_IS_CONSTRUCTED(&pThis->_task)) {
+            NoneTask_Construct(
+                &pThis->_task,
+                BaseTaskParameter2NoneTaskParameter(parameter));
 
-    if (strcmp(type, NONE_SYSTEM_TASK) == 0)
-    {
-        ConstructNoneTask(
-            &self->_task,
-            BaseTaskParameter2NoneTaskParameter(parameter));
-    }
-    else if (strcmp(type, GENERAL_TASK) == 0)
-    {
-        GeneralTaskParameter *generalParameter
+            return &pThis->_task.base;
+        }
+    } else if (strcmp(type, GENERAL_TASK) == 0) {
+        GeneralTaskParameter *generalPatameter
             = BaseTaskParameter2GeneralTaskParameter(parameter);
 
         NoneTaskParameter noneParameter = {
             .base = NONE_TASK_PARAMETER_BASE,
-            .entry = generalParameter->entry,
-            .parameter = generalParameter->parameter
+            .entry = generalPatameter->entry,
+            .parameter = generalPatameter->parameter,
         };
 
-        ConstructNoneTask(&self->_task, &noneParameter);
-    } else {
+        if (!NONE_TASK_IS_CONSTRUCTED(&pThis->_task)) {
+            NoneTask_Construct(&pThis->_task, &noneParameter);
+            return &pThis->_task.base;
+        }
+    }
+
+    return NULL;
+}
+
+PUBLIC void NoneSystem_DestroyTask(BaseSystem *system, BaseTask *task)
+{
+    NoneSystem *pThis = BaseSystem2NoneSystem(system);
+
+    if (system == NULL || task == NULL) {
+        return;
+    }
+
+    if (task == &pThis->_task.base) {
+        NoneTask_Destruct(&pThis->_task);
+    }
+}
+
+PUBLIC BaseTimer *NoneSystem_CreateTimer(
+    BaseSystem *system,
+    const char *type,
+    BaseTimerParameter *parameter)
+{
+    NoneTimer *timer = NULL;
+    NoneSystem *pThis = BaseSystem2NoneSystem(system);
+
+    if (system == NULL || type == NULL || parameter == NULL) {
         return NULL;
     }
 
-    return &self->_task.base;
+    if (strcmp(type, NONE_SYSTEM_TIMER) == 0) {
+        timer = NoneSystem_AllocTimer(pThis);
+
+        if (timer != NULL) {
+            NoneTimer_Construct(
+                timer,
+                BaseTimerParameter2NoneTimerParameter(parameter));
+        }
+    } else if (strcmp(type, GENERAL_SOFTWARE_TIMER) == 0) {
+        GeneralTimerParameter *generalPatameter
+            = BaseTimerParameter2GeneralTimerParameter(parameter);
+
+        NoneTimerParameter noneParameter = {
+            .base = NONE_TIMER_PARAMETER_BASE,
+            .handler = generalPatameter->handler,
+        };
+
+        timer = NoneSystem_AllocTimer(pThis);
+
+        if (timer != NULL) {
+            NoneTimer_Construct(timer, &noneParameter);
+        }
+    }
+
+    return (timer == NULL) ? NULL : &timer->baseTimer;
 }
 
-PUBLIC void DestroyTaskWithNoneSystemBase(
-    BaseFactory *factory,
-    const char *type,
-    BaseTask *task)
+PUBLIC void NoneSystem_DestroyTimer(BaseSystem *system, BaseTimer *timer)
 {
-    (void)type;
-    NoneSystem *self = BaseSystem2NoneSystem(factory);
+    NoneSystem *pThis = BaseSystem2NoneSystem(system);
 
-    if (factory != NULL && task == &self->_task.base)
-    {
-        DestructNoneTask(&self->_task);
+    if (system == NULL || timer == NULL) {
+        return;
     }
+
+    for (unsigned int i = 0; i < NONE_SYSTEM_TIMERS_NUMBER; i++) {
+        if (timer == &pThis->_timers[i].baseTimer) {
+            NoneTimer_Destruct(&pThis->_timers[i]);
+            break;
+        }
+    }
+}
+
+PUBLIC void NoneSystem_Run(BaseSystem *system)
+{
+    (void)system;
+    NoneTimer_CheckTimers();
 }

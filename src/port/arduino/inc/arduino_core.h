@@ -4,56 +4,47 @@
 #include <stddef.h>
 #include <string.h>
 
-#include "core/common/inc/keywords.h"
-#include "core/thread/inc/base_thread.h"
+#include <Arduino.h>
 
-#include "port/common/inc/base_core.h"
-#include "port/common/inc/base_task.h"
-#include "port/general/inc/general_port.h"
-#include "port/general/inc/general_uart_serial.h"
+#include "core/utils/inc/keywords.h"
 
-#include "port/arduino/inc/arduino_digital_port.h"
-#include "port/arduino/inc/arduino_uart_serial.h"
+#include "port/core/inc/base_core.h"
+#include "port/core/inc/base_port.h"
+#include "port/core/inc/base_serial.h"
+#include "port/core/inc/general_port.h"
+#include "port/core/inc/general_serial.h"
+
+#include "port/arduino/inc/arduino_port.h"
+#include "port/arduino/inc/arduino_serial.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
 
-#define ARDUINO_CORE_DIGITAL_PORT   "ArduinoDigitalPort"
-#define ARDUINO_CORE_UART_SERIAL    "ArduinoUARTSerial"
+#ifndef ARDUINO_CORE_PORTS_NUMBER
+#define ARDUINO_CORE_PORTS_NUMBER 4U
+#endif // ARDUINO_CORE_PORTS_NUMBER
 
-#define BaseCore2ArduinoCore(instance)          \
-    BASE2SUB(instance, ArduinoCore, base)
+#ifndef ARDUINO_CORE_SERIALS_NUMBER
+#define ARDUINO_CORE_SERIALS_NUMBER 1U
+#endif // ARDUINO_CORE_SERIALS_NUMBER
 
-#define BaseFactory2ArduinoCore(instance)       \
-    BaseCore2ArduinoCore(BaseFactory2BaseCore(instance))
+#define ARDUINO_CORE_DIGITAL_PORT "ArduinoPort"
+#define ARDUINO_CORE_ADDRESS_PORT "ArduinoPort"
+#define ARDUINO_CORE_UART_SERIAL "ArduinoSerial"
 
-#define BaseThread2ArduinoCoreThread(instance)  \
-    BASE2SUB(instance, ArduinoCoreThread, base)
-
-struct ArduinoCore;
+#define BaseCore2ArduinoCore(pThis) \
+    CONTAINER_OF(pThis, ArduinoCore, base)
 
 typedef struct {
-    BaseThread base;
-    struct ArduinoCore *_core;
-} ArduinoCoreThread;
-
-typedef struct ArduinoCore {
     BaseCore base;
-    ArduinoCoreThread _thread;
-    ArduinoDigitalPort _digitalPort;
-    ArduinoUARTSerial _uartSerial;
+    ArduinoPort _ports[ARDUINO_CORE_PORTS_NUMBER];
+    ArduinoSerial _serials[ARDUINO_CORE_SERIALS_NUMBER];
 } ArduinoCore;
 
 // Constructor(s) & Destructor(s)
-PUBLIC void ConstructArduinoCore(ArduinoCore *instance);
-PUBLIC void DestructArduinoCore(ArduinoCore *instance);
-
-PUBLIC void ConstructArduinoCoreThread(
-    ArduinoCoreThread *instance,
-    ArduinoCore *core);
-
-PUBLIC void DestructArduinoCoreThread(ArduinoCoreThread *instance);
+PUBLIC void ArduinoCore_Construct(ArduinoCore *pThis);
+PUBLIC void ArduinoCore_Destruct(ArduinoCore *pThis);
 
 #ifdef __cplusplus
 }

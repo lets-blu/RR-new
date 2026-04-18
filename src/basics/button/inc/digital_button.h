@@ -5,15 +5,14 @@
 #include <stddef.h>
 #include <string.h>
 
-#include "core/common/inc/keywords.h"
-#include "core/common/inc/linked_list.h"
+#include "core/coroutine/inc/linked_coroutine.h"
+#include "core/device/inc/device_factory.h"
 #include "core/device/inc/device_manager.h"
 #include "core/event/inc/event_handler.h"
-#include "core/thread/inc/base_thread.h"
+#include "core/utils/inc/keywords.h"
 
-#include "port/common/inc/base_factory.h"
-#include "port/common/inc/base_port.h"
-#include "port/general/inc/general_port.h"
+#include "port/core/inc/base_port.h"
+#include "port/core/inc/general_port.h"
 
 #include "basics/button/inc/base_button.h"
 #include "basics/button/inc/button_state.h"
@@ -22,70 +21,52 @@
 extern "C" {
 #endif // __cplusplus
 
-#define DIGITAL_BUTTON_SCAN_INTERVAL                50
+#define DIGITAL_BUTTON_SAMPLE_INTERVAL 50U
 
-#define DIGITAL_BUTTON_EVENT_PARAMETER_BASE         \
-    {._reserved = EVENT_PARAMETER_RESERVED}
+#define LinkedCoroutine2DigitalButtonCoroutine(pThis) \
+    CONTAINER_OF(pThis, DigitalButtonCoroutine, base)
 
-#define BaseButton2DigitalButton(instance)          \
-    BASE2SUB(instance, DigitalButton, base)
+#define LinkedListNode2DigitalButtonCoroutine(pThis) \
+    LinkedCoroutine2DigitalButtonCoroutine(          \
+        LinkedListNode2LinkedCoroutine(pThis))
 
-#define BaseThread2DigitalButtonThread(instance)    \
-    BASE2SUB(instance, DigitalButtonThread, base)
-
-#define EventParameter2DigitalButtonEventParameter(instance)    \
-    BASE2SUB(instance, DigitalButtonEventParameter, base)
+#define BaseButton2DigitalButton(pThis) \
+    CONTAINER_OF(pThis, DigitalButton, base)
 
 struct DigitalButton;
 
 typedef struct {
-    BaseThread base;
+    LinkedCoroutine base;
     struct DigitalButton *_button;
-} DigitalButtonThread;
+} DigitalButtonCoroutine;
 
 typedef struct DigitalButton {
     BaseButton base;
-    const ButtonState *_currentState;
+    const ButtonState *_state;
 
     BasePort *_port;
     unsigned int _pin;
     unsigned int _pressValue;
 
-    LinkedList _handlers;
-    DigitalButtonThread _thread;
+    EventHandler _handler;
+    DigitalButtonCoroutine _coroutine;
 } DigitalButton;
 
-typedef enum {
-    DIGITAL_BUTTON_EVENT_CLICKED
-} DigitalButtonEvent;
-
-typedef struct {
-    EventParameter base;
-    DigitalButtonEvent event;
-} DigitalButtonEventParameter;
-
 // Constructor(s) & Destructor(s)
-PUBLIC void ConstructDigitalButton(
-    DigitalButton *instance,
+PUBLIC void DigitalButton_Construct(
+    DigitalButton *pThis,
     void *port,
     unsigned int pin,
     unsigned int pressValue);
 
-PUBLIC void DestructDigitalButton(DigitalButton *instance);
+PUBLIC void DigitalButton_Destruct(DigitalButton *pThis);
 
-PUBLIC void ConstructDigitalButtonThread(
-    DigitalButtonThread *instance,
-    DigitalButton *button);
+// Public method(s)
+PUBLIC void DigitalButton_SetEventHandler(
+    DigitalButton *pThis,
+    EventHandler handler);
 
-PUBLIC void DestructDigitalButtonThread(DigitalButtonThread *instance);
-
-// Public Method(s)
-PUBLIC void AddEventHandlerToDigitalButton(
-    DigitalButton *self,
-    EventHandler *handler);
-
-PUBLIC void ScanDigitalButton(DigitalButton *self);
-PUBLIC void EnableAutoScanToDigitalButton(DigitalButton *self, bool enable);
+PUBLIC void DigitalButton_EnableSample(DigitalButton *pThis, bool enable);
 
 #ifdef __cplusplus
 }

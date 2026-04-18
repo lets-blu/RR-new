@@ -2,16 +2,17 @@
 #define __BUTTON_STATE_H__
 
 #include <stddef.h>
-#include "core/common/inc/keywords.h"
+
+#include "core/utils/inc/keywords.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
 
-#define BUTTON_STATE_RELEASED           &buttonStateReleased
-#define BUTTON_STATE_CONFIRM_PRESS      &buttonStateConfirmPress
-#define BUTTON_STATE_PRESSED            &buttonStatePressed
-#define BUTTON_STATE_CONFIRM_RELEASE    &buttonStateConfirmRelease
+#define BUTTON_STATE_RELEASED &buttonStateReleased
+#define BUTTON_STATE_CONFIRM_PRESS &buttonStateConfirmPress
+#define BUTTON_STATE_PRESSED &buttonStatePressed
+#define BUTTON_STATE_CONFIRM_RELEASE &buttonStateConfirmRelease
 
 struct BaseButton;
 struct ButtonStateVtbl;
@@ -21,15 +22,9 @@ typedef struct {
 } ButtonState;
 
 typedef struct ButtonStateVtbl {
-    void (*OnPress)(
-        const ButtonState *self,
-        struct BaseButton *button);
-
-    void (*OnRelease)(
-        const ButtonState *self,
-        struct BaseButton *button);
-
-    const char *(*GetName)(const ButtonState *self);
+    void (*OnPress)(const ButtonState *, struct BaseButton *);
+    void (*OnRelease)(const ButtonState *, struct BaseButton *);
+    const char *(*GetName)(const ButtonState *);
 } ButtonStateVtbl;
 
 // Public member(s)
@@ -39,15 +34,15 @@ extern PUBLIC STATIC const ButtonState buttonStatePressed;
 extern PUBLIC STATIC const ButtonState buttonStateConfirmRelease;
 
 // Public method(s)
-PUBLIC void OnPressInButtonState(
-    const ButtonState *self,
+PUBLIC void ButtonState_OnPress(
+    const ButtonState *pThis,
     struct BaseButton *button);
 
-PUBLIC void OnReleaseInButtonState(
-    const ButtonState *self,
+PUBLIC void ButtonState_OnRelease(
+    const ButtonState *pThis,
     struct BaseButton *button);
 
-PUBLIC const char *GetNameInButtonState(const ButtonState *self);
+PUBLIC const char *ButtonState_GetName(const ButtonState *pThis);
 
 #ifdef __cplusplus
 }

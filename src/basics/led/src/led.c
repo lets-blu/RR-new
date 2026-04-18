@@ -1,91 +1,63 @@
 #include "basics/led/inc/led.h"
 
 // Private member(s)
-PRIVATE STATIC Logger logger = STATIC_LOGGER("LED", LOGGER_LEVEL_INFO);
+PRIVATE STATIC Logger logger = LOGGER_STATIC("LED", LOGGER_LEVEL_INFO);
 
 // Method implement(s)
-PUBLIC void ConstructLED(
-    LED *instance,
+PUBLIC void LED_Construct(
+    LED *pThis,
     void *port,
     unsigned int pin,
     unsigned int onValue)
 {
     GeneralPortParameter parameter = {
-        .base   = GENERAL_PORT_PARAMETER_BASE,
-        .port   = port,
-        .pin    = pin
+        .base = GENERAL_PORT_PARAMETER_BASE,
+        .port = port,
     };
 
-    DeviceManager *manager = InstanceOfDeviceManager();
-
-    if (instance == NULL)
-    {
+    if (pThis == NULL) {
         return;
     }
 
-    RegisterLogger(&logger);
+    Logger_Register(&logger);
 
-    instance->_port = CreatePortWithBaseFactories(
-        GetFactoriesFromDeviceManager(manager),
+    pThis->_port = DeviceFactory_CreatePort(
+        DeviceFactory_GetInstance(),
         GENERAL_DIGITAL_PORT,
         &parameter.base);
 
-    instance->_pin = pin;
-    instance->_onValue = onValue;
-    SetupBasePort(instance->_port, pin, BASE_PORT_MODE_OUTPUT);
+    pThis->_pin = pin;
+    pThis->_onValue = onValue;
+    BasePort_SetMode(pThis->_port, pin, BASE_PORT_MODE_OUTPUT);
 }
 
-PUBLIC void DestructLED(LED *instance)
+PUBLIC void LED_Destruct(LED *pThis)
 {
-    DeviceManager *manager = InstanceOfDeviceManager();
-
-    if (instance == NULL)
-    {
-        return;
-    }
-
-    DestroyPortWithBaseFactories(
-        GetFactoriesFromDeviceManager(manager),
-        GENERAL_DIGITAL_PORT,
-        instance->_port);
-
-    memset(instance, 0, sizeof(LED));
-}
-
-PUBLIC void TurnOnLED(LED *self)
-{
-    if (self == NULL)
-    {
-        return;
-    }
-
-    LOGGER_I(&logger, "Turn on  %p", self);
-
-    if (self->_onValue == BASE_PORT_VALUE_LOW)
-    {
-        WriteBasePort(self->_port, self->_pin, BASE_PORT_VALUE_LOW);
-    }
-    else
-    {
-        WriteBasePort(self->_port, self->_pin, BASE_PORT_VALUE_HIGH);
+    if (pThis != NULL) {
+        DeviceFactory_DestroyPort(DeviceFactory_GetInstance(), pThis->_port);
+        memset(pThis, 0, sizeof(LED));
     }
 }
 
-PUBLIC void TurnOffLED(LED *self)
+PUBLIC void LED_TurnOn(LED *pThis)
 {
-    if (self == NULL)
-    {
+    if (pThis != NULL) {
+        LOGGER_D(&logger, "Turn on  %p", pThis);
+        BasePort_Write(pThis->_port, pThis->_pin, pThis->_onValue);
+    }
+}
+
+PUBLIC void LED_TurnOff(LED *pThis)
+{
+    if (pThis == NULL) {
         return;
     }
 
-    LOGGER_I(&logger, "Turn off %p", self);
+    LOGGER_D(&logger, "Turn off %p", pThis);
 
-    if (self->_onValue == BASE_PORT_VALUE_LOW)
-    {
-        WriteBasePort(self->_port, self->_pin, BASE_PORT_VALUE_HIGH);
-    }
-    else
-    {
-        WriteBasePort(self->_port, self->_pin, BASE_PORT_VALUE_LOW);
+    if (pThis->_onValue == BASE_PORT_VALUE_LOW) {
+        BasePort_Write(pThis->_port, pThis->_pin, BASE_PORT_VALUE_HIGH);
+    } else {
+        BasePort_Write(pThis->_port, pThis->_pin, BASE_PORT_VALUE_LOW);
     }
 }

@@ -4,36 +4,40 @@
 #include <stddef.h>
 #include <string.h>
 
-#include "core/common/inc/keywords.h"
+#include "core/utils/inc/keywords.h"
 
-#include "port/common/inc/base_system.h"
-#include "port/common/inc/base_task.h"
-#include "port/common/inc/base_port.h"
-#include "port/common/inc/base_serial.h"
+#include "port/core/inc/base_timer.h"
+#include "port/core/inc/general_timer.h"
+#include "port/system/inc/base_system.h"
+#include "port/system/inc/base_task.h"
+#include "port/system/inc/general_task.h"
 
 #include "port/none/inc/none_task.h"
-#include "port/general/inc/general_task.h"
+#include "port/none/inc/none_timer.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
 
+#ifndef NONE_SYSTEM_TIMERS_NUMBER
+#define NONE_SYSTEM_TIMERS_NUMBER 2U
+#endif // NONE_SYSTEM_TIMERS_NUMBER
+
 #define NONE_SYSTEM_TASK "NoneTask"
+#define NONE_SYSTEM_TIMER "NoneTimer"
 
-#define BaseSystem2NoneSystem(instance) \
-    BASE2SUB(instance, NoneSystem, base)
-
-#define BaseFactory2NoneSystem(instance) \
-    BaseSystem2NoneSystem(BaseFactory2BaseSystem(instance))
+#define BaseSystem2NoneSystem(pThis) \
+    CONTAINER_OF(pThis, NoneSystem, base)
 
 typedef struct {
     BaseSystem base;
     NoneTask _task;
+    NoneTimer _timers[NONE_SYSTEM_TIMERS_NUMBER];
 } NoneSystem;
 
 // Constructor(s) & Destructor(s)
-PROTECTED void ConstructNoneSystem(NoneSystem *instance);
-PROTECTED void DestructNoneSystem(NoneSystem *instance);
+PUBLIC void NoneSystem_Construct(NoneSystem *pThis);
+PUBLIC void NoneSystem_Destruct(NoneSystem *pThis);
 
 #ifdef __cplusplus
 }

@@ -1,43 +1,40 @@
 #include "port/none/inc/none_task.h"
 
 // Override method(s)
-PUBLIC void RunNoneTaskBase(BaseTask *task);
+PUBLIC void NoneTask_Start(BaseTask *task);
 
-// Virtual methods table
+// Virtual methods table(s)
 static const BaseTaskVtbl baseVtbl = {
-    .Run = RunNoneTaskBase
+    .Start = NoneTask_Start,
 };
 
 // Method implement(s)
-PUBLIC void ConstructNoneTask(NoneTask *instance, NoneTaskParameter *parameter)
+PUBLIC void NoneTask_Construct(NoneTask *pThis, NoneTaskParameter *parameter)
 {
-    if (instance == NULL || parameter == NULL)
-    {
+    if (pThis == NULL || parameter == NULL) {
         return;
     }
 
-    ConstructBaseTask(&instance->base, &parameter->base);
-    instance->base.vtbl = &baseVtbl;
+    BaseTask_Construct(&pThis->base, &parameter->base);
+    pThis->base.vtbl = &baseVtbl;
 
-    instance->_entry = parameter->entry;
-    instance->_parameter = parameter->parameter;
+    pThis->_entry = parameter->entry;
+    pThis->_parameter = parameter->parameter;
 }
 
-PUBLIC void DestructNoneTask(NoneTask *instance)
+PUBLIC void NoneTask_Destruct(NoneTask *pThis)
 {
-    if (instance != NULL)
-    {
-        DestructBaseTask(&instance->base);
-        memset(instance, 0, sizeof(NoneTask));
+    if (pThis != NULL) {
+        BaseTask_Destruct(&pThis->base);
+        memset(pThis, 0, sizeof(NoneTask));
     }
 }
 
-PUBLIC void RunNoneTaskBase(BaseTask *task)
+PUBLIC void NoneTask_Start(BaseTask *task)
 {
-    NoneTask *self = BaseTask2NoneTask(task);
+    NoneTask *pThis = BaseTask2NoneTask(task);
 
-    if (task != NULL && self->_entry != NULL)
-    {
-        self->_entry(self->_parameter);
+    if (task != NULL && pThis->_entry != NULL) {
+        pThis->_entry(pThis->_parameter);
     }
 }

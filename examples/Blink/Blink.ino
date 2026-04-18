@@ -1,86 +1,43 @@
 #include <RR.h>
 #include <port/arduino/inc/arduino_core.h>
-#include <port/none/inc/none_system.h>
-
-#include "blink_thread.h"
 
 ArduinoCore core;
-NoneSystem sys;
-
 LED led;
-BaseTask *task;
-BlinkThread thread;
 
-BaseSerial *serial;
-RingBuffer ringBuffer;
-uint8_t buffer[AT_COMMAND_MAX_LENGTH];
+void initLogger(void);
 
-void setup()
+void setup(void)
 {
-    DeviceManager *manager = InstanceOfDeviceManager();
+    ArduinoCore_Construct(&core);
+    DeviceManager_SetCore(DeviceManager_GetInstance(), &core.base);
 
-    // 1. Setup core
-    ConstructArduinoCore(&core);
-    SetCoreToDeviceManager(manager, &core.base);
+    initLogger();
+    LED_Construct(&led, NULL, LED_BUILTIN, BASE_PORT_VALUE_HIGH);
+}
 
-    // 2. Setup logger and AT command
-    ConstructRingBuffer(&ringBuffer, buffer, AT_COMMAND_MAX_LENGTH);
+void loop(void)
+{
+    LED_TurnOn(&led);
+    delay(1000);
 
-    ArduinoUARTSerialParameter uartParameter = {
-        .base = ARDUINO_UART_SERIAL_PARAMETER_BASE,
+    LED_TurnOff(&led);
+    delay(1000);
+}
+
+void initLogger(void)
+{
+    ArduinoSerialParameter parameter = {
+        .base = ARDUINO_SERIAL_PARAMETER_BASE,
+        .serial = &Serial,
         .baudrate = 115200,
-        .buffer = &ringBuffer
+        .rxBuffer = NULL,
+        .rxBufferSize = 0,
     };
 
-    serial = CreateSerialWithBaseFactories(
-        GetFactoriesFromDeviceManager(manager),
+    BaseSerial *serial = DeviceFactory_CreateSerial(
+        DeviceFactory_GetInstance(),
         ARDUINO_CORE_UART_SERIAL,
-        &uartParameter.base);
+        &parameter.base);
 
-    fdevopen(serialPutc, NULL);
-    AddEventHandlerToBaseSerial(serial, EventHandlerOfATCommand());
-
-    // 3. Setup system
-    ConstructNoneSystem(&sys);
-    SetSystemToDeviceManager(manager, &sys.base);
-
-    // 4. Create LED
-    ConstructLED(&led, NULL, LED_BUILTIN, BASE_PORT_VALUE_HIGH);
-
-    // 5. Create thread and task
-    ConstructBlinkThread(&thread, &led, 1000);
-
-    NoneTaskParameter taskParameter = {
-        .base = NONE_TASK_PARAMETER_BASE,
-        .entry = RunBlinkThreadTask,
-        .parameter = &thread
-    };
-
-    task = CreateTaskWithBaseFactories(
-        GetFactoriesFromDeviceManager(manager),
-        NONE_SYSTEM_TASK,
-        &taskParameter.base);
-
-    if (task == NULL)
-    {
-        AddThreadToDeviceManager(
-            manager,
-            DEVICE_MANAGER_THREAD_APPLICATION,
-            &thread.base);
-    }
-
-    // 6. Run system
-    RunBaseSystem(&sys.base);
-}
-
-void loop()
-{
-    // Never reached
-}
-
-int serialPutc(char c, FILE *file)
-{
-    (void)file;
-    WriteBaseSerial(serial, (const uint8_t *)&c, sizeof(char));
-    return c;
+    Logger_SetSerial(serial);
 }

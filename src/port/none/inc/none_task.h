@@ -4,24 +4,25 @@
 #include <stddef.h>
 #include <string.h>
 
-#include "core/common/inc/keywords.h"
-#include "port/common/inc/base_task.h"
+#include "core/utils/inc/keywords.h"
+#include "port/system/inc/base_task.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
 
-#define NONE_TASK_PARAMETER_BASE            \
-    {._reserved = BASE_TASK_PARAMETER_RESERVED}
+#define NONE_TASK_PARAMETER_BASE {             \
+    ._reserved = BASE_TASK_PARAMETER_RESERVED, \
+}
 
-#define IS_NONE_TASK_CONSTRUCTED(instance)  \
-    ((instance)->base.vtbl != NULL)
+#define NONE_TASK_IS_CONSTRUCTED(pThis) \
+    ((pThis)->base.vtbl != NULL)
 
-#define BaseTask2NoneTask(instance)         \
-    BASE2SUB(instance, NoneTask, base)
+#define BaseTask2NoneTask(pThis) \
+    CONTAINER_OF(pThis, NoneTask, base)
 
-#define BaseTaskParameter2NoneTaskParameter(instance) \
-    BASE2SUB(instance, NoneTaskParameter, base)
+#define BaseTaskParameter2NoneTaskParameter(pThis) \
+    CONTAINER_OF(pThis, NoneTaskParameter, base)
 
 typedef struct {
     BaseTask base;
@@ -38,8 +39,8 @@ typedef struct {
 typedef void (*NoneTaskEntry)(void *);
 
 // Constructor(s) & Destructor(s)
-PUBLIC void ConstructNoneTask(NoneTask *instance, NoneTaskParameter *parameter);
-PUBLIC void DestructNoneTask(NoneTask *instance);
+PUBLIC void NoneTask_Construct(NoneTask *pThis, NoneTaskParameter *parameter);
+PUBLIC void NoneTask_Destruct(NoneTask *pThis);
 
 #ifdef __cplusplus
 }

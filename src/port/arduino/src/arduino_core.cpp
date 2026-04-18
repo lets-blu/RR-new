@@ -1,321 +1,234 @@
-#ifdef ARDUINO
-
-#include <Arduino.h>
 #include "port/arduino/inc/arduino_core.h"
-#include "core/device/inc/device_manager.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif // __cplusplus
+// Private method(s)
+PRIVATE ArduinoPort *ArduinoCore_AllocPort(
+    ArduinoCore *pThis,
+    void *port);
+
+PRIVATE ArduinoSerial *ArduinoCore_AllocSerial(
+    ArduinoCore *pThis,
+    HardwareSerial *serial);
 
 // Override method(s)
-PUBLIC const char *GetNameOfArduinoCoreBase(
-    BaseCore *core);
-
-PUBLIC unsigned long GetTickOfArduinoCoreBase(
-    BaseCore *core);
-
-PUBLIC BasePort *CreatePortWithArduinoCoreBase(
-    BaseFactory *factory,
+PUBLIC BasePort *ArduinoCore_CreatePort(
+    BaseCore *core,
     const char *type,
     BasePortParameter *parameter);
 
-PUBLIC void DestroyPortWithArduinoCoreBase(
-    BaseFactory *factory,
-    const char *type,
-    BasePort *port);
+PUBLIC void ArduinoCore_DestroyPort(BaseCore *core, BasePort *port);
 
-PUBLIC BaseSerial *CreateSerialWithArduinoCoreBase(
-    BaseFactory *factory,
+PUBLIC BaseSerial *ArduinoCore_CreateSerial(
+    BaseCore *core,
     const char *type,
     BaseSerialParameter *parameter);
 
-PUBLIC void DestroySerialWithArduinoCoreBase(
-    BaseFactory *factory,
-    const char *type,
-    BaseSerial *serial);
+PUBLIC void ArduinoCore_DestroySerial(BaseCore *core, BaseSerial *serial);
 
-PUBLIC BaseTask *CreateTaskWithArduinoCoreBase(
-    BaseFactory *factory,
-    const char *type,
-    BaseTaskParameter *parameter);
+PUBLIC unsigned long ArduinoCore_GetTime(BaseCore *core);
+PUBLIC void ArduinoCore_Run(BaseCore *core);
 
-PUBLIC void DestroyTaskWithArduinoCoreBase(
-    BaseFactory *factory,
-    const char *type,
-    BaseTask *task);
-
-PUBLIC BaseThreadState RunArduinoCoreThreadBase(
-    BaseThread *thread);
-
-// Virtual methods table
-static const BaseCoreVtbl baseCoreVtbl = {
-    .GetName = GetNameOfArduinoCoreBase,
-    .GetTick = GetTickOfArduinoCoreBase
-};
-
-static const BaseFactoryVtbl baseFactoryVtbl = {
-    .CreatePort     = CreatePortWithArduinoCoreBase,
-    .DestroyPort    = DestroyPortWithArduinoCoreBase,
-    .CreateSerial   = CreateSerialWithArduinoCoreBase,
-    .DestroySerial  = DestroySerialWithArduinoCoreBase,
-    .CreateTask     = CreateTaskWithArduinoCoreBase,
-    .DestroyTask    = DestroyTaskWithArduinoCoreBase
-};
-
-static const BaseThreadVtbl baseThreadVtbl = {
-    .Run = RunArduinoCoreThreadBase
+// Virtual methods table(s)
+static const BaseCoreVtbl baseVtbl = {
+    .CreatePort = ArduinoCore_CreatePort,
+    .DestroyPort = ArduinoCore_DestroyPort,
+    .CreateSerial = ArduinoCore_CreateSerial,
+    .DestroySerial = ArduinoCore_DestroySerial,
+    .GetTime = ArduinoCore_GetTime,
+    .Run = ArduinoCore_Run,
 };
 
 // Method implement(s)
-PUBLIC void ConstructArduinoCore(ArduinoCore *instance)
+PUBLIC void ArduinoCore_Construct(ArduinoCore *pThis)
 {
-    DeviceManager *manager = InstanceOfDeviceManager();
-
-    if (instance == NULL)
-    {
-        return;
-    }
-
-    ConstructBaseCore(&instance->base);
-    instance->base.vtbl = &baseCoreVtbl;
-    instance->base.base.vtbl = &baseFactoryVtbl;
-
-    ConstructArduinoCoreThread(
-        &instance->_thread,
-        instance);
-
-    AddThreadToDeviceManager(
-        manager,
-        DEVICE_MANAGER_THREAD_DRIVER_INPUT,
-        &instance->_thread.base);
-}
-
-PUBLIC void DestructArduinoCore(ArduinoCore *instance)
-{
-    DeviceManager *manager = InstanceOfDeviceManager();
-
-    if (instance == NULL)
-    {
-        return;
-    }
-
-    RemoveThreadFromDeviceManager(
-        manager,
-        DEVICE_MANAGER_THREAD_DRIVER_INPUT,
-        &instance->_thread.base);
-
-    DestructArduinoCoreThread(&instance->_thread);
-    DestructBaseCore(&instance->base);
-    memset(instance, 0, sizeof(ArduinoCore));
-}
-
-PUBLIC void ConstructArduinoCoreThread(
-    ArduinoCoreThread *instance,
-    ArduinoCore *core)
-{
-    if (instance != NULL)
-    {
-        ConstructBaseThread(&instance->base);
-        instance->base.vtbl = &baseThreadVtbl;
-        instance->_core = core;
+    if (pThis != NULL) {
+        memset(pThis, 0, sizeof(ArduinoCore));
+        BaseCore_Construct(&pThis->base);
+        pThis->base.vtbl = &baseVtbl;
     }
 }
 
-PUBLIC void DestructArduinoCoreThread(ArduinoCoreThread *instance)
+PUBLIC void ArduinoCore_Destruct(ArduinoCore *pThis)
 {
-    if (instance != NULL)
-    {
-        DestructBaseThread(&instance->base);
-        memset(instance, 0, sizeof(ArduinoCoreThread));
+    if (pThis != NULL) {
+        BaseCore_Destruct(&pThis->base);
+        memset(pThis, 0, sizeof(ArduinoCore));
     }
 }
 
-PUBLIC const char *GetNameOfArduinoCoreBase(
-    BaseCore *core)
+PRIVATE ArduinoPort *ArduinoCore_AllocPort(
+    ArduinoCore *pThis,
+    void *port)
+{
+    ArduinoPort *freePort = NULL;
+
+    if (!ArduinoPort_IsValidPort(port)) {
+        return NULL;
+    }
+
+    for (unsigned int i = 0; i < ARDUINO_CORE_PORTS_NUMBER; i++) {
+        ArduinoPort *cursorPort = &pThis->_ports[i];
+
+        if (ARDUINO_PORT_IS_CONSTRUCTED(cursorPort)) {
+            if (ArduinoPort_GetPort(cursorPort) == port) {
+                freePort = cursorPort;
+                break;
+            }
+        } else {
+            if (freePort == NULL) {
+                freePort = cursorPort;
+            }
+        }
+    }
+
+    return freePort;
+}
+
+PRIVATE ArduinoSerial *ArduinoCore_AllocSerial(
+    ArduinoCore *pThis,
+    HardwareSerial *serial)
+{
+    ArduinoSerial *freeSerial = NULL;
+
+    for (unsigned int i = 0; i < ARDUINO_CORE_SERIALS_NUMBER; i++) {
+        ArduinoSerial *cursorSerial = &pThis->_serials[i];
+
+        if (ARDUINO_SERIAL_IS_CONSTRUCTED(cursorSerial)) {
+            if (ArduinoSerial_GetSerial(cursorSerial) == serial) {
+                freeSerial = NULL;
+                break;
+            }
+        } else {
+            if (freeSerial == NULL) {
+                freeSerial = cursorSerial;
+            }
+        }
+    }
+
+    return freeSerial;
+}
+
+PUBLIC BasePort *ArduinoCore_CreatePort(
+    BaseCore *core,
+    const char *type,
+    BasePortParameter *parameter)
+{
+    ArduinoPort *port = NULL;
+    ArduinoCore *pThis = BaseCore2ArduinoCore(core);
+
+    if (core == NULL || type == NULL || parameter == NULL) {
+        return NULL;
+    }
+
+    if (strcmp(type, ARDUINO_CORE_ADDRESS_PORT) == 0
+        || strcmp(type, ARDUINO_CORE_DIGITAL_PORT) == 0) {
+        ArduinoPortParameter *arduinoParameter
+            = BasePortParameter2ArduinoPortParameter(parameter);
+
+        port = ArduinoCore_AllocPort(pThis, arduinoParameter->port);
+
+        if (port != NULL && !ARDUINO_PORT_IS_CONSTRUCTED(port)) {
+            ArduinoPort_Construct(port, arduinoParameter);
+        }
+    } else if (strcmp(type, GENERAL_ADDRESS_PORT) == 0
+        || strcmp(type, GENERAL_DIGITAL_PORT) == 0) {
+        GeneralPortParameter *generalParameter
+            = BasePortParameter2GeneralPortParameter(parameter);
+
+        ArduinoPortParameter arduinoParameter = {
+            .base = ARDUINO_PORT_PARAMETER_BASE,
+            .port = generalParameter->port,
+        };
+
+        port = ArduinoCore_AllocPort(pThis, generalParameter->port);
+
+        if (port != NULL && !ARDUINO_PORT_IS_CONSTRUCTED(port)) {
+            ArduinoPort_Construct(port, &arduinoParameter);
+        }
+    }
+
+    return (port == NULL) ? NULL : &port->base;
+}
+
+PUBLIC void ArduinoCore_DestroyPort(BaseCore *core, BasePort *port)
 {
     (void)core;
-    return "Arduino";
+    (void)port;
 }
 
-PUBLIC unsigned long GetTickOfArduinoCoreBase(
-    BaseCore *core)
+PUBLIC BaseSerial *ArduinoCore_CreateSerial(
+    BaseCore *core,
+    const char *type,
+    BaseSerialParameter *parameter)
+{
+    ArduinoSerial *serial = NULL;
+    ArduinoCore *pThis = BaseCore2ArduinoCore(core);
+
+    if (pThis == NULL || type == NULL || parameter == NULL) {
+        return NULL;
+    }
+
+    if (strcmp(type, ARDUINO_CORE_UART_SERIAL) == 0) {
+        ArduinoSerialParameter *arduinoParameter
+            = BaseSerialParameter2ArduinoSerialParameter(parameter);
+
+        serial = ArduinoCore_AllocSerial(pThis, arduinoParameter->serial);
+
+        if (serial != NULL) {
+            ArduinoSerial_Construct(serial, arduinoParameter);
+        }
+    } else if (strcmp(type, GENERAL_UART_SERIAL) == 0) {
+        GeneralSerialParameter *generalParameter
+            = BaseSerialParameter2GeneralSerialParameter(parameter);
+
+        ArduinoSerialParameter arduinoParameter = {
+            .base = ARDUINO_SERIAL_PARAMETER_BASE,
+            .serial = (HardwareSerial *)generalParameter->serial,
+            .baudrate = generalParameter->baudrate,
+            .rxBuffer = NULL,
+            .rxBufferSize = 0,
+        };
+
+        serial = ArduinoCore_AllocSerial(pThis, arduinoParameter.serial);
+
+        if (serial != NULL) {
+            ArduinoSerial_Construct(serial, &arduinoParameter);
+        }
+    }
+
+    return (serial == NULL) ? NULL : &serial->base;
+}
+
+PUBLIC void ArduinoCore_DestroySerial(BaseCore *core, BaseSerial *serial)
+{
+    ArduinoCore *pThis = BaseCore2ArduinoCore(core);
+
+    if (core == NULL || serial == NULL) {
+        return;
+    }
+
+    for (unsigned int i = 0; i < ARDUINO_CORE_SERIALS_NUMBER; i++) {
+        if (BaseSerial2ArduinoSerial(serial) == &pThis->_serials[i]) {
+            ArduinoSerial_Destruct(&pThis->_serials[i]);
+            break;
+        }
+    }
+}
+
+PUBLIC unsigned long ArduinoCore_GetTime(BaseCore *core)
 {
     (void)core;
     return millis();
 }
 
-PUBLIC BasePort *CreatePortWithArduinoCoreBase(
-    BaseFactory *factory,
-    const char *type,
-    BasePortParameter *parameter)
+PUBLIC void ArduinoCore_Run(BaseCore *core)
 {
-    BasePort *port = NULL;
-    ArduinoCore *self = BaseFactory2ArduinoCore(factory);
+    ArduinoCore *pThis = BaseCore2ArduinoCore(core);
 
-    if (factory == NULL || type == NULL || parameter == NULL)
-    {
-        return NULL;
+    if (core == NULL) {
+        return;
     }
 
-    if (strcmp(type, ARDUINO_CORE_DIGITAL_PORT) == 0)
-    {
-        if (!IS_ARDUINO_DIGITAL_PORT_CONSTRUCTED(&self->_digitalPort))
-        {
-            ConstructArduinoDigitalPort(
-                &self->_digitalPort,
-                BasePortParameter2ArduinoDigitalPortParameter(parameter));
-        }
-
-        port = &self->_digitalPort.base;
+    for (unsigned int i = 0; i < ARDUINO_CORE_SERIALS_NUMBER; i++) {
+        ArduinoSerial_Sample(&pThis->_serials[i]);
     }
-    else if (strcmp(type, GENERAL_DIGITAL_PORT) == 0)
-    {
-        GeneralPortParameter *generalParameter
-            = BasePortParameter2GeneralPortParameter(parameter);
-
-        ArduinoDigitalPortParameter arduinoParameter = {
-            .base = ARDUINO_DIGITAL_PORT_PARAMETER_BASE
-        };
-
-        if (generalParameter->port != NULL)
-        {
-            return NULL;
-        }
-
-        if (!IS_ARDUINO_DIGITAL_PORT_CONSTRUCTED(&self->_digitalPort))
-        {
-            ConstructArduinoDigitalPort(&self->_digitalPort, &arduinoParameter);
-        }
-
-        port = &self->_digitalPort.base;
-    }
-
-    return port;
 }
-
-PUBLIC void DestroyPortWithArduinoCoreBase(
-    BaseFactory *factory,
-    const char *type,
-    BasePort *port)
-{
-    (void)factory;
-    (void)type;
-    (void)port;
-}
-
-PUBLIC BaseSerial *CreateSerialWithArduinoCoreBase(
-    BaseFactory *factory,
-    const char *type,
-    BaseSerialParameter *parameter)
-{
-    BaseSerial *serial = NULL;
-    ArduinoCore *self = BaseFactory2ArduinoCore(factory);
-
-    if (factory == NULL || type == NULL || parameter == NULL)
-    {
-        return NULL;
-    }
-
-    if (strcmp(type, ARDUINO_CORE_UART_SERIAL) == 0)
-    {
-        if (!IS_ARDUINO_UART_SERIAL_CONSTRUCTED(&self->_uartSerial))
-        {
-            ConstructArduinoUARTSerial(
-                &self->_uartSerial,
-                BaseSerialParameter2ArduinoUARTSerialParameter(parameter));
-        }
-
-        serial = &self->_uartSerial.base;
-    }
-    else if (strcmp(type, GENERAL_UART_SERIAL) == 0)
-    {
-        GeneralUARTSerialParameter *generalParameter
-            = BaseSerialParameter2GeneralUARTSerialParameter(parameter);
-
-        ArduinoUARTSerialParameter arduinoParameter = {
-            .base = ARDUINO_UART_SERIAL_PARAMETER_BASE,
-            .baudrate = generalParameter->baudrate,
-            .buffer = NULL
-        };
-
-        if (generalParameter->port != &Serial)
-        {
-            return NULL;
-        }
-
-        if (!IS_ARDUINO_UART_SERIAL_CONSTRUCTED(&self->_uartSerial))
-        {
-            ConstructArduinoUARTSerial(&self->_uartSerial, &arduinoParameter);
-        }
-
-        serial = &self->_uartSerial.base;
-    }
-
-    return serial;
-}
-
-PUBLIC void DestroySerialWithArduinoCoreBase(
-    BaseFactory *factory,
-    const char *type,
-    BaseSerial *serial)
-{
-    (void)factory;
-    (void)type;
-    (void)serial;
-}
-
-PUBLIC BaseTask *CreateTaskWithArduinoCoreBase(
-    BaseFactory *factory,
-    const char *type,
-    BaseTaskParameter *parameter)
-{
-    (void)factory;
-    (void)type;
-    (void)parameter;
-
-    return NULL;
-}
-
-PUBLIC void DestroyTaskWithArduinoCoreBase(
-    BaseFactory *factory,
-    const char *type,
-    BaseTask *task)
-{
-    (void)factory;
-    (void)type;
-    (void)task;
-}
-
-PUBLIC BaseThreadState RunArduinoCoreThreadBase(
-    BaseThread *thread)
-{
-    ArduinoCore *core = NULL;
-    ArduinoCoreThread *self = BaseThread2ArduinoCoreThread(thread);
-
-    if (self == NULL)
-    {
-        return BASE_THREAD_STATE_ENDED;
-    }
-
-    core = self->_core;
-    BEGIN_BASE_THREAD(thread);
-
-    for (;;)
-    {
-        if (IS_ARDUINO_UART_SERIAL_CONSTRUCTED(&core->_uartSerial))
-        {
-            SampleBaseSerial(&core->_uartSerial.base);
-        }
-
-        YIELD_BASE_THREAD(thread);
-    }
-
-    END_BASE_THREAD(thread);
-}
-
-#ifdef __cplusplus
-}
-#endif // __cplusplus
-
-#endif // ARDUINO

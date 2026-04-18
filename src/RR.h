@@ -1,26 +1,20 @@
 #ifndef __RR_H__
 #define __RR_H__
 
-// Core
-#include "core/common/inc/keywords.h"
-#include "core/common/inc/ring_buffer.h"
+#include "core/device/inc/device_factory.h"
 #include "core/device/inc/device_manager.h"
 #include "core/event/inc/event_handler.h"
-#include "core/thread/inc/base_thread.h"
 
-// Basics
-#include "basics/led/inc/led.h"
+#include "port/core/inc/base_port.h"
+#include "port/core/inc/base_serial.h"
+
 #include "basics/button/inc/digital_button.h"
-
-// Utils
-#include "utils/at_command/inc/at_command.h"
+#include "basics/led/inc/led.h"
+#include "digital/register/inc/register_group.h"
+#include "digital/register/inc/shift_register.h"
+#include "digital/selector/inc/data_selector.h"
+#include "digital/selector/inc/selector_group.h"
+#include "utils/command/inc/at_command.h"
 #include "utils/logger/inc/logger.h"
-
-// Port
-#include "port/common/inc/base_factory.h"
-#include "port/common/inc/base_port.h"
-#include "port/common/inc/base_serial.h"
-#include "port/common/inc/base_task.h"
-#include "port/common/inc/base_system.h"
 
 #endif // __RR_H__

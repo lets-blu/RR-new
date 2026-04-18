@@ -7,62 +7,60 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "core/common/inc/keywords.h"
-#include "core/common/inc/linked_list.h"
-#include "utils/at_command/inc/at_command.h"
+#include "core/utils/inc/keywords.h"
+#include "core/utils/inc/linked_list.h"
+#include "port/core/inc/base_serial.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif // __cplusplus
 
-#define LOGGER_PARAMETERS_NUMBER        3
-#define LOGGER_PARAMETER_NAME           1
-#define LOGGER_PARAMETER_LEVEL          2
+#ifndef LOGGER_BUFFER_SIZE
+#define LOGGER_BUFFER_SIZE 80U
+#endif // LOGGER_BUFFER_SIZE
 
-#define STATIC_LOGGER(name, level) {    \
-    .base = STATIC_LINKED_LIST_NODE(),  \
-    ._name = (name),                    \
-    ._level = (level)                   \
+#define LOGGER_STATIC(name, level) {   \
+    .base = LINKED_LIST_NODE_STATIC(), \
+    ._name = (name),                   \
+    ._level = (level),                 \
 }
 
-#define LOGGER_D(self, format, args...) \
-    PrintStringWithLogger(              \
-        (self),                         \
-        LOGGER_LEVEL_DEBUG,             \
-        "[%s][D]" format "\r\n",        \
-        (self)->_name, ##args)
+#define LOGGER_D(pThis, format, ...) \
+    Logger_PrintF(                   \
+        (pThis),                     \
+        LOGGER_LEVEL_DEBUG,          \
+        "[%s][D] " format "\r\n",    \
+        (pThis)->_name, ##__VA_ARGS__)
 
-#define LOGGER_I(self, format, args...) \
-    PrintStringWithLogger(              \
-        (self),                         \
-        LOGGER_LEVEL_INFO,              \
-        "[%s][I]" format "\r\n",        \
-        (self)->_name, ##args)
+#define LOGGER_I(pThis, format, ...) \
+    Logger_PrintF(                   \
+        (pThis),                     \
+        LOGGER_LEVEL_INFO,           \
+        "[%s][I] " format "\r\n",    \
+        (pThis)->_name, ##__VA_ARGS__)
 
-#define LOGGER_W(self, format, args...) \
-    PrintStringWithLogger(              \
-        (self),                         \
-        LOGGER_LEVEL_WARN,              \
-        "[%s][W]" format "\r\n",        \
-        (self)->_name, ##args)
+#define LOGGER_W(pThis, format, ...) \
+    Logger_PrintF(                   \
+        (pThis),                     \
+        LOGGER_LEVEL_WARN,           \
+        "[%s][W] " format "\r\n",    \
+        (pThis)->_name, ##__VA_ARGS__)
 
-#define LOGGER_E(self, format, args...) \
-    PrintStringWithLogger(              \
-        (self),                         \
-        LOGGER_LEVEL_ERROR,             \
-        "[%s][E]" format "\r\n",        \
-        (self)->_name, ##args)
+#define LOGGER_E(pThis, format, ...) \
+    Logger_PrintF(                   \
+        (pThis),                     \
+        LOGGER_LEVEL_ERROR,          \
+        "[%s][E] " format "\r\n",    \
+        (pThis)->_name, ##__VA_ARGS__)
 
-#define LinkedListNode2Logger(instance) \
-    BASE2SUB(instance, Logger, base)
+#define LinkedListNode2Logger(pThis) \
+    CONTAINER_OF(pThis, Logger, base)
 
 typedef enum {
     LOGGER_LEVEL_DEBUG,
     LOGGER_LEVEL_INFO,
     LOGGER_LEVEL_WARN,
     LOGGER_LEVEL_ERROR,
-    LOGGER_LEVEL_OFF,
-    NUMBER_OF_LOGGER_LEVELS
 } LoggerLevel;
 
 typedef struct {
@@ -72,23 +70,23 @@ typedef struct {
 } Logger;
 
 // Constructor(s) & Destructor(s)
-PUBLIC void ConstructLogger(
-    Logger *instance,
+PUBLIC void Logger_Construct(
+    Logger *pThis,
     const char *name,
     LoggerLevel level);
 
-PUBLIC void DestructLogger(Logger *instance);
+PUBLIC void Logger_Destruct(Logger *pThis);
 
-// Public Method(s)
-PUBLIC int PrintStringWithLogger(
-    Logger *self,
+// Public method(s)
+PUBLIC int Logger_PrintF(
+    Logger *pThis,
     LoggerLevel level,
     const char *format,
     ...);
 
-PUBLIC STATIC void RegisterLogger(Logger *instance);
-PUBLIC STATIC void UnregisterLogger(Logger *instance);
-PUBLIC STATIC bool SetLevelToLogger(const char *name, LoggerLevel level);
+PUBLIC STATIC void Logger_SetSerial(BaseSerial *newSerial);
+PUBLIC STATIC void Logger_Register(Logger *logger);
+PUBLIC STATIC void Logger_Deregister(Logger *logger);
 
 #ifdef __cplusplus
 }

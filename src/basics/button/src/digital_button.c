@@ -1,28 +1,36 @@
 #include "basics/button/inc/digital_button.h"
 
+// Private method(s)
+PRIVATE void DigitalButtonCoroutine_Construct(
+    DigitalButtonCoroutine *pThis,
+    DigitalButton *button);
+
+PRIVATE void DigitalButtonCoroutine_Destruct(DigitalButtonCoroutine *pThis);
+
 // Override method(s)
-PUBLIC void SetStateToDigitalButtonBase(
+PUBLIC CoroutineState DigitalButtonCoroutine_Run(LinkedCoroutine *coroutine);
+
+PUBLIC void DigitalButton_SetState(
     BaseButton *button,
     const ButtonState *state);
 
-PUBLIC const ButtonState *GetStateFromDigitalButtonBase(BaseButton *button);
-PUBLIC void OnClickDigitalButtonBase(BaseButton *button);
-PUBLIC BaseThreadState RunDigitalButtonThreadBase(BaseThread *thread);
+PUBLIC const ButtonState *DigitalButton_GetState(BaseButton *button);
+PUBLIC void DigitalButton_OnClick(BaseButton *button);
 
-// Virtual methods table
-static const BaseButtonVtbl buttonVtbl = {
-    .SetState = SetStateToDigitalButtonBase,
-    .GetState = GetStateFromDigitalButtonBase,
-    .OnClick = OnClickDigitalButtonBase
+// Virtual methods table(s)
+static const LinkedCoroutineVtbl coroutineVtbl = {
+    .Run = DigitalButtonCoroutine_Run,
 };
 
-static const BaseThreadVtbl threadVtbl = {
-    .Run = RunDigitalButtonThreadBase
+static const BaseButtonVtbl buttonVtbl = {
+    .SetState = DigitalButton_SetState,
+    .GetState = DigitalButton_GetState,
+    .OnClick = DigitalButton_OnClick,
 };
 
 // Method implement(s)
-PUBLIC void ConstructDigitalButton(
-    DigitalButton *instance,
+PUBLIC void DigitalButton_Construct(
+    DigitalButton *pThis,
     void *port,
     unsigned int pin,
     unsigned int pressValue)
@@ -30,180 +38,135 @@ PUBLIC void ConstructDigitalButton(
     GeneralPortParameter parameter = {
         .base = GENERAL_PORT_PARAMETER_BASE,
         .port = port,
-        .pin = pin
     };
 
-    DeviceManager *manager = InstanceOfDeviceManager();
-
-    if (instance == NULL)
-    {
+    if (pThis == NULL) {
         return;
     }
 
-    ConstructBaseButton(&instance->base);
-    instance->base.vtbl = &buttonVtbl;
-    instance->_currentState = BUTTON_STATE_RELEASED;
+    BaseButton_Construct(&pThis->base);
+    pThis->base.vtbl = &buttonVtbl;
+    pThis->_state = BUTTON_STATE_RELEASED;
 
-    instance->_port = CreatePortWithBaseFactories(
-        GetFactoriesFromDeviceManager(manager),
+    pThis->_port = DeviceFactory_CreatePort(
+        DeviceFactory_GetInstance(),
         GENERAL_DIGITAL_PORT,
         &parameter.base);
 
-    instance->_pin = pin;
-    instance->_pressValue = pressValue;
-    SetupBasePort(instance->_port, pin, BASE_PORT_MODE_INPUT);
+    pThis->_pin = pin;
+    pThis->_pressValue = pressValue;
+    BasePort_SetMode(pThis->_port, pin, BASE_PORT_MODE_INPUT);
 
-    ConstructLinkedList(&instance->_handlers);
-    ConstructDigitalButtonThread(&instance->_thread, instance);
+    pThis->_handler = NULL;
+    DigitalButtonCoroutine_Construct(&pThis->_coroutine, pThis);
 }
 
-PUBLIC void DestructDigitalButton(DigitalButton *instance)
+PUBLIC void DigitalButton_Destruct(DigitalButton *pThis)
 {
-    DeviceManager *manager = InstanceOfDeviceManager();
-
-    if (instance == NULL)
-    {
+    if (pThis == NULL) {
         return;
     }
 
-    DestructDigitalButtonThread(&instance->_thread);
-    DestructLinkedList(&instance->_handlers);
+    DigitalButtonCoroutine_Destruct(&pThis->_coroutine);
+    DeviceFactory_DestroyPort(DeviceFactory_GetInstance(), pThis->_port);
+    BaseButton_Destruct(&pThis->base);
 
-    DestroyPortWithBaseFactories(
-        GetFactoriesFromDeviceManager(manager),
-        GENERAL_DIGITAL_PORT,
-        instance->_port);
-
-    DestructBaseButton(&instance->base);
-    memset(instance, 0, sizeof(DigitalButton));
+    memset(pThis, 0, sizeof(DigitalButton));
 }
 
-PUBLIC void ConstructDigitalButtonThread(
-    DigitalButtonThread *instance,
+PRIVATE void DigitalButtonCoroutine_Construct(
+    DigitalButtonCoroutine *pThis,
     DigitalButton *button)
 {
-    if (instance != NULL)
-    {
-        ConstructBaseThread(&instance->base);
-        instance->base.vtbl = &threadVtbl;
-        instance->_button = button;
+    LinkedCoroutine_Construct(&pThis->base);
+    pThis->base.vtbl = &coroutineVtbl;
+    pThis->_button = button;
+}
+
+PRIVATE void DigitalButtonCoroutine_Destruct(DigitalButtonCoroutine *pThis)
+{
+    LinkedCoroutine_Destruct(&pThis->base);
+    memset(pThis, 0, sizeof(DigitalButtonCoroutine));
+}
+
+PUBLIC void DigitalButton_SetEventHandler(
+    DigitalButton *pThis,
+    EventHandler handler)
+{
+    if (pThis != NULL) {
+        pThis->_handler = handler;
     }
 }
 
-PUBLIC void DestructDigitalButtonThread(DigitalButtonThread *instance)
+PUBLIC void DigitalButton_EnableSample(DigitalButton *pThis, bool enable)
 {
-    if (instance != NULL)
-    {
-        DestructBaseThread(&instance->base);
-        memset(instance, 0, sizeof(DigitalButtonThread));
-    }
-}
+    DeviceManager *manager = DeviceManager_GetInstance();
 
-PUBLIC void AddEventHandlerToDigitalButton(
-    DigitalButton *self,
-    EventHandler *handler)
-{
-    if (self != NULL && handler != NULL)
-    {
-        AddNodeToLinkedList(&self->_handlers, &handler->base);
-    }
-}
-
-PUBLIC void ScanDigitalButton(DigitalButton *self)
-{
-    unsigned int value = BASE_PORT_VALUE_LOW;
-
-    if (self == NULL)
-    {
+    if (pThis == NULL) {
         return;
     }
 
-    value = ReadBasePort(self->_port, self->_pin);
-
-    if (value == self->_pressValue)
-    {
-        OnPressInButtonState(self->_currentState, &self->base);
-    }
-    else
-    {
-        OnReleaseInButtonState(self->_currentState, &self->base);
+    if (enable) {
+        DeviceManager_AddCoroutine(manager, &pThis->_coroutine.base);
+    } else {
+        DeviceManager_RemoveCoroutine(manager, &pThis->_coroutine.base);
     }
 }
 
-PUBLIC void EnableAutoScanToDigitalButton(DigitalButton *self, bool enable)
+PUBLIC CoroutineState DigitalButtonCoroutine_Run(LinkedCoroutine *coroutine)
 {
-    DeviceManager *manager = InstanceOfDeviceManager();
+    DigitalButton *button = NULL;
 
-    if (self == NULL)
-    {
-        return;
+    DigitalButtonCoroutine *pThis
+        = LinkedCoroutine2DigitalButtonCoroutine(coroutine);
+
+    if (coroutine == NULL) {
+        return COROUTINE_STATE_ENDED;
     }
 
-    if (enable)
-    {
-        AddThreadToDeviceManager(
-            manager,
-            DEVICE_MANAGER_THREAD_DRIVER_INPUT,
-            &self->_thread.base);
+    button = pThis->_button;
+    LINKED_COROUTINE_BEGIN(coroutine);
+
+    for (;;) {
+        unsigned int value = BasePort_Read(button->_port, button->_pin);
+
+        if (value == button->_pressValue) {
+            ButtonState_OnPress(button->_state, &button->base);
+        } else {
+            ButtonState_OnRelease(button->_state, &button->base);
+        }
+
+        LINKED_COROUTINE_SLEEP(coroutine, DIGITAL_BUTTON_SAMPLE_INTERVAL);
     }
-    else
-    {
-        RemoveThreadFromDeviceManager(
-            manager,
-            DEVICE_MANAGER_THREAD_DRIVER_INPUT,
-            &self->_thread.base);
-    }
+
+    LINKED_COROUTINE_END(coroutine);
 }
 
-PUBLIC void SetStateToDigitalButtonBase(
+PUBLIC void DigitalButton_SetState(
     BaseButton *button,
     const ButtonState *state)
 {
-    DigitalButton *self = BaseButton2DigitalButton(button);
+    DigitalButton *pThis = BaseButton2DigitalButton(button);
 
-    if (button != NULL && state != NULL)
-    {
-        self->_currentState = state;
+    if (button != NULL) {
+        pThis->_state = state;
     }
 }
 
-PUBLIC const ButtonState *GetStateFromDigitalButtonBase(BaseButton *button)
+PUBLIC const ButtonState *DigitalButton_GetState(BaseButton *button)
 {
-    DigitalButton *self = BaseButton2DigitalButton(button);
-    return (button == NULL) ? NULL : self->_currentState;
+    return (button == NULL) ? NULL : BaseButton2DigitalButton(button)->_state;
 }
 
-PUBLIC void OnClickDigitalButtonBase(BaseButton *button)
+PUBLIC void DigitalButton_OnClick(BaseButton *button)
 {
-    DigitalButtonEventParameter parameter = {
-        .base = DIGITAL_BUTTON_EVENT_PARAMETER_BASE,
-        .event = DIGITAL_BUTTON_EVENT_CLICKED
-    };
+    DigitalButton *pThis = BaseButton2DigitalButton(button);
 
-    DigitalButton *self = BaseButton2DigitalButton(button);
-
-    if (button != NULL)
-    {
-        InvokeEventHandlers(&self->_handlers, self, &parameter.base);
-    }
-}
-
-PUBLIC BaseThreadState RunDigitalButtonThreadBase(BaseThread *thread)
-{
-    DigitalButtonThread *self = BaseThread2DigitalButtonThread(thread);
-
-    if (thread == NULL)
-    {
-        return BASE_THREAD_STATE_ENDED;
+    if (button == NULL) {
+        return;
     }
 
-    BEGIN_BASE_THREAD(thread);
-
-    for (;;)
-    {
-        ScanDigitalButton(self->_button);
-        DELAY_BASE_THREAD(thread, DIGITAL_BUTTON_SCAN_INTERVAL);
+    if (pThis->_handler != NULL) {
+        pThis->_handler(pThis, NULL);
     }
-
-    END_BASE_THREAD(thread);
 }

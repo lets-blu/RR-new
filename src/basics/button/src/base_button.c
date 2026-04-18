@@ -1,59 +1,50 @@
 #include "basics/button/inc/base_button.h"
 
 // Private member(s)
-PRIVATE STATIC Logger logger = STATIC_LOGGER("BaseButton", LOGGER_LEVEL_INFO);
+PRIVATE STATIC Logger logger = LOGGER_STATIC("BaseButton", LOGGER_LEVEL_INFO);
 
 // Method implement(s)
-PROTECTED void ConstructBaseButton(BaseButton *instance)
+PROTECTED void BaseButton_Construct(BaseButton *pThis)
 {
-    if (instance != NULL)
-    {
-        RegisterLogger(&logger);
-        instance->vtbl = NULL;
+    if (pThis != NULL) {
+        Logger_Register(&logger);
+        pThis->vtbl = NULL;
     }
 }
 
-PROTECTED void DestructBaseButton(BaseButton *instance)
+PROTECTED void BaseButton_Destruct(BaseButton *pThis)
 {
-    if (instance != NULL)
-    {
-        memset(instance, 0, sizeof(BaseButton));
+    if (pThis != NULL) {
+        memset(pThis, 0, sizeof(BaseButton));
     }
 }
 
-PUBLIC void SetStateToBaseButton(BaseButton *self, const ButtonState *state)
+PUBLIC void BaseButton_SetState(BaseButton *pThis, const ButtonState *state)
 {
-    const ButtonState *currentState = GetStateFromBaseButton(self);
+    const ButtonState *current = BaseButton_GetState(pThis);
 
-    if (self == NULL || self->vtbl == NULL || self->vtbl->SetState == NULL)
-    {
+    if (pThis == NULL || pThis->vtbl == NULL || pThis->vtbl->SetState == NULL) {
         return;
     }
 
-    LOGGER_I(&logger, "Set state to %p, %s -> %s",
-        (void *)self,
-        GetNameInButtonState(currentState),
-        GetNameInButtonState(state));
+    LOGGER_I(&logger, "Set state %p, %s -> %s",
+        pThis, ButtonState_GetName(current), ButtonState_GetName(state));
 
-    self->vtbl->SetState(self, state);
+    pThis->vtbl->SetState(pThis, state);
 }
 
-PUBLIC const ButtonState *GetStateFromBaseButton(BaseButton *self)
+PUBLIC const ButtonState *BaseButton_GetState(BaseButton *pThis)
 {
-    if (self == NULL || self->vtbl == NULL || self->vtbl->GetState == NULL)
-    {
+    if (pThis == NULL || pThis->vtbl == NULL || pThis->vtbl->GetState == NULL) {
         return NULL;
     }
 
-    return self->vtbl->GetState(self);
+    return pThis->vtbl->GetState(pThis);
 }
 
-PUBLIC void OnClickBaseButton(BaseButton *self)
+PUBLIC void BaseButton_OnClick(BaseButton *pThis)
 {
-    if (self == NULL || self->vtbl == NULL || self->vtbl->OnClick == NULL)
-    {
-        return;
+    if (pThis != NULL && pThis->vtbl != NULL && pThis->vtbl->OnClick != NULL) {
+        pThis->vtbl->OnClick(pThis);
     }
-
-    self->vtbl->OnClick(self);
 }

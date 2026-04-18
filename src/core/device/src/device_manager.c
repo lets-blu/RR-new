@@ -1,148 +1,104 @@
 #include "core/device/inc/device_manager.h"
 
 // Private member(s)
-PRIVATE STATIC DeviceManager instance;
-
-PRIVATE STATIC Logger logger
-    = STATIC_LOGGER("DeviceManager", LOGGER_LEVEL_DEBUG);
-
-// Private method(s)
-PRIVATE void ConstructDeviceManager(DeviceManager *instance);
-PRIVATE STATIC void RunDeviceManager(void *parameter);
+PRIVATE STATIC DeviceManager instance = {
+    ._core = NULL,
+    ._system = NULL,
+    ._components = LINKED_LIST_STATIC(),
+    ._coroutines = LINKED_LIST_STATIC(),
+};
 
 // Method implement(s)
-PRIVATE void ConstructDeviceManager(DeviceManager *instance)
+PUBLIC void DeviceManager_SetCore(DeviceManager *pThis, BaseCore *core)
 {
-    if (instance == NULL)
-    {
-        return;
-    }
-
-    RegisterLogger(&logger);
-
-    instance->_isConstructed = true;
-
-    instance->_core = NULL;
-    instance->_sys = NULL;
-    ConstructLinkedList(&instance->_factories);
-
-    instance->_task = NULL;
-
-    for (unsigned int i = 0; i < DEVICE_MANAGER_THREADS_NUMBER; i++)
-    {
-        ConstructLinkedList(&instance->_threads[i]);
+    if (pThis != NULL) {
+        pThis->_core = core;
     }
 }
 
-PUBLIC void DestructDeviceManager(DeviceManager *instance)
+PUBLIC BaseCore *DeviceManager_GetCore(DeviceManager *pThis)
 {
-    if (instance == NULL)
-    {
-        return;
-    }
-
-    for (unsigned int i = 0; i < DEVICE_MANAGER_THREADS_NUMBER; i++)
-    {
-        DestructLinkedList(&instance->_threads[i]);
-    }
-
-    DestructLinkedList(&instance->_factories);
-    memset(instance, 0, sizeof(DeviceManager));
+    return (pThis != NULL) ? pThis->_core : NULL;
 }
 
-PUBLIC void SetCoreToDeviceManager(DeviceManager *self, BaseCore *core)
+PUBLIC void DeviceManager_SetSystem(DeviceManager *pThis, BaseSystem *system)
 {
-    if (self != NULL && core != NULL && self->_core == NULL)
-    {
-        self->_core = core;
-        AddNodeToLinkedList(&self->_factories, &core->base.base);
-        LOGGER_D(&logger, "Set core: %s", GetNameOfBaseCore(core));
+    if (pThis != NULL) {
+        pThis->_system = system;
     }
 }
 
-PUBLIC BaseCore *GetCoreFromDeviceManager(DeviceManager *self)
+PUBLIC BaseSystem *DeviceManager_GetSystem(DeviceManager *pThis)
 {
-    return (self == NULL) ? NULL : self->_core;
+    return (pThis != NULL) ? pThis->_system : NULL;
 }
 
-PUBLIC void SetSystemToDeviceManager(DeviceManager *self, BaseSystem *sys)
+PUBLIC void DeviceManager_AddComponent(
+    DeviceManager *pThis,
+    BaseComponent *component)
 {
-    GeneralTaskParameter parameter = {
-        .base = GENERAL_TASK_PARAMETER_BASE,
-        .entry = RunDeviceManager,
-        .parameter = self
-    };
-
-    if (self == NULL || sys == NULL || self->_sys != NULL)
-    {
-        return;
-    }
-
-    self->_sys = sys;
-    AddNodeToLinkedList(&self->_factories, &sys->base.base);
-    LOGGER_D(&logger, "Set system: %s", GetNameOfBaseSystem(sys));
-
-    self->_task = CreateTaskWithBaseFactories(
-        &self->_factories,
-        GENERAL_TASK,
-        &parameter.base);
-
-    LOGGER_I(&logger, "Set system, create task %p", self->_task);
-}
-
-PUBLIC BaseSystem *GetSystemFromDeviceManager(DeviceManager *self)
-{
-    return (self == NULL) ? NULL : self->_sys;
-}
-
-PUBLIC LinkedList *GetFactoriesFromDeviceManager(DeviceManager *self)
-{
-    return (self == NULL) ? NULL : &self->_factories;
-}
-
-PUBLIC void AddThreadToDeviceManager(
-    DeviceManager *self,
-    DeviceManagerThread type,
-    BaseThread *thread)
-{
-    if (self != NULL && thread != NULL)
-    {
-        AddNodeToLinkedList(&self->_threads[type], &thread->base);
-        LOGGER_D(&logger, "Add thread: %p (type %d)", thread, type);
+    if (pThis != NULL && component != NULL) {
+        LinkedList_AddTail(&pThis->_components, &component->base);
     }
 }
 
-PUBLIC void RemoveThreadFromDeviceManager(
-    DeviceManager *self,
-    DeviceManagerThread type,
-    BaseThread *thread)
+PUBLIC void DeviceManager_RemoveComponent(
+    DeviceManager *pThis,
+    BaseComponent *component)
 {
-    if (self != NULL && thread != NULL)
-    {
-        RemoveNodeFromLinkedList(&self->_threads[type], &thread->base);
-        LOGGER_D(&logger, "Remove thread: %p (type %d)", thread, type);
+    if (pThis != NULL && component != NULL) {
+        LinkedList_RemoveNode(&pThis->_components, &component->base);
     }
 }
 
-PUBLIC STATIC DeviceManager *InstanceOfDeviceManager(void)
+PUBLIC void DeviceManager_AddCoroutine(
+    DeviceManager *pThis,
+    LinkedCoroutine *coroutine)
 {
-    if (!instance._isConstructed)
-    {
-        ConstructDeviceManager(&instance);
+    if (pThis != NULL && coroutine != NULL) {
+        LinkedList_AddTail(&pThis->_coroutines, &coroutine->base);
     }
+}
 
+PUBLIC void DeviceManager_RemoveCoroutine(
+    DeviceManager *pThis,
+    LinkedCoroutine *coroutine)
+{
+    if (pThis != NULL && coroutine != NULL) {
+        LinkedList_RemoveNode(&pThis->_coroutines, &coroutine->base);
+    }
+}
+
+PUBLIC LinkedList *DeviceManager_GetComponents(DeviceManager *pThis)
+{
+    return (pThis == NULL) ? NULL : &pThis->_components;
+}
+
+PUBLIC STATIC DeviceManager *DeviceManager_GetInstance(void)
+{
     return &instance;
 }
 
-PRIVATE STATIC void RunDeviceManager(void *parameter)
+PUBLIC STATIC void DeviceManager_TaskEntry(void *parameter)
 {
-    DeviceManager *self = (DeviceManager *)parameter;
+    DeviceManager *manager = (DeviceManager *)parameter;
 
-    for (;;)
-    {
-        for (unsigned int i = 0; i < DEVICE_MANAGER_THREADS_NUMBER; i++)
-        {
-            RunBaseThreads(&self->_threads[i]);
+    LOOP {
+        LinkedListIterator iterator;
+
+        BaseCore_Run(manager->_core);
+        BaseSystem_Run(manager->_system);
+        LinkedListIterator_Construct(&iterator, &manager->_coroutines);
+
+        while (LinkedListIterator_HasNext(&iterator)) {
+            LinkedCoroutine *coroutine = LinkedListNode2LinkedCoroutine(
+                LinkedListIterator_GetNext(&iterator));
+
+            if (LinkedCoroutine_Run(coroutine) == COROUTINE_STATE_ENDED) {
+                LinkedList_RemoveNode(&manager->_coroutines, &coroutine->base);
+            }
         }
+
+        LinkedListIterator_Destruct(&iterator);
     }
 }

@@ -2,208 +2,203 @@
 #include "basics/button/inc/base_button.h"
 
 // Override method(s)
-PUBLIC void OnPressInButtonStateReleased(
-    const ButtonState *self,
+PUBLIC void ButtonStateReleased_OnPress(
+    const ButtonState *pThis,
     struct BaseButton *button);
 
-PUBLIC void OnReleaseInButtonStateReleased(
-    const ButtonState *self,
+PUBLIC void ButtonStateReleased_OnRelease(
+    const ButtonState *pThis,
     struct BaseButton *button);
 
-PUBLIC const char *GetNameInButtonStateReleased(const ButtonState *self);
+PUBLIC const char *ButtonStateReleased_GetName(const ButtonState *pThis);
 
-PUBLIC void OnPressInButtonStateConfirmPress(
-    const ButtonState *self,
+PUBLIC void ButtonStateConfirmPress_OnPress(
+    const ButtonState *pThis,
     struct BaseButton *button);
 
-PUBLIC void OnReleaseInButtonStateConfirmPress(
-    const ButtonState *self,
+PUBLIC void ButtonStateConfirmPress_OnRelease(
+    const ButtonState *pThis,
     struct BaseButton *button);
 
-PUBLIC const char *GetNameInButtonStateConfirmPress(const ButtonState *self);
+PUBLIC const char *ButtonStateConfirmPress_GetName(const ButtonState *pThis);
 
-PUBLIC void OnPressInButtonStatePressed(
-    const ButtonState *self,
+PUBLIC void ButtonStatePressed_OnPress(
+    const ButtonState *pThis,
     struct BaseButton *button);
 
-PUBLIC void OnReleaseInButtonStatePressed(
-    const ButtonState *self,
+PUBLIC void ButtonStatePressed_OnRelease(
+    const ButtonState *pThis,
     struct BaseButton *button);
 
-PUBLIC const char *GetNameInButtonStatePressed(const ButtonState *self);
+PUBLIC const char *ButtonStatePressed_GetName(const ButtonState *pThis);
 
-PUBLIC void OnPressInButtonStateConfirmRelease(
-    const ButtonState *self,
+PUBLIC void ButtonStateConfirmRelease_OnPress(
+    const ButtonState *pThis,
     struct BaseButton *button);
 
-PUBLIC void OnReleaseInButtonStateConfirmRelease(
-    const ButtonState *self,
+PUBLIC void ButtonStateConfirmRelease_OnRelease(
+    const ButtonState *pThis,
     struct BaseButton *button);
 
-PUBLIC const char *GetNameInButtonStateConfirmRelease(const ButtonState *self);
+PUBLIC const char *ButtonStateConfirmRelease_GetName(const ButtonState *pThis);
 
-// Virtual methods table
-static const ButtonStateVtbl releasedVtbl = {
-    .OnPress = OnPressInButtonStateReleased,
-    .OnRelease = OnReleaseInButtonStateReleased,
-    .GetName = GetNameInButtonStateReleased
+// Virtual methods table(s)
+static const ButtonStateVtbl buttonStateReleasedVtbl = {
+    .OnPress = ButtonStateReleased_OnPress,
+    .OnRelease = ButtonStateReleased_OnRelease,
+    .GetName = ButtonStateReleased_GetName,
 };
 
-static const ButtonStateVtbl confirmPressVtbl = {
-    .OnPress = OnPressInButtonStateConfirmPress,
-    .OnRelease = OnReleaseInButtonStateConfirmPress,
-    .GetName = GetNameInButtonStateConfirmPress
+static const ButtonStateVtbl buttonStateConfirmPressVtbl = {
+    .OnPress = ButtonStateConfirmPress_OnPress,
+    .OnRelease = ButtonStateConfirmPress_OnRelease,
+    .GetName = ButtonStateConfirmPress_GetName,
 };
 
-static const ButtonStateVtbl pressedVtbl = {
-    .OnPress = OnPressInButtonStatePressed,
-    .OnRelease = OnReleaseInButtonStatePressed,
-    .GetName = GetNameInButtonStatePressed
+static const ButtonStateVtbl buttonStatePressedVtbl = {
+    .OnPress = ButtonStatePressed_OnPress,
+    .OnRelease = ButtonStatePressed_OnRelease,
+    .GetName = ButtonStatePressed_GetName,
 };
 
-static const ButtonStateVtbl confirmReleaseVtbl = {
-    .OnPress = OnPressInButtonStateConfirmRelease,
-    .OnRelease = OnReleaseInButtonStateConfirmRelease,
-    .GetName = GetNameInButtonStateConfirmRelease
+static const ButtonStateVtbl buttonStateConfirmReleaseVtbl = {
+    .OnPress = ButtonStateConfirmRelease_OnPress,
+    .OnRelease = ButtonStateConfirmRelease_OnRelease,
+    .GetName = ButtonStateConfirmRelease_GetName,
 };
 
-// Public member(s)
+// Public method(s)
 PUBLIC STATIC const ButtonState buttonStateReleased = {
-    .vtbl = &releasedVtbl
+    .vtbl = &buttonStateReleasedVtbl,
 };
 
 PUBLIC STATIC const ButtonState buttonStateConfirmPress = {
-    .vtbl = &confirmPressVtbl
+    .vtbl = &buttonStateConfirmPressVtbl,
 };
 
 PUBLIC STATIC const ButtonState buttonStatePressed = {
-    .vtbl = &pressedVtbl
+    .vtbl = &buttonStatePressedVtbl,
 };
 
 PUBLIC STATIC const ButtonState buttonStateConfirmRelease = {
-    .vtbl = &confirmReleaseVtbl
+    .vtbl = &buttonStateConfirmReleaseVtbl,
 };
 
 // Method implement(s)
-PUBLIC void OnPressInButtonStateReleased(
-    const ButtonState *self,
+PUBLIC void ButtonState_OnPress(
+    const ButtonState *pThis,
     struct BaseButton *button)
 {
-    (void)self;
-    SetStateToBaseButton(button, BUTTON_STATE_CONFIRM_PRESS);
-}
-
-PUBLIC void OnReleaseInButtonStateReleased(
-    const ButtonState *self,
-    struct BaseButton *button)
-{
-    (void)self;
-    (void)button;
-}
-
-PUBLIC const char *GetNameInButtonStateReleased(const ButtonState *self)
-{
-    (void)self;
-    return "RELEASED";
-}
-
-PUBLIC void OnPressInButtonStateConfirmPress(
-    const ButtonState *self,
-    struct BaseButton *button)
-{
-    (void)self;
-    SetStateToBaseButton(button, BUTTON_STATE_PRESSED);
-}
-
-PUBLIC void OnReleaseInButtonStateConfirmPress(
-    const ButtonState *self,
-    struct BaseButton *button)
-{
-    (void)self;
-    SetStateToBaseButton(button, BUTTON_STATE_RELEASED);
-}
-
-PUBLIC const char *GetNameInButtonStateConfirmPress(const ButtonState *self)
-{
-    (void)self;
-    return "CONFIRM_PRESS";
-}
-
-PUBLIC void OnPressInButtonStatePressed(
-    const ButtonState *self,
-    struct BaseButton *button)
-{
-    (void)self;
-    (void)button;
-}
-
-PUBLIC void OnReleaseInButtonStatePressed(
-    const ButtonState *self,
-    struct BaseButton *button)
-{
-    (void)self;
-    SetStateToBaseButton(button, BUTTON_STATE_CONFIRM_RELEASE);
-}
-
-PUBLIC const char *GetNameInButtonStatePressed(const ButtonState *self)
-{
-    (void)self;
-    return "PRESSED";
-}
-
-PUBLIC void OnPressInButtonStateConfirmRelease(
-    const ButtonState *self,
-    struct BaseButton *button)
-{
-    (void)self;
-    SetStateToBaseButton(button, BUTTON_STATE_PRESSED);
-}
-
-PUBLIC void OnReleaseInButtonStateConfirmRelease(
-    const ButtonState *self,
-    struct BaseButton *button)
-{
-    (void)self;
-    SetStateToBaseButton(button, BUTTON_STATE_RELEASED);
-    OnClickBaseButton(button);
-}
-
-PUBLIC const char *GetNameInButtonStateConfirmRelease(const ButtonState *self)
-{
-    (void)self;
-    return "CONFIRM_RELEASE";
-}
-
-PUBLIC void OnPressInButtonState(
-    const ButtonState *self,
-    struct BaseButton *button)
-{
-    if (self == NULL || self->vtbl == NULL || self->vtbl->OnPress == NULL)
-    {
-        return;
+    if (pThis != NULL && pThis->vtbl != NULL && pThis->vtbl->OnPress != NULL) {
+        pThis->vtbl->OnPress(pThis, button);
     }
-
-    self->vtbl->OnPress(self, button);
 }
 
-PUBLIC void OnReleaseInButtonState(
-    const ButtonState *self,
+PUBLIC void ButtonState_OnRelease(
+    const ButtonState *pThis,
     struct BaseButton *button)
 {
-    if (self == NULL || self->vtbl == NULL || self->vtbl->OnRelease == NULL)
-    {
-        return;
+    if (pThis != NULL
+        && pThis->vtbl != NULL
+        && pThis->vtbl->OnRelease != NULL) {
+        pThis->vtbl->OnRelease(pThis, button);
     }
-
-    self->vtbl->OnRelease(self, button);
 }
 
-PUBLIC const char *GetNameInButtonState(const ButtonState *self)
+PUBLIC const char *ButtonState_GetName(const ButtonState *pThis)
 {
-    if (self == NULL || self->vtbl == NULL || self->vtbl->GetName == NULL)
-    {
+    if (pThis == NULL || pThis->vtbl == NULL || pThis->vtbl->GetName == NULL) {
         return NULL;
     }
 
-    return self->vtbl->GetName(self);
+    return pThis->vtbl->GetName(pThis);
+}
+
+PUBLIC void ButtonStateReleased_OnPress(
+    const ButtonState *pThis,
+    struct BaseButton *button)
+{
+    (void)pThis;
+    BaseButton_SetState(button, BUTTON_STATE_CONFIRM_PRESS);
+}
+
+PUBLIC void ButtonStateReleased_OnRelease(
+    const ButtonState *pThis,
+    struct BaseButton *button)
+{
+    (void)pThis;
+    (void)button;
+}
+
+PUBLIC const char *ButtonStateReleased_GetName(const ButtonState *pThis)
+{
+    (void)pThis;
+    return "RELEASED";
+}
+
+PUBLIC void ButtonStateConfirmPress_OnPress(
+    const ButtonState *pThis,
+    struct BaseButton *button)
+{
+    (void)pThis;
+    BaseButton_SetState(button, BUTTON_STATE_PRESSED);
+}
+
+PUBLIC void ButtonStateConfirmPress_OnRelease(
+    const ButtonState *pThis,
+    struct BaseButton *button)
+{
+    (void)pThis;
+    BaseButton_SetState(button, BUTTON_STATE_RELEASED);
+}
+
+PUBLIC const char *ButtonStateConfirmPress_GetName(const ButtonState *pThis)
+{
+    (void)pThis;
+    return "CONFIRM_PRESS";
+}
+
+PUBLIC void ButtonStatePressed_OnPress(
+    const ButtonState *pThis,
+    struct BaseButton *button)
+{
+    (void)pThis;
+    (void)button;
+}
+
+PUBLIC void ButtonStatePressed_OnRelease(
+    const ButtonState *pThis,
+    struct BaseButton *button)
+{
+    (void)pThis;
+    BaseButton_SetState(button, BUTTON_STATE_CONFIRM_RELEASE);
+}
+
+PUBLIC const char *ButtonStatePressed_GetName(const ButtonState *pThis)
+{
+    (void)pThis;
+    return "PRESSED";
+}
+
+PUBLIC void ButtonStateConfirmRelease_OnPress(
+    const ButtonState *pThis,
+    struct BaseButton *button)
+{
+    (void)pThis;
+    BaseButton_SetState(button, BUTTON_STATE_PRESSED);
+}
+
+PUBLIC void ButtonStateConfirmRelease_OnRelease(
+    const ButtonState *pThis,
+    struct BaseButton *button)
+{
+    (void)pThis;
+    BaseButton_SetState(button, BUTTON_STATE_RELEASED);
+    BaseButton_OnClick(button);
+}
+
+PUBLIC const char *ButtonStateConfirmRelease_GetName(const ButtonState *pThis)
+{
+    (void)pThis;
+    return "CONFIRM_RELEASE";
 }

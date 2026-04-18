@@ -4,12 +4,10 @@
 #include <stddef.h>
 #include <string.h>
 
-#include "core/common/inc/keywords.h"
-#include "core/device/inc/device_manager.h"
-
-#include "port/common/inc/base_factory.h"
-#include "port/common/inc/base_port.h"
-#include "port/general/inc/general_port.h"
+#include "core/device/inc/device_factory.h"
+#include "core/utils/inc/keywords.h"
+#include "port/core/inc/base_port.h"
+#include "port/core/inc/general_port.h"
 
 #include "utils/logger/inc/logger.h"
 
@@ -24,17 +22,17 @@ typedef struct {
 } LED;
 
 // Constructor(s) & Destructor(s)
-PUBLIC void ConstructLED(
-    LED *instance,
+PUBLIC void LED_Construct(
+    LED *pThis,
     void *port,
     unsigned int pin,
     unsigned int onValue);
 
-PUBLIC void DestructLED(LED *instance);
+PUBLIC void LED_Destruct(LED *pThis);
 
 // Public method(s)
-PUBLIC void TurnOnLED(LED *self);
-PUBLIC void TurnOffLED(LED *self);
+PUBLIC void LED_TurnOn(LED *pThis);
+PUBLIC void LED_TurnOff(LED *pThis);
 
 #ifdef __cplusplus
 }
