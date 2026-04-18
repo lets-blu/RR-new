@@ -1,0 +1,313 @@
+<circuit version="1.1.0-SR1" rev="2005" stepSize="1000000" stepsPS="1000000" NLsteps="100000" reaStep="1000000" animate="0" >
+
+<item itemtype="MCU" CircId="mega328-1" mainComp="false" Show_id="true" Show_Val="false" Pos="-1532,-1172" rotation="0" hflip="1" vflip="1" label="mega328-1" idLabPos="0,-20" labelrot="0" valLabPos="-16,20" valLabRot="0" Frequency="16 MHz" Program="ShiftRegister.hex" Auto_Load="false" saveEepr="true" Logic_Symbol="false" Rst_enabled="false" Ext_Osc="false" Wdt_enabled="false" Clk_Out="false" MainMcu="true" SerialMon="-1" />
+
+<item itemtype="Subcircuit" CircId="74HC595-2" mainComp="false" Show_id="true" Show_Val="false" Pos="-1532,-1020" rotation="0" hflip="1" vflip="1" label="74HC595-2" idLabPos="0,-20" labelrot="0" valLabPos="-16,20" valLabRot="0" Input_High_V="2.5 V" Input_Low_V="2.5 V" Input_Imped="1e+09 Ω" Out_High_V="5 V" Out_Low_V="0 V" Out_Imped="40 Ω" Tpd_ps="10 ns" Tr_ps="3 ns" Tf_ps="4 ns" Logic_Symbol="true" />
+
+<item itemtype="Subcircuit" CircId="74HC595-3" mainComp="false" Show_id="true" Show_Val="false" Pos="-1340,-1020" rotation="0" hflip="1" vflip="1" label="74HC595-3" idLabPos="0,-20" labelrot="0" valLabPos="-16,20" valLabRot="0" Input_High_V="2.5 V" Input_Low_V="2.5 V" Input_Imped="1e+09 Ω" Out_High_V="5 V" Out_Low_V="0 V" Out_Imped="40 Ω" Tpd_ps="10 ns" Tr_ps="3 ns" Tf_ps="4 ns" Logic_Symbol="true" />
+
+<item itemtype="LedBar" CircId="LedBar-4" mainComp="false" Show_id="false" Show_Val="false" Pos="-1428,-980" rotation="0" hflip="1" vflip="1" label="LedBar-4" idLabPos="-16,-44" labelrot="0" valLabPos="-16,-56" valLabRot="0" Color="Yellow" Size="8 _Leds" Grounded="false" Threshold="2.4 V" MaxCurrent="30 mA" Resistance="0.6 Ω" />
+
+<item itemtype="LedBar" CircId="LedBar-5" mainComp="false" Show_id="false" Show_Val="false" Pos="-1236,-980" rotation="0" hflip="1" vflip="1" label="LedBar-5" idLabPos="-16,-44" labelrot="0" valLabPos="-16,-56" valLabRot="0" Color="Yellow" Size="8 _Leds" Grounded="false" Threshold="2.4 V" MaxCurrent="30 mA" Resistance="0.6 Ω" />
+
+<item itemtype="Tunnel" CircId="Tunnel-6" mainComp="false" Show_id="false" Show_Val="false" Pos="-1556,-1140" rotation="0" hflip="1" vflip="1" label="Tunnel-6" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="D2" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-7" mainComp="false" Show_id="false" Show_Val="false" Pos="-1556,-1132" rotation="0" hflip="1" vflip="1" label="Tunnel-7" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="D3" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-8" mainComp="false" Show_id="false" Show_Val="false" Pos="-1556,-1124" rotation="0" hflip="1" vflip="1" label="Tunnel-8" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="D4" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-9" mainComp="false" Show_id="false" Show_Val="false" Pos="-1556,-1012" rotation="0" hflip="1" vflip="1" label="Tunnel-9" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="D3" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-10" mainComp="false" Show_id="false" Show_Val="false" Pos="-1556,-1004" rotation="0" hflip="1" vflip="1" label="Tunnel-10" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="D4" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-11" mainComp="false" Show_id="false" Show_Val="false" Pos="-1556,-980" rotation="0" hflip="1" vflip="1" label="Tunnel-11" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="D2" IsBus="false" />
+
+<item itemtype="Rail" CircId="Rail-12" mainComp="false" ShowProp="Voltage" Show_id="false" Show_Val="true" Pos="-1572,-956" rotation="0" hflip="1" vflip="1" label="Rail-12" idLabPos="-5,-10" labelrot="-90" valLabPos="-12,6" valLabRot="-90" Voltage="5 V" />
+
+<item itemtype="Ground" CircId="Ground-13" mainComp="false" Show_id="false" Show_Val="false" Pos="-1548,-924" rotation="0" hflip="1" vflip="1" label="Ground-13" idLabPos="-16,8" labelrot="0" valLabPos="-16,20" valLabRot="0" />
+
+<item itemtype="Tunnel" CircId="Tunnel-14" mainComp="false" Show_id="false" Show_Val="false" Pos="-1364,-1004" rotation="0" hflip="1" vflip="1" label="Tunnel-14" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="D4" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-15" mainComp="false" Show_id="false" Show_Val="false" Pos="-1364,-1012" rotation="0" hflip="1" vflip="1" label="Tunnel-15" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="D3" IsBus="false" />
+
+<item itemtype="Rail" CircId="Rail-16" mainComp="false" ShowProp="Voltage" Show_id="false" Show_Val="true" Pos="-1380,-956" rotation="0" hflip="1" vflip="1" label="Rail-16" idLabPos="-5,-10" labelrot="-90" valLabPos="-12,6" valLabRot="-90" Voltage="5 V" />
+
+<item itemtype="Ground" CircId="Ground-17" mainComp="false" Show_id="false" Show_Val="false" Pos="-1356,-924" rotation="0" hflip="1" vflip="1" label="Ground-17" idLabPos="-16,8" labelrot="0" valLabPos="-16,20" valLabRot="0" />
+
+<item itemtype="Ground" CircId="Ground-18" mainComp="false" Show_id="false" Show_Val="false" Pos="-1404,-924" rotation="0" hflip="1" vflip="1" label="Ground-18" idLabPos="-16,8" labelrot="0" valLabPos="-16,20" valLabRot="0" />
+
+<item itemtype="Ground" CircId="Ground-28" mainComp="false" Show_id="false" Show_Val="false" Pos="-1212,-924" rotation="0" hflip="1" vflip="1" label="Ground-28" idLabPos="-16,8" labelrot="0" valLabPos="-16,20" valLabRot="0" />
+
+<item itemtype="ResistorDip" CircId="ResistorDip-43" mainComp="false" ShowProp="Resistance" Show_id="false" Show_Val="true" Pos="-1468,-980" rotation="0" hflip="1" vflip="1" label="ResistorDip-43" idLabPos="-24,-40" labelrot="0" valLabPos="4,-26" valLabRot="90" Resistance="100 Ω" Size="8" PullUp="false" PuVolt="5 V" />
+
+<item itemtype="ResistorDip" CircId="ResistorDip-44" mainComp="false" ShowProp="Resistance" Show_id="false" Show_Val="true" Pos="-1276,-980" rotation="0" hflip="1" vflip="1" label="ResistorDip-44" idLabPos="-24,-40" labelrot="0" valLabPos="4,-26" valLabRot="90" Resistance="100 Ω" Size="8" PullUp="false" PuVolt="5 V" />
+
+<item itemtype="Tunnel" CircId="Tunnel-45" mainComp="false" Show_id="false" Show_Val="false" Pos="-1556,-1164" rotation="0" hflip="1" vflip="1" label="Tunnel-45" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="RESET" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-46" mainComp="false" Show_id="false" Show_Val="false" Pos="-1556,-1156" rotation="0" hflip="1" vflip="1" label="Tunnel-46" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="RX/D0" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-47" mainComp="false" Show_id="false" Show_Val="false" Pos="-1556,-1148" rotation="0" hflip="1" vflip="1" label="Tunnel-47" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="TX/D1" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-48" mainComp="false" Show_id="false" Show_Val="false" Pos="-1556,-1100" rotation="0" hflip="1" vflip="1" label="Tunnel-48" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="XTAL1" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-49" mainComp="false" Show_id="false" Show_Val="false" Pos="-1556,-1092" rotation="0" hflip="1" vflip="1" label="Tunnel-49" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="XTAL2" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-50" mainComp="false" Show_id="false" Show_Val="false" Pos="-1556,-1084" rotation="0" hflip="1" vflip="1" label="Tunnel-50" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="D5" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-51" mainComp="false" Show_id="false" Show_Val="false" Pos="-1556,-1076" rotation="0" hflip="1" vflip="1" label="Tunnel-51" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="D6" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-52" mainComp="false" Show_id="false" Show_Val="false" Pos="-1556,-1068" rotation="0" hflip="1" vflip="1" label="Tunnel-52" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="D7" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-53" mainComp="false" Show_id="false" Show_Val="false" Pos="-1556,-1060" rotation="0" hflip="1" vflip="1" label="Tunnel-53" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="D8" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-55" mainComp="false" Show_id="false" Show_Val="false" Pos="-1476,-1164" rotation="0" hflip="-1" vflip="1" label="Tunnel-55" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="A5/SCL" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-56" mainComp="false" Show_id="false" Show_Val="false" Pos="-1476,-1156" rotation="0" hflip="-1" vflip="1" label="Tunnel-56" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="A4/SDA" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-57" mainComp="false" Show_id="false" Show_Val="false" Pos="-1476,-1148" rotation="0" hflip="-1" vflip="1" label="Tunnel-57" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="A3" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-58" mainComp="false" Show_id="false" Show_Val="false" Pos="-1476,-1140" rotation="0" hflip="-1" vflip="1" label="Tunnel-58" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="A2" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-59" mainComp="false" Show_id="false" Show_Val="false" Pos="-1476,-1132" rotation="0" hflip="-1" vflip="1" label="Tunnel-59" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="A1" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-60" mainComp="false" Show_id="false" Show_Val="false" Pos="-1476,-1124" rotation="0" hflip="-1" vflip="1" label="Tunnel-60" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="A0" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-61" mainComp="false" Show_id="false" Show_Val="false" Pos="-1476,-1092" rotation="0" hflip="-1" vflip="1" label="Tunnel-61" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="D13/SCK" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-62" mainComp="false" Show_id="false" Show_Val="false" Pos="-1476,-1084" rotation="0" hflip="-1" vflip="1" label="Tunnel-62" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="D12/CIPO" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-63" mainComp="false" Show_id="false" Show_Val="false" Pos="-1476,-1076" rotation="0" hflip="-1" vflip="1" label="Tunnel-63" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="D11/COPI" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-64" mainComp="false" Show_id="false" Show_Val="false" Pos="-1476,-1068" rotation="0" hflip="-1" vflip="1" label="Tunnel-64" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="D10/SS" IsBus="false" />
+
+<item itemtype="Tunnel" CircId="Tunnel-65" mainComp="false" Show_id="false" Show_Val="false" Pos="-1476,-1060" rotation="0" hflip="-1" vflip="1" label="Tunnel-65" idLabPos="-16,-24" labelrot="0" valLabPos="-16,20" valLabRot="0" Name="D9" IsBus="false" />
+
+<item itemtype="Rail" CircId="Rail-66" mainComp="false" ShowProp="Voltage" Show_id="false" Show_Val="true" Pos="-1460,-1108" rotation="180" hflip="1" vflip="1" label="Rail-66" idLabPos="-5,-10" labelrot="-90" valLabPos="-12,6" valLabRot="-90" Voltage="5 V" />
+
+<item itemtype="Node" CircId="Node-29" mainComp="false" Pos="-1212,-948" />
+
+<item itemtype="Node" CircId="Node-30" mainComp="false" Pos="-1212,-956" />
+
+<item itemtype="Node" CircId="Node-31" mainComp="false" Pos="-1212,-964" />
+
+<item itemtype="Node" CircId="Node-32" mainComp="false" Pos="-1212,-972" />
+
+<item itemtype="Node" CircId="Node-33" mainComp="false" Pos="-1212,-980" />
+
+<item itemtype="Node" CircId="Node-34" mainComp="false" Pos="-1212,-988" />
+
+<item itemtype="Node" CircId="Node-35" mainComp="false" Pos="-1212,-996" />
+
+<item itemtype="Node" CircId="Node-27" mainComp="false" Pos="-1404,-996" />
+
+<item itemtype="Node" CircId="Node-26" mainComp="false" Pos="-1404,-988" />
+
+<item itemtype="Node" CircId="Node-23" mainComp="false" Pos="-1404,-980" />
+
+<item itemtype="Node" CircId="Node-22" mainComp="false" Pos="-1404,-972" />
+
+<item itemtype="Node" CircId="Node-21" mainComp="false" Pos="-1404,-964" />
+
+<item itemtype="Node" CircId="Node-20" mainComp="false" Pos="-1404,-956" />
+
+<item itemtype="Node" CircId="Node-19" mainComp="false" Pos="-1404,-948" />
+
+<item itemtype="Node" CircId="Node-67" mainComp="false" Pos="-1484,-1108" />
+
+<item itemtype="Connector" uid="Connector-1" startpinid="Tunnel-6-pin" endpinid="mega328-1-PORTD2" pointList="-1556,-1140,-1540,-1140" />
+
+<item itemtype="Connector" uid="Connector-2" startpinid="Tunnel-7-pin" endpinid="mega328-1-PORTD3" pointList="-1556,-1132,-1540,-1132" />
+
+<item itemtype="Connector" uid="Connector-3" startpinid="Tunnel-8-pin" endpinid="mega328-1-PORTD4" pointList="-1556,-1124,-1540,-1124" />
+
+<item itemtype="Connector" uid="Connector-4" startpinid="Tunnel-9-pin" endpinid="74HC595-2-SHC" pointList="-1556,-1012,-1540,-1012" />
+
+<item itemtype="Connector" uid="Connector-5" startpinid="Tunnel-10-pin" endpinid="74HC595-2-STC" pointList="-1556,-1004,-1540,-1004" />
+
+<item itemtype="Connector" uid="Connector-6" startpinid="Tunnel-11-pin" endpinid="74HC595-2-DS" pointList="-1556,-980,-1540,-980" />
+
+<item itemtype="Connector" uid="Connector-7" startpinid="74HC595-2-!MR" endpinid="Rail-12-outnod" pointList="-1540,-956,-1556,-956" />
+
+<item itemtype="Connector" uid="Connector-8" startpinid="Ground-13-Gnd" endpinid="74HC595-2-!OE" pointList="-1548,-940,-1548,-948,-1540,-948" />
+
+<item itemtype="Connector" uid="Connector-18" startpinid="74HC595-3-STC" endpinid="Tunnel-14-pin" pointList="-1348,-1004,-1364,-1004" />
+
+<item itemtype="Connector" uid="Connector-20" startpinid="74HC595-3-!MR" endpinid="Rail-16-outnod" pointList="-1348,-956,-1364,-956" />
+
+<item itemtype="Connector" uid="Connector-21" startpinid="Ground-17-Gnd" endpinid="74HC595-3-!OE" pointList="-1356,-940,-1356,-948,-1348,-948" />
+
+<item itemtype="Connector" uid="Connector-59" startpinid="LedBar-5-led7-pinN" endpinid="Node-29-1" pointList="-1220,-948,-1212,-948" />
+
+<item itemtype="Connector" uid="Connector-61" startpinid="Node-29-2" endpinid="Ground-28-Gnd" pointList="-1212,-948,-1212,-940" />
+
+<item itemtype="Connector" uid="Connector-62" startpinid="LedBar-5-led6-pinN" endpinid="Node-30-1" pointList="-1220,-956,-1212,-956" />
+
+<item itemtype="Connector" uid="Connector-64" startpinid="Node-30-2" endpinid="Node-29-0" pointList="-1212,-956,-1212,-948" />
+
+<item itemtype="Connector" uid="Connector-65" startpinid="LedBar-5-led5-pinN" endpinid="Node-31-1" pointList="-1220,-964,-1212,-964" />
+
+<item itemtype="Connector" uid="Connector-67" startpinid="Node-31-2" endpinid="Node-30-0" pointList="-1212,-964,-1212,-956" />
+
+<item itemtype="Connector" uid="Connector-68" startpinid="LedBar-5-led4-pinN" endpinid="Node-32-1" pointList="-1220,-972,-1212,-972" />
+
+<item itemtype="Connector" uid="Connector-70" startpinid="Node-32-2" endpinid="Node-31-0" pointList="-1212,-972,-1212,-964" />
+
+<item itemtype="Connector" uid="Connector-71" startpinid="LedBar-5-led3-pinN" endpinid="Node-33-1" pointList="-1220,-980,-1212,-980" />
+
+<item itemtype="Connector" uid="Connector-73" startpinid="Node-33-2" endpinid="Node-32-0" pointList="-1212,-980,-1212,-972" />
+
+<item itemtype="Connector" uid="Connector-74" startpinid="LedBar-5-led2-pinN" endpinid="Node-34-1" pointList="-1220,-988,-1212,-988" />
+
+<item itemtype="Connector" uid="Connector-76" startpinid="Node-34-2" endpinid="Node-33-0" pointList="-1212,-988,-1212,-980" />
+
+<item itemtype="Connector" uid="Connector-77" startpinid="LedBar-5-led1-pinN" endpinid="Node-35-1" pointList="-1220,-996,-1212,-996" />
+
+<item itemtype="Connector" uid="Connector-78" startpinid="LedBar-5-led0-pinN" endpinid="Node-35-0" pointList="-1220,-1004,-1212,-1004,-1212,-996" />
+
+<item itemtype="Connector" uid="Connector-79" startpinid="Node-35-2" endpinid="Node-34-0" pointList="-1212,-996,-1212,-988" />
+
+<item itemtype="Connector" uid="Connector-49" startpinid="Node-27-2" endpinid="Node-26-0" pointList="-1404,-996,-1404,-988" />
+
+<item itemtype="Connector" uid="Connector-48" startpinid="LedBar-4-led0-pinN" endpinid="Node-27-0" pointList="-1412,-1004,-1404,-1004,-1404,-996" />
+
+<item itemtype="Connector" uid="Connector-47" startpinid="LedBar-4-led1-pinN" endpinid="Node-27-1" pointList="-1412,-996,-1404,-996" />
+
+<item itemtype="Connector" uid="Connector-46" startpinid="Node-26-2" endpinid="Node-23-0" pointList="-1404,-988,-1404,-980" />
+
+<item itemtype="Connector" uid="Connector-44" startpinid="LedBar-4-led2-pinN" endpinid="Node-26-1" pointList="-1412,-988,-1404,-988" />
+
+<item itemtype="Connector" uid="Connector-37" startpinid="Node-23-2" endpinid="Node-22-0" pointList="-1404,-980,-1404,-972" />
+
+<item itemtype="Connector" uid="Connector-35" startpinid="LedBar-4-led3-pinN" endpinid="Node-23-1" pointList="-1412,-980,-1404,-980" />
+
+<item itemtype="Connector" uid="Connector-34" startpinid="Node-22-2" endpinid="Node-21-0" pointList="-1404,-972,-1404,-964" />
+
+<item itemtype="Connector" uid="Connector-32" startpinid="LedBar-4-led4-pinN" endpinid="Node-22-1" pointList="-1412,-972,-1404,-972" />
+
+<item itemtype="Connector" uid="Connector-31" startpinid="Node-21-2" endpinid="Node-20-0" pointList="-1404,-964,-1404,-956" />
+
+<item itemtype="Connector" uid="Connector-29" startpinid="LedBar-4-led5-pinN" endpinid="Node-21-1" pointList="-1412,-964,-1404,-964" />
+
+<item itemtype="Connector" uid="Connector-28" startpinid="Node-20-2" endpinid="Node-19-0" pointList="-1404,-956,-1404,-948" />
+
+<item itemtype="Connector" uid="Connector-26" startpinid="LedBar-4-led6-pinN" endpinid="Node-20-1" pointList="-1412,-956,-1404,-956" />
+
+<item itemtype="Connector" uid="Connector-25" startpinid="Node-19-2" endpinid="Ground-18-Gnd" pointList="-1404,-948,-1404,-940" />
+
+<item itemtype="Connector" uid="Connector-23" startpinid="LedBar-4-led7-pinN" endpinid="Node-19-1" pointList="-1412,-948,-1404,-948" />
+
+<item itemtype="Connector" uid="Connector-117" startpinid="Tunnel-15-pin" endpinid="74HC595-3-SHC" pointList="-1364,-1012,-1348,-1012" />
+
+<item itemtype="Connector" uid="Connector-119" startpinid="ResistorDip-43-resistor0-ePin0" endpinid="74HC595-2-Q0" pointList="-1484,-1004,-1492,-1004" />
+
+<item itemtype="Connector" uid="Connector-120" startpinid="ResistorDip-43-resistor1-ePin2" endpinid="74HC595-2-Q1" pointList="-1484,-996,-1492,-996" />
+
+<item itemtype="Connector" uid="Connector-121" startpinid="ResistorDip-43-resistor2-ePin4" endpinid="74HC595-2-Q2" pointList="-1484,-988,-1492,-988" />
+
+<item itemtype="Connector" uid="Connector-122" startpinid="ResistorDip-43-resistor3-ePin6" endpinid="74HC595-2-Q3" pointList="-1484,-980,-1492,-980" />
+
+<item itemtype="Connector" uid="Connector-123" startpinid="ResistorDip-43-resistor4-ePin8" endpinid="74HC595-2-Q4" pointList="-1484,-972,-1492,-972" />
+
+<item itemtype="Connector" uid="Connector-124" startpinid="ResistorDip-43-resistor5-ePin10" endpinid="74HC595-2-Q5" pointList="-1484,-964,-1492,-964" />
+
+<item itemtype="Connector" uid="Connector-125" startpinid="ResistorDip-43-resistor6-ePin12" endpinid="74HC595-2-Q6" pointList="-1484,-956,-1492,-956" />
+
+<item itemtype="Connector" uid="Connector-126" startpinid="ResistorDip-43-resistor7-ePin14" endpinid="74HC595-2-Q7" pointList="-1484,-948,-1492,-948" />
+
+<item itemtype="Connector" uid="Connector-127" startpinid="LedBar-4-led7-pinP" endpinid="ResistorDip-43-resistor7-ePin15" pointList="-1444,-948,-1452,-948" />
+
+<item itemtype="Connector" uid="Connector-128" startpinid="LedBar-4-led6-pinP" endpinid="ResistorDip-43-resistor6-ePin13" pointList="-1444,-956,-1452,-956" />
+
+<item itemtype="Connector" uid="Connector-129" startpinid="LedBar-4-led5-pinP" endpinid="ResistorDip-43-resistor5-ePin11" pointList="-1444,-964,-1452,-964" />
+
+<item itemtype="Connector" uid="Connector-130" startpinid="LedBar-4-led4-pinP" endpinid="ResistorDip-43-resistor4-ePin9" pointList="-1444,-972,-1452,-972" />
+
+<item itemtype="Connector" uid="Connector-131" startpinid="LedBar-4-led3-pinP" endpinid="ResistorDip-43-resistor3-ePin7" pointList="-1444,-980,-1452,-980" />
+
+<item itemtype="Connector" uid="Connector-132" startpinid="LedBar-4-led2-pinP" endpinid="ResistorDip-43-resistor2-ePin5" pointList="-1444,-988,-1452,-988" />
+
+<item itemtype="Connector" uid="Connector-133" startpinid="LedBar-4-led1-pinP" endpinid="ResistorDip-43-resistor1-ePin3" pointList="-1444,-996,-1452,-996" />
+
+<item itemtype="Connector" uid="Connector-134" startpinid="LedBar-4-led0-pinP" endpinid="ResistorDip-43-resistor0-ePin1" pointList="-1444,-1004,-1452,-1004" />
+
+<item itemtype="Connector" uid="Connector-135" startpinid="ResistorDip-44-resistor0-ePin0" endpinid="74HC595-3-Q0" pointList="-1292,-1004,-1300,-1004" />
+
+<item itemtype="Connector" uid="Connector-136" startpinid="ResistorDip-44-resistor1-ePin2" endpinid="74HC595-3-Q1" pointList="-1292,-996,-1300,-996" />
+
+<item itemtype="Connector" uid="Connector-137" startpinid="ResistorDip-44-resistor2-ePin4" endpinid="74HC595-3-Q2" pointList="-1292,-988,-1300,-988" />
+
+<item itemtype="Connector" uid="Connector-138" startpinid="ResistorDip-44-resistor3-ePin6" endpinid="74HC595-3-Q3" pointList="-1292,-980,-1300,-980" />
+
+<item itemtype="Connector" uid="Connector-139" startpinid="ResistorDip-44-resistor4-ePin8" endpinid="74HC595-3-Q4" pointList="-1292,-972,-1300,-972" />
+
+<item itemtype="Connector" uid="Connector-140" startpinid="ResistorDip-44-resistor5-ePin10" endpinid="74HC595-3-Q5" pointList="-1292,-964,-1300,-964" />
+
+<item itemtype="Connector" uid="Connector-141" startpinid="ResistorDip-44-resistor6-ePin12" endpinid="74HC595-3-Q6" pointList="-1292,-956,-1300,-956" />
+
+<item itemtype="Connector" uid="Connector-142" startpinid="ResistorDip-44-resistor7-ePin14" endpinid="74HC595-3-Q7" pointList="-1292,-948,-1300,-948" />
+
+<item itemtype="Connector" uid="Connector-143" startpinid="LedBar-5-led0-pinP" endpinid="ResistorDip-44-resistor0-ePin1" pointList="-1252,-1004,-1260,-1004" />
+
+<item itemtype="Connector" uid="Connector-144" startpinid="LedBar-5-led1-pinP" endpinid="ResistorDip-44-resistor1-ePin3" pointList="-1252,-996,-1260,-996" />
+
+<item itemtype="Connector" uid="Connector-145" startpinid="LedBar-5-led2-pinP" endpinid="ResistorDip-44-resistor2-ePin5" pointList="-1252,-988,-1260,-988" />
+
+<item itemtype="Connector" uid="Connector-146" startpinid="LedBar-5-led3-pinP" endpinid="ResistorDip-44-resistor3-ePin7" pointList="-1252,-980,-1260,-980" />
+
+<item itemtype="Connector" uid="Connector-147" startpinid="LedBar-5-led4-pinP" endpinid="ResistorDip-44-resistor4-ePin9" pointList="-1252,-972,-1260,-972" />
+
+<item itemtype="Connector" uid="Connector-148" startpinid="LedBar-5-led5-pinP" endpinid="ResistorDip-44-resistor5-ePin11" pointList="-1252,-964,-1260,-964" />
+
+<item itemtype="Connector" uid="Connector-149" startpinid="LedBar-5-led6-pinP" endpinid="ResistorDip-44-resistor6-ePin13" pointList="-1252,-956,-1260,-956" />
+
+<item itemtype="Connector" uid="Connector-150" startpinid="LedBar-5-led7-pinP" endpinid="ResistorDip-44-resistor7-ePin15" pointList="-1252,-948,-1260,-948" />
+
+<item itemtype="Connector" uid="Connector-155" startpinid="74HC595-2-Q7'" endpinid="74HC595-3-DS" pointList="-1492,-1012,-1396,-1012,-1396,-980,-1348,-980" />
+
+<item itemtype="Connector" uid="Connector-156" startpinid="Tunnel-45-pin" endpinid="mega328-1-PORTC6" pointList="-1556,-1164,-1540,-1164" />
+
+<item itemtype="Connector" uid="Connector-157" startpinid="Tunnel-46-pin" endpinid="mega328-1-PORTD0" pointList="-1556,-1156,-1540,-1156" />
+
+<item itemtype="Connector" uid="Connector-158" startpinid="Tunnel-47-pin" endpinid="mega328-1-PORTD1" pointList="-1556,-1148,-1540,-1148" />
+
+<item itemtype="Connector" uid="Connector-159" startpinid="Tunnel-48-pin" endpinid="mega328-1-PORTB6" pointList="-1556,-1100,-1540,-1100" />
+
+<item itemtype="Connector" uid="Connector-160" startpinid="Tunnel-49-pin" endpinid="mega328-1-PORTB7" pointList="-1556,-1092,-1540,-1092" />
+
+<item itemtype="Connector" uid="Connector-161" startpinid="Tunnel-50-pin" endpinid="mega328-1-PORTD5" pointList="-1556,-1084,-1540,-1084" />
+
+<item itemtype="Connector" uid="Connector-162" startpinid="Tunnel-51-pin" endpinid="mega328-1-PORTD6" pointList="-1556,-1076,-1540,-1076" />
+
+<item itemtype="Connector" uid="Connector-163" startpinid="Tunnel-52-pin" endpinid="mega328-1-PORTD7" pointList="-1556,-1068,-1540,-1068" />
+
+<item itemtype="Connector" uid="Connector-164" startpinid="Tunnel-53-pin" endpinid="mega328-1-PORTB0" pointList="-1556,-1060,-1540,-1060" />
+
+<item itemtype="Connector" uid="Connector-165" startpinid="Tunnel-55-pin" endpinid="mega328-1-PORTC5" pointList="-1476,-1164,-1492,-1164" />
+
+<item itemtype="Connector" uid="Connector-166" startpinid="mega328-1-PORTC4" endpinid="Tunnel-56-pin" pointList="-1492,-1156,-1476,-1156" />
+
+<item itemtype="Connector" uid="Connector-167" startpinid="Tunnel-57-pin" endpinid="mega328-1-PORTC3" pointList="-1476,-1148,-1492,-1148" />
+
+<item itemtype="Connector" uid="Connector-168" startpinid="mega328-1-PORTC2" endpinid="Tunnel-58-pin" pointList="-1492,-1140,-1476,-1140" />
+
+<item itemtype="Connector" uid="Connector-169" startpinid="Tunnel-59-pin" endpinid="mega328-1-PORTC1" pointList="-1476,-1132,-1492,-1132" />
+
+<item itemtype="Connector" uid="Connector-170" startpinid="mega328-1-PORTC0" endpinid="Tunnel-60-pin" pointList="-1492,-1124,-1476,-1124" />
+
+<item itemtype="Connector" uid="Connector-172" startpinid="mega328-1-PORTV0" endpinid="Node-67-1" pointList="-1492,-1100,-1484,-1100,-1484,-1108" />
+
+<item itemtype="Connector" uid="Connector-173" startpinid="Rail-66-outnod" endpinid="Node-67-0" pointList="-1476,-1108,-1484,-1108" />
+
+<item itemtype="Connector" uid="Connector-174" startpinid="Node-67-2" endpinid="mega328-1-PORTV1" pointList="-1484,-1108,-1492,-1108" />
+
+<item itemtype="Connector" uid="Connector-175" startpinid="Tunnel-61-pin" endpinid="mega328-1-PORTB5" pointList="-1476,-1092,-1492,-1092" />
+
+<item itemtype="Connector" uid="Connector-176" startpinid="Tunnel-62-pin" endpinid="mega328-1-PORTB4" pointList="-1476,-1084,-1492,-1084" />
+
+<item itemtype="Connector" uid="Connector-177" startpinid="Tunnel-63-pin" endpinid="mega328-1-PORTB3" pointList="-1476,-1076,-1492,-1076" />
+
+<item itemtype="Connector" uid="Connector-178" startpinid="Tunnel-64-pin" endpinid="mega328-1-PORTB2" pointList="-1476,-1068,-1492,-1068" />
+
+<item itemtype="Connector" uid="Connector-179" startpinid="Tunnel-65-pin" endpinid="mega328-1-PORTB1" pointList="-1476,-1060,-1492,-1060" />
+
+</circuit>
